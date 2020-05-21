@@ -77,7 +77,7 @@ Feature: SQL Hello World
   }
 ]
 ```
->> Table HelloWorld
+`Table HelloWorld`
 ```
 | id | hello |
 | 1  | world |
