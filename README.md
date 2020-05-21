@@ -11,7 +11,7 @@ Clone this project and run `yarn` from the root directory.  For the quickest sta
 
 ## Hello World API Example
 
-> HelloWorldAPI.feature
+> ./features/HelloWorldAPI.feature
 ```
 Feature: View the text "Hello World"
   Scenario: Hello World
@@ -19,7 +19,7 @@ Feature: View the text "Hello World"
     Then status ok
     And "${response}" is equal to "Hello World"
 ```
->>  helloWorld.json
+>>  ./helloWorld.json
 ```
 {
   "url": "http://www.mocky.io/v2/",
@@ -57,14 +57,14 @@ This requires the setup of your sql environment.  To utilize this, please run `n
 
 You will also need to update the sql query and update the validations to match.  You can copy the validations from the generated report to make sure it passes.
 
-> HelloWorldSQL.feature
+> features/HelloWorldSQL.feature
 ```
 Feature: SQL Hello World
   Scenario: Run a query
       When the query "SELECT * FROM HelloWorld" is run
       Then it matches set from the file "helloWorldSQL.json"
 ```
->> helloWorldSQL.json
+>> ./helloWorldSQL.json
 ```
 [
   {
