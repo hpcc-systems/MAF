@@ -1,4 +1,4 @@
-image: node:latest
+image: ***REMOVED***:4567/***REMOVED***/automation/images/android-automation-docker:alpine
 stages:
  - test
 test:
