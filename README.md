@@ -89,3 +89,6 @@ A list of all the step definitions we use and a link to some of the various step
 https://***REMOVED***/***REMOVED***/qa/automation/stepdefinitionsreadme
 
 This gives a master list of steps that can be used and a link to the individual projects.  To quickly view how some of the projects work, please clone them, run the tests and look at the results.  In general the projects use `multi-cucumber-html-reporter` but you can use a variety of reporting tools.  One of the main projects of interest would be the `cucumber-validations` and whichever module you would like to use for your project.
+
+## Add a module
+Please view [AddModule](./AddModule.md) for information on how to add a module.  This will allow the creation of new steps that can be used in your project.
