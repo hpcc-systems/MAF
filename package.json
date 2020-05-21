@@ -1,0 +1,11 @@
+{
+  "name": "maf",
+  "version": "1.0.0",
+  "description": "Modular Automation Framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "cucumber-js -f json:test/report/cucumber_report.json"
+  },
+  "author": "",
+  "license": "ISC"
+}
