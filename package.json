@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "chai": "^4.2.0",
+    "cucumber-api": "git+https://svc-TelemtsBot:***REMOVED***@***REMOVED***/***REMOVED***/qa/automation/cucumber-modules/api.git",
     "cucumber-validations": "git+https://svc-TelemtsBot:***REMOVED***@***REMOVED***/***REMOVED***/qa/automation/cucumber-modules/validations.git",
     "filltemplate": "git+https://svc-TelemtsBot:***REMOVED***@***REMOVED***/***REMOVED***/qa/helpers/filltemplate.git",
     "multiple-cucumber-html-reporter": "^1.16.0",
