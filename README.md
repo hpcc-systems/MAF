@@ -50,10 +50,12 @@ Feature: View the text "Hello World"
 
 ## Hello World SQL Example
 
-This requires the setup of your sql environment.  To utilize this, please run `node sqlConfigure` and it will prompt you for needed credentials, etc. for SQL to run properly.  It will store the config in a `sqlConfig.json` file and it will store your credentials using `node-keytar` which uses your OS's secure password storage:
+This requires the setup of your sql environment.  To utilize this, please run `node sqlConfigure` and it will prompt you for needed credentials, etc. for SQL to run properly.    It will store the config in a `sqlConfig.json` file and it will store your credentials using `node-keytar` which uses your OS's secure password storage:
 - Windows - Credential Vault
 - MacOS - KeyChain
 - Linux - libSecret
+
+You will also need to update the sql query and update the validations to match.  You can copy the validations from the generated report to make sure it passes.
 
 > HelloWorldSQL.feature
 ```

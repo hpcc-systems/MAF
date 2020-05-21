@@ -6,6 +6,18 @@
   "scripts": {
     "test": "cucumber-js -f json:test/report/cucumber_report.json"
   },
+  "devDependencies": {
+    "cucumber": "^6.0.5",
+    "cucumber-html-reporter": "^5.1.0"
+  },
+  "dependencies": {
+    "chai": "^4.2.0",
+    "cucumber-validations": "git+https://svc-TelemtsBot:***REMOVED***@***REMOVED***/***REMOVED***/qa/automation/cucumber-modules/validations.git",
+    "filltemplate": "git+https://svc-TelemtsBot:***REMOVED***@***REMOVED***/***REMOVED***/qa/helpers/filltemplate.git",
+    "multiple-cucumber-html-reporter": "^1.16.0",
+    "node-fetch": "^2.6.0",
+    "sql-setup": "git+https://svc-TelemtsBot:***REMOVED***@***REMOVED***/***REMOVED***/qa/Mobile/node-sql-setup.git"
+  },
   "author": "",
   "license": "ISC"
 }
