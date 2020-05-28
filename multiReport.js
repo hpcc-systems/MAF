@@ -5,13 +5,17 @@ var platformMap={
   "darwin": "osx"
   
 }
+var platformName="Unknown"
+if(platformMap[os.platform()]) {
+  platformName=platformMap[os.platform()]
+}
 
 
 report.generate({
        metadata:{
         device: 'Local test machine',
         platform: {
-            name: platformMap[os.platform()],
+            name: platformName,
             version: os.release()
         }
        },
