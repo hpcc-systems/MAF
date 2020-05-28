@@ -13,7 +13,7 @@
             "console": "integratedTerminal",
             "args": [
                 "-f",
-                "json:test/report/cucumber_report.json",
+                "json:cucumber_report.json",
                 "${file}:${lineNumber}"
              ] },
              {
@@ -24,7 +24,7 @@
                 "console": "integratedTerminal",
                 "args": [
                     "-f",
-                    "json:test/report/cucumber_report.json",
+                    "json:cucumber_report.json",
                     "${file}"
                  ] }
     ]
