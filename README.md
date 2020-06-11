@@ -15,7 +15,7 @@ Clone this project and run `yarn` from the root directory.  For the quickest sta
 ```
 Feature: View the text "Hello World"
   Scenario: Hello World
-    When the request from json file "helloWorld.json" is performed
+    When api request "helloWorld.json" is performed
     Then status ok
     And "${response}" is equal to "Hello World"
 ```
