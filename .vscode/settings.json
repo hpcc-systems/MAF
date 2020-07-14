@@ -1,8 +1,16 @@
 {
+    "cucumberautocomplete.stepsInvariants": true,
+    "cucumberautocomplete.smartSnippets": true,
     "cucumberautocomplete.steps": [
         "node_modules/cucumber-api/index.js",
         "node_modules/cucumber-validations/features/stepDefinitions/steps.js",
         "node_modules/sql-setup/steps.js"
+    ],
+    "cucumberautocomplete.customParameters": [
+        {
+            "parameter": "{jsonObject}",
+            "value": "(it|item {string}|file {string}|{string})"
+        }
     ],
     "cucumberautocomplete.syncfeatures": "features/**feature",
     "cucumberautocomplete.strictGherkinCompletion": true
