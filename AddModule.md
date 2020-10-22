@@ -4,7 +4,7 @@ Creating custom modules is simple, but it is advisable to follow a couple of rul
 ## Add a readme explaining how to install your project
 Your readme should include how to install the project through npm/yarn and additionally the step files that need to be created to access your repo.  In general this will be something similar to:
 ```
-module.exports=require('cucumber-api')
+require('cucumber-api')
 ```
 
 ## Returning data to be used
