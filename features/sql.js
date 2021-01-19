@@ -1,1 +1,0 @@
-module.exports=require('sql-setup/steps')

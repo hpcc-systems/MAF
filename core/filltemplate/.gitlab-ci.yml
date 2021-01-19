@@ -1,0 +1,15 @@
+stages:
+  - test
+run:
+  image: node:latest
+  stage: test
+  before_script:
+    - npm ci
+  script:
+    - npm t
+  tags:
+    - docker
+  artifacts:
+    paths:
+      - test/report
+    when: always
