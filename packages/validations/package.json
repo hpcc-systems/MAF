@@ -1,0 +1,27 @@
+{
+  "name": "@ln-maf/cucumber-validations",
+  "version": "2.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "cucumber-js -f json:test/report/cucumber_report.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@ln-maf/core": "1.0.0",
+    "@ln-maf/filltemplate": "2.0.0",
+    "jsonpath": "^1.0.2",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.24.0",
+    "validator": "^12.1.0",
+    "xmldom": "^0.2.1",
+    "xpath": "0.0.27"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^7.0.0",
+    "chai": "^4.2.0",
+    "cucumber-html-reporter": "^4.0.5",
+    "multiple-cucumber-html-reporter": "^1.16.0"
+  }
+}

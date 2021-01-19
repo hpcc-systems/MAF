@@ -1,5 +1,6 @@
 {
-  "name": "maf",
+  "name": "ln-maf",
+  "private": true,
   "version": "1.0.0",
   "description": "Modular Automation Framework",
   "main": "index.js",
@@ -7,18 +8,17 @@
     "test": "cucumber-js -f json:test/report/cucumber_report.json"
   },
   "devDependencies": {
-    "cucumber": "^6.0.5",
+    "@cucumber/cucumber": "^7.0.0",
     "cucumber-html-reporter": "^5.1.0"
   },
   "dependencies": {
     "chai": "^4.2.0",
-    "cucumber-api": "git+https://svc-TelemtsBot:***REMOVED***@***REMOVED***/***REMOVED***/qa/automation/cucumber-modules/api.git",
-    "cucumber-validations": "git+https://svc-TelemtsBot:***REMOVED***@***REMOVED***/***REMOVED***/qa/automation/cucumber-modules/validations.git",
-    "filltemplate": "git+https://svc-TelemtsBot:***REMOVED***@***REMOVED***/***REMOVED***/qa/helpers/filltemplate.git",
     "multiple-cucumber-html-reporter": "^1.16.0",
-    "node-fetch": "^2.6.0",
-    "sql-setup": "git+https://svc-TelemtsBot:***REMOVED***@***REMOVED***/***REMOVED***/qa/Mobile/node-sql-setup.git"
+    "node-fetch": "^2.6.0"
   },
+  "workspaces": [
+    "packages/*"
+  ],
   "author": "",
-  "license": "ISC"
+  "license": "Apache-2.0"
 }

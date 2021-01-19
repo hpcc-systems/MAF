@@ -1,0 +1,15 @@
+{
+    "cucumberautocomplete.stepsInvariants": true,
+    "cucumberautocomplete.smartSnippets": true,
+    "cucumberautocomplete.customParameters": [
+        {
+            "parameter": "{jsonObject}",
+            "value": "(it|item {string}|file {string}|{string})"
+        }
+    ],
+    "cucumberautocomplete.steps": [
+        "features/stepDefinitions/steps.js"
+    ],
+    "cucumberautocomplete.syncfeatures": "features/**feature",
+    "cucumberautocomplete.strictGherkinCompletion": true
+}

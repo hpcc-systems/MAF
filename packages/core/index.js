@@ -1,4 +1,4 @@
-const { fillTemplate } = require('filltemplate')
+const fillTemplate = require('@ln-maf/filltemplate')
 var Cucumber = require('cucumber')
 var When = Cucumber.When;
 
