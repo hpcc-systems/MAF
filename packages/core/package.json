@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@ln-maf/filltemplate": "2.0.0"
+    "@ln-maf/filltemplate": "^1.0.0"
   },
   "peerDependencies": {
     "@cucumber/cucumber": "^7.0.0",

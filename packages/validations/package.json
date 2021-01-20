@@ -1,6 +1,6 @@
 {
   "name": "@ln-maf/cucumber-validations",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -9,8 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@ln-maf/core": "1.0.0",
-    "@ln-maf/filltemplate": "2.0.0",
+    "@ln-maf/core": "^1.0.0",
+    "@ln-maf/filltemplate": "^1.0.0",
     "jsonpath": "^1.0.2",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
