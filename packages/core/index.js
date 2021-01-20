@@ -1,5 +1,5 @@
 const fillTemplate = require('@ln-maf/filltemplate')
-var Cucumber = require('cucumber')
+var Cucumber = require('@cucumber/cucumber')
 var When = Cucumber.When;
 
 var fs=require('fs')
@@ -38,6 +38,10 @@ var performJSONObjectTransform = function (items) {
   }
   if (items.value) {
     items.value = items.value.slice(1, items.value.length - 1)
+  }
+  items.type=items.type1
+  if(items.type===null || items.type===undefined) {
+    items.type=items.type2
   }
   if(items.type===null || items.type===undefined) {
     items.type=""
@@ -100,10 +104,15 @@ var MAFWhen=function(name, func) {
       }
       this.results.lastRun=await func.call(this, ...([].slice.call(arguments)))
       if(canAttach.call(this))
-        this.attach(JSON.stringify({ lastRun: this.results.lastRun }))
+        this.attach(JSON.stringify({ lastRun: this.results.lastRun }, null, 2))
     }
   `)
   When(name, tmpFunc)
 }
-
-module.exports={performJSONObjectTransform, applyJSONToString, readFile, writeFile, writeFileBuffer,readFileBuffer, getFilePath, canAttach, MAFWhen}
+var MAFSave=function(name, value) {
+  if(!this.results) {
+    this.results={}
+  }
+  this.results[name]=value  
+}
+module.exports={performJSONObjectTransform, applyJSONToString, readFile, writeFile, writeFileBuffer,readFileBuffer, getFilePath, canAttach, MAFWhen, MAFSave}

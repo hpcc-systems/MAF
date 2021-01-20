@@ -2,9 +2,8 @@
     "cucumberautocomplete.stepsInvariants": true,
     "cucumberautocomplete.smartSnippets": true,
     "cucumberautocomplete.steps": [
-        "node_modules/cucumber-api/index.js",
-        "node_modules/cucumber-validations/features/stepDefinitions/steps.js",
-        "node_modules/sql-setup/steps.js"
+        "packages/api/autoComplete.js",
+        "packages/validations/features/stepDefinitions/steps.js"
     ],
     "cucumberautocomplete.customParameters": [
         {

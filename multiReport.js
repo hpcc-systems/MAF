@@ -1,6 +1,5 @@
 const report = require('multiple-cucumber-html-reporter');
 const os = require('os');
-
 var platformMap={
   "darwin": "osx"
   
@@ -12,6 +11,7 @@ if(platformMap[os.platform()]) {
 
 
 report.generate({
+       displayDuration: true,
        metadata:{
         device: 'Local test machine',
         platform: {

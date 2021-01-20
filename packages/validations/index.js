@@ -1,2 +1,2 @@
 require('./features/stepDefinitions/steps')
-require('./features/parameter_types')
+require('@ln-maf/core/parameter_types')

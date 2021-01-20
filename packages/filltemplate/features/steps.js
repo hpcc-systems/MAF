@@ -1,5 +1,5 @@
-var fillTemplate=require('../index').fillTemplate
-var Cucumber=require('cucumber')
+var fillTemplate=require('../index')
+var Cucumber=require('@cucumber/cucumber')
 
 var equal=require('deep-equal')
 var chai=require('chai')

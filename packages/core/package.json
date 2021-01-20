@@ -9,7 +9,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ln-maf/filltemplate": "^1.0.0"
+    "@ln-maf/filltemplate": "*"
   },
   "peerDependencies": {
     "@cucumber/cucumber": "^7.0.0",

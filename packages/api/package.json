@@ -1,0 +1,25 @@
+{
+  "name": "cucumber-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "cucumber-js -f json:test/report/cucumber_report.json --parallel 16; node genReport"
+  },
+  "author": "",
+  "license": "Apache-2",
+  "devDependencies": {
+    "@ln-maf/validations": "*"
+  },
+  "peerDependencies": {
+    "@ln-maf/core": "*",
+    "@ln-maf/filltemplate": "*",
+    "@cucumber/cucumber": "^7.0.0"
+  },
+  "dependencies": {
+    "chai": "^4.2.0",
+    "form-data": "^3.0.0",
+    "multiple-cucumber-html-reporter": "^1.16.0",
+    "node-fetch": "^2.6.0"
+  }
+}

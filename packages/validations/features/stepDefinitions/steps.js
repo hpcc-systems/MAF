@@ -1,5 +1,5 @@
-const { Before } = require('cucumber');
-var Cucumber = require('cucumber')
+const { Before } = require('@cucumber/cucumber');
+var Cucumber = require('@cucumber/cucumber')
 var fs = require('fs')
 var chai = require('chai')
 var assert = chai.assert;
@@ -416,6 +416,10 @@ When('set:', function (dataTable) {
     setToString(i, item[index], this)
   })
 })
+MAFWhen('set result to {jsonObject}', function(item) {
+  return performJSONObjectTransform.call(this, item)
+})
+
 MAFWhen('{jsonObject} is base64 encoded', function(item) {
   var item = performJSONObjectTransform.call(this, item)
   if(typeof item !== "string") {
@@ -694,4 +698,23 @@ Then("{jsonObject} does not contain {string}", function (jsonObject, checkString
   checkString = fillTemplate(checkString, this.results)
   obj = JSON.stringify(obj)
   assert.isFalse(obj.includes(checkString), `String '${checkString}' is in ${obj}`)
+})
+When("blob item {string} is written to file {string}", async function (blob, fileName) {
+  blob = fillTemplate(blob, this.results);
+  blob = eval("this.results."+blob)
+  var b=Buffer.from(await blob.arrayBuffer())
+  writeFile(`${fileName}`, b, this);
+})
+When("blob item {string} is attached", async function (blob) {
+  blob = fillTemplate(blob, this.results);
+  blob = eval("this.results."+blob)
+  var b=Buffer.from(await blob.arrayBuffer())
+  return this.attach(b, 'image/png');
+})
+Then("blob item {string} is equal to file {string}", async function (blob, fileName) {
+  blob = fillTemplate(blob, this.results);
+  blob = eval("this.results."+blob)
+  var b=await blob.arrayBuffer()
+  var actualImage = readFile(`${fileName}` ,this );
+  assert.isTrue(Buffer.compare(actualImage, Buffer.from(b)) === 0)
 })

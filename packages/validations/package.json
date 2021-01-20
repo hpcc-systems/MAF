@@ -1,5 +1,5 @@
 {
-  "name": "@ln-maf/cucumber-validations",
+  "name": "@ln-maf/validations",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,18 +9,23 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ln-maf/core": "^1.0.0",
-    "@ln-maf/filltemplate": "^1.0.0",
     "jsonpath": "^1.0.2",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
     "validator": "^12.1.0",
     "xmldom": "^0.2.1",
+    "chai": "^4.2.0",
     "xpath": "0.0.27"
+  },
+  "peerDependencies": {
+    "@ln-maf/core": "*",
+    "@ln-maf/filltemplate": "*",
+    "@cucumber/cucumber": "^7.0.0"
   },
   "devDependencies": {
     "@cucumber/cucumber": "^7.0.0",
-    "chai": "^4.2.0",
+    "@ln-maf/core": "*",
+    "@ln-maf/filltemplate": "*",
     "cucumber-html-reporter": "^4.0.5",
     "multiple-cucumber-html-reporter": "^1.16.0"
   },

@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "chai": "^4.2.0",
-    "multiple-cucumber-html-reporter": "^1.16.0",
+    "multiple-cucumber-html-reporter": "^1.18.0",
     "node-fetch": "^2.6.0"
   },
   "workspaces": [
