@@ -148,7 +148,7 @@ MAFWhen('api request from {jsonObject} is performed', async function (item){
   return await performRequestFromJSON.call(this, item);
 })
 MAFWhen('perform api request:', performRequestFromJSONString)
-MAFWhen('api request from {jsonObject} is performed with:', async function(item, dataTable) {
+MAFWhen('api request from {jsonObject} is performed with:', async function(reqItem, dataTable) {
   dataTable=dataTable.rawTable
   var indices=dataTable[0]
   var item=[]
@@ -170,14 +170,15 @@ MAFWhen('api request from {jsonObject} is performed with:', async function(item,
   if(!this.results) {
     this.results={}
   }
-  var extraParams=this
+  var extraParams={}
+  extraParams.results={...this.results}
   for(var i=0; i<indices.length; i++) {
     var val=fillTemplate(item[i], this.results)
     eval(`extraParams.results.${indices[i]} = val`)
   }
-  var item = performJSONObjectTransform.call(this, item)
 
-  return await performRequestFromJSON.call(extraParams, file)
+  var item = performJSONObjectTransform.call(extraParams, reqItem)
+  return await performRequestFromJSON.call(this, item)
 })
 
 var performRequest=async (method, scenario) => {
