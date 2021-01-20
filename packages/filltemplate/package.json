@@ -19,5 +19,6 @@
     "multiple-cucumber-html-reporter": "^1.16.0"
   },
   "author": "",
-  "license": "ISC"
+  "license": "Apache-2.0",
+  "gitHead": "a66423b9fff044caff0f13082c523c899c6d0723"
 }
