@@ -1,0 +1,27 @@
+{
+  "name": "@ln-maf/default-sql",
+  "version": "2.1.0",
+  "description": "Default Sql setup on Node with cucumber",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@***REMOVED***:***REMOVED***/qa/Mobile/node-sql-setup.git"
+  },
+  "author": "",
+  "license": "Apache-2",
+  "dependencies": {
+    "chai": "^4.2.0",
+    "fstream": "^1.0.12",
+    "prompt": "^1.0.0"
+  },
+  "peerDependencies": {
+    "keytar": "4.*"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^7.0.0",
+    "multiple-cucumber-html-reporter": "^1.18.0",
+    "@ln-maf/validations": "*",
+    "cucumber-html-reporter": "^5.1.0"
+
+  }
+}

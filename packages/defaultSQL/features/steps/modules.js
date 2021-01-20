@@ -1,0 +1,1 @@
+require('@ln-maf/validations')

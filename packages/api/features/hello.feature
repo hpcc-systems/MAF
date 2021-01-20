@@ -15,10 +15,13 @@ Feature: Hello world feature
     When api request from item "req" is performed
 
   Scenario: Get an image
+    When set:
+      |url|
+      |cucumber.io|
     When set "req" to:
       """
       {
-        "url": "https://cucumber.io",
+        "url": "https://${url}",
         "api": "img/cucumber-school-logo.png",
         "method": "GET"
       }

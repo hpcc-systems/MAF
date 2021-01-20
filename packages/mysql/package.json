@@ -1,0 +1,22 @@
+{
+  "name": "@ln-maf/mysql",
+  "version": "2.1.0",
+  "description": "Setup for sql on Node",
+  "main": "index.js",
+  "scripts": {
+    "test": "cucumber-js -f json:test/report/cucumber_report.json; node genReport.js"
+  },
+  "bin": {
+    "mysql-configure": "./config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@***REMOVED***:***REMOVED***/qa/Mobile/node-sql-setup.git"
+  },
+  "author": "",
+  "license": "Apache-2",
+  "dependencies": {
+    "sync-mysql": "^3.0.1",
+    "@ln-maf/default-sql": "*"
+  }
+}
