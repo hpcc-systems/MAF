@@ -3,6 +3,7 @@ function replaceAll(string, search, replace) {
 }
 
 const fillTemplate = function(templateString, templateVars){
+  templateString=templateString.replace(/\"\${/g, '${JSON.stringify(').replace(/\}\"/g, ')}')
   templateVars.random=Math.floor(Math.random()*100000)
   if(typeof templateString !== "string") {
     templateString=JSON.stringify(templateString, null, 2)

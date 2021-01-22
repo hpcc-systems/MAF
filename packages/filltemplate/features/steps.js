@@ -9,23 +9,14 @@ var When = Cucumber.When;
 var Then = Cucumber.Then;
 
 
-   Given('{string} = {string}', function (string, val) {
-     var obj=fillTemplate(val, this)
-     try{
-       obj=JSON.parse(obj)
-     } catch(e) {}
-     this[string]=obj
-   });
-   Given('{string} = {int}', function (string, int) {
-     this[string]=int
-   });
        
+   Then('it is exactly equal to:', function(docString) {
+     assert.equal(this.results.lastRun, docString, `${this.lastRun} not equal to ${docString}`)
+   })
    When('run templateString', function (docString) {
-     this["lastRun"]=fillTemplate(docString, this)
-     this.attach(JSON.stringify(this.lastRun))
+     if(!this.results) {
+       this.results={}
+     }
+     this.results["lastRun"]=fillTemplate(docString, this.results)
+     this.attach(JSON.stringify(this.results.lastRun))
    })
-
-   Then('it is equal to item:', function (docString) {
-     assert.equal(this.lastRun, docString, `${this.lastRun} not equal to ${docString}`)
-   })
-     

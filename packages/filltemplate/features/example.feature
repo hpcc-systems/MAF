@@ -1,6 +1,33 @@
 Feature: Test Fill Template
+  Scenario: Test with xml in json
+    Given set "a" to:
+"""
+<root>
+
+<h:table xmlns:h="http://www.w3.org/TR/html4/">
+  <h:tr>
+    <h:td>Apples</h:td>
+    <h:td>Bananas</h:td>
+  </h:tr>
+</h:table>
+
+<f:table xmlns:f="https://www.w3schools.com/furniture">
+  <f:name>African Coffee Table</f:name>
+  <f:width>80</f:width>
+  <f:length>120</f:length>
+</f:table>
+
+</root>
+"""
+  And set "bob" to:
+  """
+  {
+     "what": "${a}"
+  }
+  """
+  Then item "bob.what" is equal to item "a"
   Scenario: Test fill template
-    Given "numVal" = 5
+    Given set "numVal" to 5
     When run templateString
 """
 {
@@ -12,7 +39,7 @@ Feature: Test Fill Template
   }\
 }
 """
-    Then it is equal to item:
+    Then it is exactly equal to:
 """
 {
   "bob": 
@@ -20,14 +47,14 @@ Feature: Test Fill Template
 }
 """
   Scenario: Test with an json object
-    Given "numVal" = '{ "item5" :3 } '
+    Given set "numVal" to '{ "item5" :3 } '
     When run templateString
 """
 {
   "bob": ${numVal}\
 }
 """
-    Then it is equal to item:
+    Then it is exactly equal to:
 """
 {
   "bob": {
@@ -36,14 +63,15 @@ Feature: Test Fill Template
 }
 """
   Scenario: Test with an json object
-    Given "numVal" = '{ "item5" :3 } '
+    Given set "numVal" to '{ "item5" :3 } '
     When run templateString
 """
 {
   "bob": ${numVal.item5}
 }
 """
-    Then it is equal to item:
+And set "what" to it
+    Then it is exactly equal to:
 """
 {
   "bob": 3
@@ -54,19 +82,19 @@ Feature: Test Fill Template
 """
 5
 """
-  Then it is equal to item:
+  Then it is exactly equal to:
 """
 5
 """
 
   Scenario: Template in a template
-  Given "var1" = 3
-  And "varOneOne" = "1"
+  Given set "var1" to 3
+  And set "varOneOne" to "1"
   When run templateString
 """
 Hi${var${varOneOne}}After
 """
-Then it is equal to item:
+Then it is exactly equal to:
 """
 Hi3After
 """
@@ -75,31 +103,31 @@ Hi3After
 """
 ${hello{there
 """
-Then it is equal to item:
+Then it is exactly equal to:
 """
 ${hello{there
 """
   Scenario: Edge cases
-  Given "var1" = 3
+  Given set "var1" to 3
   When run templateString
 """
 ${(function () {
 return "var1"
 })()}
 """
-Then it is equal to item:
+Then it is exactly equal to:
 """
 var1
 """
   Scenario: Edge cases
-  Given "var1" = 3
+  Given set "var1" to 3
   When run templateString
 """
 ${${(function () {
 return "var1"
 })()}}
 """
-Then it is equal to item:
+Then it is exactly equal to:
 """
 3
 """
