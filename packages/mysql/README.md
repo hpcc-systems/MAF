@@ -11,7 +11,7 @@ npm i @ln-maf/mysql
 # Set up configs
 
 Keytar is used to store access to the username and password for sql.  
-To setup an sql config please run:
+To setup an sql config please run the following from project root:
 ```
 node node_modules/@ln-maf/mysql/config.js
 ```

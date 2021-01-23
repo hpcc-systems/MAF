@@ -3,10 +3,6 @@
   "version": "2.1.0",
   "description": "Default Sql setup on Node with cucumber",
   "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "git@***REMOVED***:***REMOVED***/qa/Mobile/node-sql-setup.git"
-  },
   "author": "",
   "license": "Apache-2",
   "dependencies": {

@@ -1,10 +1,10 @@
 # Fill template
-Fills the template literals how js would handle them.  Allows use of template literal in a string.  
+Fills the template literals similar to how js would handle them.  Allows use of template literal in a string.  There are a couple of key differences with how they are processed by fillTemplate.
 
 ## Installation
 Install it with
 ```
-yarn add git+ssh://git@***REMOVED***:***REMOVED***/qa/helpers/filltemplate.git
+npm i @ln-maf/filltemplate
 ```
 ## Usage
 ```
@@ -39,4 +39,10 @@ Would apply:
   "hello" : "World"
 }
 ```
- to the `jsonObj`
+to the `jsonObj`
+
+
+## Differences
+All `"${JS_COMMAND_HERE}"` are replaced with `${JSON.stringify(command)}`.  This automatically escapes some characters to prevent invalid json within json files.
+
+The items are evaled on within each bracket.  You can see some of the examples within the features subfolder of this project.

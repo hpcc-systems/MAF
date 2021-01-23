@@ -9,10 +9,6 @@
   "bin": {
     "mysql-configure": "./config.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git@***REMOVED***:***REMOVED***/qa/Mobile/node-sql-setup.git"
-  },
   "author": "",
   "license": "Apache-2",
   "dependencies": {

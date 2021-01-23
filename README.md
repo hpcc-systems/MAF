@@ -84,11 +84,45 @@ Feature: SQL Hello World
 | 2  | day   |
 ```
 
-## Step Definitions Master list
-A list of all the step definitions we use and a link to some of the various steps can be found at:
-https://***REMOVED***/***REMOVED***/qa/automation/stepdefinitionsreadme
+## Included modules:
+There are several included modules, below are links to the READMEs.  You can also find them in the projects directory.
 
-This gives a master list of steps that can be used and a link to the individual projects.  To quickly view how some of the projects work, please clone them, run the tests and look at the results.  In general the projects use `multi-cucumber-html-reporter` but you can use a variety of reporting tools.  One of the main projects of interest would be the `cucumber-validations` and whichever module you would like to use for your project.
+[Validations](packages/validations/README.md) - This project contains helper cucumber steps and various ways of setting objects.  It additionally performs validations on some of the objects.  This would include things like `Then item "a" is equal to 5` and `When "Hello World" is base64 encoded`
+
+[API](packages/api/README.md) - This project contains cucumber steps for performing API Calls.
+
+[MySQL](packages/mysql/README.md) - This project contains cucumber steps for calling MYSQL.
+
+[DefaultSql](packages/defaultSQL/README.md) - This project is used to create other sql modules.  Just implement what is in MySQL and read the README to get it set up.
+
+[Core](packages/core/README.md) - This contains details about the core.  If you are attempting to set up your own cucumber steps it is a good place to start.  Specifically for the function `MAFWhen`.
+
+[filltemplate](packages/filltemplate/README.md) - This contains details on how the parsing of template literals is done.  There are some slight changes over the default.  This is needed to provide easy access to variables within strings.
+
+## Variable usage
+Variables can be used within almost any step.  These can be used as follows:
+
+Feature: Variable example with api
+## Hello World API Example
+
+`./features/HelloWorldAPI.feature`
+```
+Feature: View the text "Hello World"
+  Scenario: Hello World
+    Given set "url" to "https://mocky.io"
+    Given set "exampleLiteral" to "${5+5}Works?"
+    When api request "helloWorld.json" is performed
+    Then status ok
+    And "${response}" is equal to "Hello World"
+```
+`./helloWorld.json`
+```
+{
+  "url": "${url}",
+  "api": "5ec540242f00004cb1dc30dd",
+  "method": "GET"
+}
+```
 
 ## Add a module
 Please view [AddModule](./AddModule.md) for information on how to add a module.  This will allow the creation of new steps that can be used in your project.

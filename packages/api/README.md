@@ -147,7 +147,7 @@ Example:
 Assuming badge.json is:
 ```
 {
-    "api": "/driver/user/${userID}/badges",
+    "api": "/user/${userID}/badges",
     "headers": {
         "accept": "application/json",
         "accept-language": "en-US,en;q=0.9,es;q=0.8",
@@ -156,8 +156,6 @@ Assuming badge.json is:
         "sec-fetch-mode": "cors",
         "sec-fetch-site": "same-origin"
     },
-    "referrer": "https://***REMOVED******REMOVED***/",
-    "referrerPolicy": "no-referrer-when-downgrade",
     "body": null,
     "method": "GET"
 }

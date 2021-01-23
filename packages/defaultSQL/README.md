@@ -1,5 +1,5 @@
-# Node Post Gre Sql Setup
-This module is created to allow other projects to easily create modules that perform sql using various platforms.  There are examples for mysql and pg sql.
+# Node Default SQL Setup
+This module is created to allow other projects to easily create modules that perform sql using various platforms.  There are examples for mysql included.
 
 # Setup
 
@@ -30,9 +30,9 @@ create({
 })
 ```
 
-## Given $MODULENAME config from [{jsonObject}](https://***REMOVED***/***REMOVED***/qa/automation/cucumber-modules/validations/-/blob/master/JSONObject.md)
+## Given $MODULENAME config from [{jsonObject}](../validations/README.md)
 Utilizes the sql system associated with the file provided.
 
-## When $MODULENAME query from [{jsonObject}](https://***REMOVED***/***REMOVED***/qa/automation/cucumber-modules/validations/-/blob/master/JSONObject.md) is run
+## When $MODULENAME query from [{jsonObject}](../validations/JSONObject.md) is run
 Runs a query from the provided item.  Allows templated args as per the global cucumber projects.  Stores the results in `this.results.lastRun`.  Usable in MAF as `${lastRun}` or the it keyword.  Supports a string, file or item whenever this is used.
 

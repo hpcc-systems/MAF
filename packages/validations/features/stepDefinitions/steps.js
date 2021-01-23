@@ -545,6 +545,8 @@ Then('{jsonObject} is not equal to:', function (item1, item2) {
     assert.notEqual(item1, expected)
   }
 })
+
+
 Then('{jsonObject} is equal to:', function (item1, item2) {
   var item1 = performJSONObjectTransform.call(this, item1)
   if (!this.results) {

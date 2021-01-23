@@ -11,9 +11,9 @@ require('cucumber-api')
 Data that needs to be used by other steps is stored in `this.results`.  Specifically, items are added to `this.results.lastRun` to be used by the variable `it`.
 
 ## Processing of Data
-In general we use the `fillTemplate` project to ensure that variables can be replaced.  If the item is a json item, it will need the function `applyTemplateToJSON`.  Usages of both of these can be found at:
+In general we use the [filltemplate](packages/filltemplate/README.md) project to ensure that variables can be replaced.   This can be found as part of the core library:
 
-https://***REMOVED***/***REMOVED***/qa/automation/cucumber-modules/api/blob/master/index.js
+[{core}](packages/core/README.md)
 
 This is used to process items like `${response}` or `${response[0].name}`
 
