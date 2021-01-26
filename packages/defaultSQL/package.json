@@ -1,5 +1,8 @@
 {
   "name": "@ln-maf/default-sql",
+ "publishConfig": {
+    "access": "public"
+  },
   "version": "1.0.5",
   "description": "Default Sql setup on Node with cucumber",
   "main": "index.js",
@@ -22,5 +25,5 @@
     "cucumber-html-reporter": "^5.1.0",
     "multiple-cucumber-html-reporter": "^1.18.0"
   },
-  "gitHead": "07cf7594a39c9ece428b5e59accab21833f016b9"
+  "gitHead": "9bf55a2c86fa17707fabfb4320c3d722e270f9e6"
 }

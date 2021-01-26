@@ -1,5 +1,8 @@
 {
   "name": "@ln-maf/api",
+ "publishConfig": {
+    "access": "public"
+  },
   "version": "1.0.5",
   "description": "",
   "main": "index.js",
@@ -21,5 +24,5 @@
     "form-data": "^3.0.0",
     "node-fetch": "^2.6.0"
   },
-  "gitHead": "07cf7594a39c9ece428b5e59accab21833f016b9"
+  "gitHead": "9bf55a2c86fa17707fabfb4320c3d722e270f9e6"
 }
