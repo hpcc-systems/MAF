@@ -1,0 +1,33 @@
+{
+  "name": "@ln-maf/validations",
+  "version": "1.0.2",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "cd ../.. && bash runFeature.sh validations"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "chai": "^4.2.0",
+    "jsonpath": "^1.0.2",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.24.0",
+    "validator": "^12.1.0",
+    "xmldom": "^0.2.1",
+    "xpath": "0.0.27"
+  },
+  "peerDependencies": {
+    "@cucumber/cucumber": "^7.0.0",
+    "@ln-maf/core": "*",
+    "@ln-maf/filltemplate": "*"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^7.0.0",
+    "@ln-maf/core": "^1.0.2",
+    "@ln-maf/filltemplate": "^1.0.2",
+    "cucumber-html-reporter": "^4.0.5",
+    "multiple-cucumber-html-reporter": "^1.16.0"
+  },
+  "gitHead": "d5b8a4e6f3779050582f7ac750d72290be2813ee"
+}

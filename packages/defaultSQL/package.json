@@ -1,0 +1,26 @@
+{
+  "name": "@ln-maf/default-sql",
+  "version": "1.0.2",
+  "description": "Default Sql setup on Node with cucumber",
+  "main": "index.js",
+  "scripts": {
+    "test": "cd ../.. && bash runFeature.sh defaultSQL"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "chai": "^4.2.0",
+    "fstream": "^1.0.12",
+    "prompt": "^1.0.0"
+  },
+  "peerDependencies": {
+    "keytar": "4.*"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^7.0.0",
+    "@ln-maf/validations": "^1.0.2",
+    "cucumber-html-reporter": "^5.1.0",
+    "multiple-cucumber-html-reporter": "^1.18.0"
+  },
+  "gitHead": "d5b8a4e6f3779050582f7ac750d72290be2813ee"
+}

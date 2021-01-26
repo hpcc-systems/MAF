@@ -1,0 +1,26 @@
+{
+  "name": "@ln-maf/filltemplate",
+  "version": "1.0.2",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "cd ../.. && bash runFeature.sh filltemplate"
+  },
+  "dependencies": {
+    "chai": "^4.2.0",
+    "deep-equal": "^2.0.3",
+    "validator": "^12.1.0",
+    "xmldom": "^0.2.1",
+    "xpath": "0.0.27"
+  },
+  "devDependencies": {
+    "cucumber-html-reporter": "^4.0.5",
+    "multiple-cucumber-html-reporter": "^1.16.0"
+  },
+  "peerDependencies": {
+    "@cucumber/cucumber": "^7.0.0"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "gitHead": "d5b8a4e6f3779050582f7ac750d72290be2813ee"
+}

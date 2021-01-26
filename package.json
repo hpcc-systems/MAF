@@ -1,0 +1,27 @@
+{
+  "name": "ln-maf",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Modular Automation Framework",
+  "main": "index.js",
+  "prepare": "cd packages && node createAutoComplete.js",
+  "scripts": {
+    "test": "lerna run test"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^7.0.0",
+    "cucumber-html-reporter": "^5.1.0",
+    "keytar": "4.*",
+    "lerna": "^3.22.1"
+  },
+  "dependencies": {
+    "chai": "^4.2.0",
+    "multiple-cucumber-html-reporter": "^1.18.0",
+    "node-fetch": "^2.6.0"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "author": "",
+  "license": "Apache-2.0"
+}

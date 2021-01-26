@@ -1,0 +1,25 @@
+{
+  "name": "cucumber-api",
+  "version": "1.0.2",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "cd ../.. && bash runFeature.sh api"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@ln-maf/validations": "^1.0.2"
+  },
+  "peerDependencies": {
+    "@cucumber/cucumber": "^7.0.0",
+    "@ln-maf/core": "*",
+    "@ln-maf/filltemplate": "*",
+    "chai": "^4.2.0"
+  },
+  "dependencies": {
+    "form-data": "^3.0.0",
+    "node-fetch": "^2.6.0"
+  },
+  "gitHead": "d5b8a4e6f3779050582f7ac750d72290be2813ee"
+}

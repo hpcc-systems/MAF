@@ -1,0 +1,17 @@
+{
+  "name": "@ln-maf/core",
+  "version": "1.0.2",
+  "description": "The core for the MAF framework.  Contains helpers to make it easy to use.",
+  "main": "index.js",
+  "scripts": {
+    "test": "cd ../.. && bash runFeature.sh core"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "peerDependencies": {
+    "@cucumber/cucumber": "^7.0.0",
+    "@ln-maf/filltemplate": "*",
+    "moment": "^2.29.1"
+  },
+  "gitHead": "d5b8a4e6f3779050582f7ac750d72290be2813ee"
+}

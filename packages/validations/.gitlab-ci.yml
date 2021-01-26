@@ -1,0 +1,15 @@
+image: node:latest
+stages:
+ - test
+test:
+  stage: test
+  script: 
+    - mkdir -p test/report
+    - npm ci
+    - bash runIt.sh
+  tags:
+    - docker
+  artifacts:
+    paths:
+      - test/report/undefined/cucumber_report.html 
+    when: always
