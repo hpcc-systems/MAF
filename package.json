@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "description": "Modular Automation Framework",
   "main": "index.js",
+  "prepare": "cd packages && node createAutoComplete.js",
   "scripts": {
     "test": "lerna run test"
   },

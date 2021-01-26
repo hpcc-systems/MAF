@@ -17,11 +17,12 @@ npm i '@ln-maf/core'
 
 Then create a features directory `mkdir features` with the following in `features/steps.js` file:
 ```
+require('@ln-maf/core/parameter_types')
 require('@ln-maf/validations')
 require('@ln-maf/api')
 require('@ln-maf/mysql')
 ```
-Doing this indicates that these modules steps are available to use by cucumber.
+Doing this indicates that these modules steps and [parameter types](https://cucumber.io/docs/cucumber/cucumber-expressions/#parameter-types) are available to use by cucumber.
 
 Modify the `package.json` to use cucumber:
 ```
@@ -33,7 +34,6 @@ Modify the `package.json` to use cucumber:
 If you want to see your results in a nice looking report I would recommend using [`npm i multiple-cucumber-html-reporter`](https://github.com/wswebcreation/multiple-cucumber-html-reporter).
 
 You can use the `multiReport.js` file to build it; just copy this into the root of your project and make sure your cucumber tests are written to `test/report/report.json`.  Then you can run `node multiReport` to generate a report of your tests.
-
 
 ## Hello World API Example
 
@@ -56,7 +56,7 @@ Feature: View the text "Hello World"
 
 ### The Generated report:
 ```
-➜  cucumber-api git:(master) bash runFeature.sh helloWorld.feature
+➜  mafMonoRepo git:(master) bash runFeature.sh helloWorld.feature
 ...
 
 1 scenario (1 passed)
@@ -67,7 +67,7 @@ Feature: View the text "Hello World"
 =====================================================================================
     Multiple Cucumber HTML report generated in:
 
-    $HOME/cucumber-api/test/report/index.html
+    $HOME/mafMonoRepo/test/report/index.html
 =====================================================================================
 ```
 
