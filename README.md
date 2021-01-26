@@ -5,9 +5,35 @@ An expandable fast, easy to use automation framework built in the cucumber langu
 ## Installation
 Dependencies
 - node
-- yarn
 
-Clone this project and run `yarn` from the root directory.  For the quickest start add the HelloWorld API example.  By default, the HelloWorldAPI and HelloWorldSQL dependencies are included.  For other dependencies, you will need to read the required steps in their respective READMEs.
+Create a new npm project `npm init` and install the following dependencies:
+```
+npm i @cucumber/cucumber
+npm i '@ln-maf/validations'
+npm i '@ln-maf/api'
+npm i '@ln-maf/mysql'
+npm i '@ln-maf/core'
+```
+
+Then create a features directory `mkdir features` with the following in `features/steps.js` file:
+```
+require('@ln-maf/validations')
+require('@ln-maf/api')
+require('@ln-maf/mysql')
+```
+Doing this indicates that these modules steps are available to use by cucumber.
+
+Modify the `package.json` to use cucumber:
+```
+  "scripts": {
+    "test": "cucumber-js --format json > test/report.json"
+  },
+```
+
+If you want to see your results in a nice looking report I would recommend using [`npm i multiple-cucumber-html-reporter`](https://github.com/wswebcreation/multiple-cucumber-html-reporter).
+
+You can use the `multiReport.js` file to build it; just copy this into the root of your project and make sure your cucumber tests are written to `test/report/report.json`.  Then you can run `node multiReport` to generate a report of your tests.
+
 
 ## Hello World API Example
 
@@ -61,7 +87,7 @@ You will also need to update the sql query and update the validations to match. 
 ```
 Feature: SQL Hello World
   Scenario: Run a query
-      When the query "SELECT * FROM HelloWorld" is run
+      When mysql query from string "SELECT * FROM HelloWorld" is run
       Then it matches set from the file "helloWorldSQL.json"
 ```
 `./helloWorldSQL.json`
