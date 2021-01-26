@@ -1,6 +1,6 @@
 # MAF - Modular Automation Framework
 
-An expandable fast, easy to use automation framework built in the cucumber language.  Supports AWS S3/DynamoDB, API Testing, UI Testing, SQL Testing in a simple manner.  Allows the usage of modules in isolation as well as in an integrated fashion.  Utilizes the cucumber language to clearly articulate intent while preserving test data for further debugging and record-keeping.
+An expandable fast, easy to use automation framework built in the cucumber language.  Supports API Testing and SQL Testing in a simple manner.  Allows the usage of modules in isolation as well as in an integrated fashion.  Utilizes the cucumber language to clearly articulate intent while preserving test data for further debugging and record-keeping.  Allows the integration of custom modules and provides a core to allow for simple integration between components.
 
 ## Installation
 Dependencies
