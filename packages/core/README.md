@@ -13,6 +13,7 @@ MAFWhen("run json path {string} on {jsonObject}", function (jPath, jsonObject) {
 
 ## MAFWhen
 Creates a Cucumber `When`, but the return value is stored in the lastRun value which can be accessed with the keyword `it`.
+Please see above for an example.
 
 ## MAFSave
 Saves an object to maf to be used by the json transform.

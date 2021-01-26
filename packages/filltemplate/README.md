@@ -39,7 +39,7 @@ Would apply:
   "hello" : "World"
 }
 ```
-to the `jsonObj`
+to the `jsonObj`.
 
 
 ## Differences
