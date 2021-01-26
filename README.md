@@ -27,8 +27,13 @@ Doing this indicates that these modules steps and [parameter types](https://cucu
 Modify the `package.json` to use cucumber:
 ```
   "scripts": {
-    "test": "cucumber-js --format json > test/report.json"
+    "test": "cucumber-js --format json > test/report/report.json"
   },
+```
+
+Please also create a directory to store your test results in the root of your project.  To match the above and the below multiReport please run:
+```
+mkdir -p test/report
 ```
 
 If you want to see your results in a nice looking report I would recommend using [`npm i multiple-cucumber-html-reporter`](https://github.com/wswebcreation/multiple-cucumber-html-reporter).
