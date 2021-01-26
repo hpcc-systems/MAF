@@ -1,6 +1,6 @@
 {
   "name": "@ln-maf/validations",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -24,8 +24,8 @@
   },
   "devDependencies": {
     "@cucumber/cucumber": "^7.0.0",
-    "@ln-maf/core": "^1.0.1",
-    "@ln-maf/filltemplate": "^1.0.1",
+    "@ln-maf/core": "^1.0.2",
+    "@ln-maf/filltemplate": "^1.0.2",
     "cucumber-html-reporter": "^4.0.5",
     "multiple-cucumber-html-reporter": "^1.16.0"
   },

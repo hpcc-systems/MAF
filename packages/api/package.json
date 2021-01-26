@@ -1,6 +1,6 @@
 {
   "name": "cucumber-api",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,7 @@
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@ln-maf/validations": "^1.0.1"
+    "@ln-maf/validations": "^1.0.2"
   },
   "peerDependencies": {
     "@cucumber/cucumber": "^7.0.0",
