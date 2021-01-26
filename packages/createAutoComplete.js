@@ -1,4 +1,3 @@
-console.log("TESTING")
 var textReplace=function(text) {
     var lines=text.split("\n")    
     var keywords=["Given", "When", "Then", "MAFWhen"]
