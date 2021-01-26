@@ -46,7 +46,7 @@ You can use the `multiReport.js` file to build it; just copy this into the root 
 ```
 Feature: View the text "Hello World"
   Scenario: Hello World
-    When api request "helloWorld.json" is performed
+    When api request from file "helloWorld.json" is performed
     Then status ok
     And "${response}" is equal to "Hello World"
 ```
