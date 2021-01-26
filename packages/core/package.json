@@ -1,6 +1,6 @@
 {
   "name": "@ln-maf/core",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "The core for the MAF framework.  Contains helpers to make it easy to use.",
   "main": "index.js",
   "scripts": {
