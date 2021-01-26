@@ -7,7 +7,7 @@
     "test": "cd ../.. && bash runFeature.sh api"
   },
   "author": "",
-  "license": "Apache-2",
+  "license": "Apache-2.0",
   "devDependencies": {
     "@ln-maf/validations": "^1.0.1"
   },
@@ -20,5 +20,6 @@
   "dependencies": {
     "form-data": "^3.0.0",
     "node-fetch": "^2.6.0"
-  }
+  },
+  "gitHead": "7614c7aef112b5b707586522520d42235f3b758a"
 }
