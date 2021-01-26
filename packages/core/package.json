@@ -1,6 +1,6 @@
 {
   "name": "@ln-maf/core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "The core for the MAF framework.  Contains helpers to make it easy to use.",
   "main": "index.js",
   "scripts": {
@@ -10,10 +10,8 @@
   "license": "Apache-2.0",
   "peerDependencies": {
     "@cucumber/cucumber": "^7.0.0",
-    "moment": "^2.29.1",
-    "@ln-maf/filltemplate": "*"
-  },
-  "devDependencies": {
+    "@ln-maf/filltemplate": "*",
+    "moment": "^2.29.1"
   },
   "gitHead": "a66423b9fff044caff0f13082c523c899c6d0723"
 }

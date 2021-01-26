@@ -1,6 +1,6 @@
 {
   "name": "@ln-maf/mysql",
-  "version": "2.1.0",
+  "version": "1.0.1",
   "description": "Setup for sql on Node",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
   "author": "",
   "license": "Apache-2",
   "dependencies": {
-    "sync-mysql": "^3.0.1",
-    "@ln-maf/default-sql": "*"
+    "@ln-maf/default-sql": "^1.0.1",
+    "sync-mysql": "^3.0.1"
   }
 }
