@@ -1,4 +1,33 @@
 Feature: Validations : Equivalence testing
+  Scenario: JSON equivalence
+Given set "str" to:
+"""
+I am a string"
+with new lines
+"""
+And set "doubleStr" to:
+"""
+${str}
+Next Line
+"""
+And set "newItem" to:
+"""
+{
+  "str": "${str}"
+}
+"""
+Then item "newItem" is equal to:
+"""
+{
+    "str": "I am a string\"\nwith new lines"
+}
+"""
+And item "doubleStr" is equal to:
+"""
+I am a string"
+with new lines
+Next Line
+"""
   Scenario: Last item not null
     Given set "lastRun" to "5"
     Then it is not null
