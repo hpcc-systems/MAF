@@ -1,6 +1,6 @@
 {
   "name": "@ln-maf/mysql",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Setup for sql on Node",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ln-maf/default-sql": "^1.0.2",
+    "@ln-maf/default-sql": "^1.0.3",
     "sync-mysql": "^3.0.1"
   },
   "gitHead": "d5b8a4e6f3779050582f7ac750d72290be2813ee"
