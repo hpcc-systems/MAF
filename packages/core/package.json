@@ -4,20 +4,16 @@
   "description": "The core for the MAF framework.  Contains helpers to make it easy to use.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cd ../.. && bash runFeature.sh core"
   },
   "author": "",
   "license": "Apache-2.0",
-  "dependencies": {
-    "@ln-maf/filltemplate": "*"
-  },
   "peerDependencies": {
     "@cucumber/cucumber": "^7.0.0",
-    "moment": "^2.29.1"
+    "moment": "^2.29.1",
+    "@ln-maf/filltemplate": "*"
   },
   "devDependencies": {
-    "@cucumber/cucumber": "^7.0.0",
-    "moment": "^2.29.1"
   },
   "gitHead": "a66423b9fff044caff0f13082c523c899c6d0723"
 }

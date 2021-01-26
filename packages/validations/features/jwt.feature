@@ -1,4 +1,4 @@
-Feature: JWT
+Feature: Validations : JWT
   Scenario:  Sign using JWT
     Given set "privateKey" to
 """

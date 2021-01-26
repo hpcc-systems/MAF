@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "bash runAllFeatures.sh"
+    "test": "cd ../.. && bash runFeature.sh filltemplate"
   },
   "dependencies": {
     "validator": "^12.1.0",

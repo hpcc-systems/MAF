@@ -1,4 +1,4 @@
-Feature: Json Path Testing
+Feature: Validations : Json Path Testing
   Background:
     When set "directory" to "packages/validations"
 

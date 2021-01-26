@@ -8,7 +8,7 @@ var When = Cucumber.When;
 var Then = Cucumber.Then;
 var world = null
 const fillTemplate = require('@ln-maf/filltemplate')
-const {canAttach, performJSONObjectTransform, applyJSONToString, readFile, writeFile, writeFileBuffer,readFileBuffer, getFilePath, MAFWhen} = require('@ln-maf/core')
+const { canAttach, performJSONObjectTransform, applyJSONToString, readFile, writeFile, writeFileBuffer, readFileBuffer, getFilePath, MAFWhen } = require('@ln-maf/core')
 
 Before((scenario) => {
   world = scenario
@@ -26,16 +26,16 @@ var setToString = function (location, value, scenario, attach = true) {
   func(applyJSONToString(value, scenario), scenario.results)
   var res = {}
   res[location] = eval("scenario.results." + location)
-  if(canAttach.call(this))
-  if (attach)
-    scenario.attach(JSON.stringify(res, null, 2))
+  if (canAttach.call(this))
+    if (attach)
+      scenario.attach(JSON.stringify(res, null, 2))
 }
-When('apply parameters', function() {
-  if(!this.results) {
-    this.results={}
+When('apply parameters', function () {
+  if (!this.results) {
+    this.results = {}
   }
   Object.assign(this.results, this.parameters)
-  if(canAttach.call(this))
+  if (canAttach.call(this))
     this.attach(JSON.stringify(this.parameters))
 })
 
@@ -59,15 +59,15 @@ var setToObj = function (location, obj) {
   eval(set)
   var res = {}
   res[location] = eval(loc)
-  if(canAttach.call(this))
-  this.attach(JSON.stringify(res, null, 2))
+  if (canAttach.call(this))
+    this.attach(JSON.stringify(res, null, 2))
 }
-Then('{jsonObject} {validationsEquivalence} {jsonObject}', function(obj1, equiv, obj2) {
-  if(equiv === "=") {
-    equiv ="=="
+Then('{jsonObject} {validationsEquivalence} {jsonObject}', function (obj1, equiv, obj2) {
+  if (equiv === "=") {
+    equiv = "=="
   }
-  var obj=Number(performJSONObjectTransform.call(this, obj1))
-  var obj2=Number(performJSONObjectTransform.call(this, obj2))
+  var obj = Number(performJSONObjectTransform.call(this, obj1))
+  var obj2 = Number(performJSONObjectTransform.call(this, obj2))
   assert(eval("obj" + equiv + "obj2"), JSON.stringify(obj) + " was not " + equiv + " " + JSON.stringify(obj2))
 })
 
@@ -167,8 +167,8 @@ var doSetsMatch = (set1, set2, scenario) => {
   var res = isSetsEqual(expected, queryResult)
   var diffedJSON = JSON.stringify(difference, null, 2)
   if (!res) {
-  if(canAttach.call(scenario))
-    scenario.attach(diffedJSON)
+    if (canAttach.call(scenario))
+      scenario.attach(diffedJSON)
   }
   assert(res, `The difference is: ${diffedJSON}`)
 }
@@ -309,8 +309,8 @@ When("{string} is written to file {string} on JSON path {string}", function (val
   var fileContents = JSON.parse(readFile(fileName, this))
   jp.apply(fileContents, jsonPath, function () { return value })
   writeFile(fileName, JSON.stringify(fileContents), this)
-  if(canAttach.call(this))
-  this.attach(JSON.stringify(fileContents))
+  if (canAttach.call(this))
+    this.attach(JSON.stringify(fileContents))
 })
 
 /**
@@ -328,8 +328,8 @@ When("{string} is applied to item {string} on JSON path {string}", function (val
   }
   jp.apply(fileContents, jsonPath, function () { return value })
   this.results[item] = fileContents
-  if(canAttach.call(this))
-  this.attach(JSON.stringify(this.results[item]))
+  if (canAttach.call(this))
+    this.attach(JSON.stringify(this.results[item]))
 })
 
 When("item {string} is written in json line delimited format to file {string}", function (item, file) {
@@ -343,8 +343,8 @@ When("item {string} is written in json line delimited format to file {string}", 
 When("{jsonObject} is written to file {string}", function (jsonObject, file) {
   var obj = performJSONObjectTransform.call(this, jsonObject)
   file = fillTemplate(file, this.results)
-  if(typeof(obj)==="object") {
-    obj=JSON.stringify(obj)
+  if (typeof (obj) === "object") {
+    obj = JSON.stringify(obj)
   }
   writeFile(file, obj, this)
 })
@@ -416,19 +416,19 @@ When('set:', function (dataTable) {
     setToString(i, item[index], this)
   })
 })
-MAFWhen('set result to {jsonObject}', function(item) {
+MAFWhen('set result to {jsonObject}', function (item) {
   return performJSONObjectTransform.call(this, item)
 })
 
-MAFWhen('{jsonObject} is base64 encoded', function(item) {
+MAFWhen('{jsonObject} is base64 encoded', function (item) {
   var item = performJSONObjectTransform.call(this, item)
-  if(typeof item !== "string") {
-    item=JSON.stringify(item)
+  if (typeof item !== "string") {
+    item = JSON.stringify(item)
   }
   var encode = (new Buffer(item, 'ascii').toString("base64"))
   return encode
 })
-MAFWhen('{jsonObject} is base64 decoded', function(item) {
+MAFWhen('{jsonObject} is base64 decoded', function (item) {
   var item = performJSONObjectTransform.call(this, item)
   assert(typeof item === "string", "Item type needs to be a string for base64 decoding, but it was a " + typeof item)
   var decode = (new Buffer(item, 'base64').toString("ascii"))
@@ -438,8 +438,8 @@ MAFWhen('{jsonObject} is base64 decoded', function(item) {
 Then('the value {string} is base64 decoded and resaved', function (item) {
   var unencrypt = (new Buffer(this.results[item], 'base64').toString("ascii"))
   this.results[item] = unencrypt
-  if(canAttach.call(this))
-  this.attach("Decoded value: " + unencrypt)
+  if (canAttach.call(this))
+    this.attach("Decoded value: " + unencrypt)
 })
 
 var lowerCaseItemKeys = function (item) {
@@ -459,8 +459,8 @@ var lowerCaseItemKeys = function (item) {
 
 When('make json keys for item {string} lower case', function (item) {
   lowerCaseItemKeys(this.results[item])
-  if(canAttach.call(this))
-  this.attach(JSON.stringify(this.results[item], null, 2))
+  if (canAttach.call(this))
+    this.attach(JSON.stringify(this.results[item], null, 2))
 })
 
 var flatten = function (item, res) {
@@ -476,8 +476,8 @@ When('json item {string} is flattened', function (item) {
   flatten(this.results[item], res)
   this.results[item] = res
 
-  if(canAttach.call(this))
-  this.attach(JSON.stringify(this.results[item], null, 2))
+  if (canAttach.call(this))
+    this.attach(JSON.stringify(this.results[item], null, 2))
 })
 
 var numberify = function (item) {
@@ -492,8 +492,8 @@ var numberify = function (item) {
 
 When('json item {string} is numberifyed', function (item) {
   numberify(this.results[item])
-  if(canAttach.call(this))
-  this.attach(JSON.stringify(this.results[item], null, 2))
+  if (canAttach.call(this))
+    this.attach(JSON.stringify(this.results[item], null, 2))
 })
 
 var trimIt = function (item) {
@@ -507,14 +507,14 @@ var trimIt = function (item) {
 
 When('json item {string} is trimmed', function (item) {
   trimIt(this.results[item])
-  if(canAttach.call(this))
-  this.attach(JSON.stringify(this.results[item], null, 2))
+  if (canAttach.call(this))
+    this.attach(JSON.stringify(this.results[item], null, 2))
 })
 
 Then('{jsonObject} is not equal to {jsonObject}', function (item1, item2) {
   var item1 = performJSONObjectTransform.call(this, item1)
   var item2 = performJSONObjectTransform.call(this, item2)
-  if(typeof item1 === "object" && typeof item2 === "object") {
+  if (typeof item1 === "object" && typeof item2 === "object") {
     assert.notDeepEqual(item1, item2)
   } else {
     assert.notEqual(item1, item2)
@@ -524,7 +524,7 @@ Then('{jsonObject} is not equal to {jsonObject}', function (item1, item2) {
 Then('{jsonObject} is equal to {jsonObject}', function (item1, item2) {
   var item1 = performJSONObjectTransform.call(this, item1)
   var item2 = performJSONObjectTransform.call(this, item2)
-  if(typeof item1 === "object" && typeof item2 === "object") {
+  if (typeof item1 === "object" && typeof item2 === "object") {
     assert.deepEqual(item1, item2)
   } else {
     assert.equal(item1, item2)
@@ -539,7 +539,7 @@ Then('{jsonObject} is not equal to:', function (item1, item2) {
   try {
     expected = JSON.parse(expected)
   } catch (e) { }
-  if(typeof item1 === "object" && typeof expected === "object") {
+  if (typeof item1 === "object" && typeof expected === "object") {
     assert.notDeepEqual(item1, expected)
   } else {
     assert.notEqual(item1, expected)
@@ -556,7 +556,7 @@ Then('{jsonObject} is equal to:', function (item1, item2) {
   try {
     expected = JSON.parse(expected)
   } catch (e) { }
-  if(typeof item1 === "object" && typeof expected === "object") {
+  if (typeof item1 === "object" && typeof expected === "object") {
     assert.deepEqual(item1, expected)
   } else {
     assert.equal(item1, expected)
@@ -632,60 +632,39 @@ When('wait {int} milliseconds', function (milliseconds) {
 
 Given('set examples', async function () {
   // Write code here that turns the phrase above into concrete actions
-  const { pickle } = world
-  var lStep = pickle.steps[pickle.steps.length - 1].locations
-  lStep = lStep[lStep.length - 1].line
-  var start = lStep
-  var end = world.sourceLocation.line
-  var fileName = world.sourceLocation.uri
-  var fs = require('fs');
-  const readline = require('readline');
-  const fileStream = fs.createReadStream(fileName)
-  const rl = readline.createInterface({
-    input: fileStream,
-    crlfDelay: Infinity
-  });
-  // Note: we use the crlfDelay option to recognize all instances of CR LF
-  // ('\r\n') in input.txt as a single line break.
-  var lineNum = 0
-  var table = null
-  var examples = false
-  var last = null
-  for await (const line of rl) {
-    lineNum++
-    if (lineNum > end) {
-      break;
-    }
-    if (lineNum >= start) {
-      if (examples) {
-        table = line
-        examples = false
-      }
-      if (line.trim().startsWith("Examples:")) {
-        examples = true
-      }
-      last = line
-    }
-  }
+  var a = world
+  var flatten = (acc, cumulator) => [...acc, ...cumulator]
+  var extras = a.pickle.steps.map(i => i.astNodeIds)
+  extras = extras.reduce(flatten)
+  var examples = a.gherkinDocument.feature.children.map(i =>
+    i.scenario.examples.map(
+      i => i.tableBody.filter(
+        i => extras.includes(i.id))))
+    .reduce(flatten)
 
-  var keys = table.split("|")
-  keys = keys.slice(1, keys.length - 1).map(k => k.trim())
-  last = last.split("|")
-  last = last.slice(1, last.length, -1).map(k => k.trim())
+  var res = a.gherkinDocument.feature.children.map(i =>
+    i.scenario.examples.filter(i =>
+      i.tableBody.map(i => extras.includes(i.id)).includes(true)))
+  res = res.reduce(flatten, [])
+  var headers = res.map(i => i.tableHeader.cells).reduce(flatten, [])
+  headers = headers.map(i => i.value)
+  examples = examples.reduce(flatten, []).map(i => i.cells).reduce(flatten, []).map(i => i.value)
+  var res = headers.reduce((prev, curr, i) => {
+    prev[curr] = examples[i]
+    return prev
+  }
+    , {})
   if (!this.results) {
     this.results = {}
   }
-  var res = {}
-  for (var i = 0; i < keys.length; i++) {
-    try {
-      res[keys[i]] = fillTemplate(last[i], this.results)
-    } catch (e) { }
+  var keys = Object.keys(res)
+  for (var key in keys) {
+    key = keys[key]
+    res[key] = fillTemplate(res[key], this.results)
+    this.results[key] = res[key]
   }
-  for (var i = 0; i < keys.length; i++) {
-    this.results[keys[i]] = res[keys[i]]
-  }
-  if(canAttach.call(this))
-  this.attach(JSON.stringify(res, null, 2))
+  if (canAttach.call(this))
+    this.attach(JSON.stringify(res))
 });
 
 Then("{jsonObject} contains {string}", function (jsonObject, checkString) {
@@ -703,20 +682,20 @@ Then("{jsonObject} does not contain {string}", function (jsonObject, checkString
 })
 When("blob item {string} is written to file {string}", async function (blob, fileName) {
   blob = fillTemplate(blob, this.results);
-  blob = eval("this.results."+blob)
-  var b=Buffer.from(await blob.arrayBuffer())
+  blob = eval("this.results." + blob)
+  var b = Buffer.from(await blob.arrayBuffer())
   writeFile(`${fileName}`, b, this);
 })
 When("blob item {string} is attached", async function (blob) {
   blob = fillTemplate(blob, this.results);
-  blob = eval("this.results."+blob)
-  var b=Buffer.from(await blob.arrayBuffer())
+  blob = eval("this.results." + blob)
+  var b = Buffer.from(await blob.arrayBuffer())
   return this.attach(b, 'image/png');
 })
 Then("blob item {string} is equal to file {string}", async function (blob, fileName) {
   blob = fillTemplate(blob, this.results);
-  blob = eval("this.results."+blob)
-  var b=await blob.arrayBuffer()
-  var actualImage = readFile(`${fileName}` ,this );
+  blob = eval("this.results." + blob)
+  var b = await blob.arrayBuffer()
+  var actualImage = readFile(`${fileName}`, this);
   assert.isTrue(Buffer.compare(actualImage, Buffer.from(b)) === 0)
 })

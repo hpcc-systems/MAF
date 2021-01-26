@@ -4,7 +4,7 @@
   "description": "Setup for sql on Node",
   "main": "index.js",
   "scripts": {
-    "test": "cucumber-js -f json:test/report/cucumber_report.json; node genReport.js"
+    "test": "cd ../.. && bash runFeature.sh mysql"
   },
   "bin": {
     "mysql-configure": "./config.js"

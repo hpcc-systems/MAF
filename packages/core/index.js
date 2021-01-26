@@ -23,7 +23,7 @@ var applyJSONToString = function (string, scenario) {
       if (typeof obj === "object") {
         string = obj
       }
-    }
+    } 
   } catch (e) {
     try {
       string = string.split("\n").filter(i => i !== "").map(i => JSON.parse(i))
@@ -55,13 +55,10 @@ var performJSONObjectTransform = function (items) {
       return eval("this.results." + items.value)
     case "file":
       items.value = fillTemplate(items.value, this.results)
-      var res=applyJSONToString(readFile(items.value, this), this)
-      return res
+      return applyJSONToString(readFile(items.value, this), this)
     case "":
-      return applyJSONToString(items.value, this)
     case "string":
-      var res= fillTemplate(items.value, this.results)
-      return res
+      return applyJSONToString(items.value, this)
     default:
       return parseInt(items.type)
   }

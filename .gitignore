@@ -1,3 +1,6 @@
+testItem.txt
 node_modules
+.git.bfg-report/
 test
 *.sqlConfig.json
+passwords.txt

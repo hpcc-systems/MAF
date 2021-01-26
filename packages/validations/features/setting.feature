@@ -1,4 +1,4 @@
-Feature: Setting variables
+Feature: Validations : Setting variables
   Background:
     When set "directory" to "packages/validations"
 
@@ -74,13 +74,13 @@ Scenario: Check two json objects
   And set "item" to:
   """
   {
-  "a": ${a}
+  "a": "${a}"
   }
   """
   Then item "item" is equal to:
   """
   {
-  "a":"hi"
+  "a": "\"hi\""
   }
   """
 

@@ -1,4 +1,4 @@
-Feature: Test the json object
+Feature: core - Test the core json object
   Scenario: Test using file
     Given set "a" to 5
     And item "a" is written to file "testItem.txt"

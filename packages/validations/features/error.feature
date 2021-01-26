@@ -1,4 +1,4 @@
-Feature: Error from response
+Feature: Validations : Error from response
   Scenario:  Validate error
     When set "response" to:
 """

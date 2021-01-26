@@ -1,15 +1,20 @@
-Feature: Set Examples from the scenario outline to be visible
+Feature: Validations : Set Examples from the scenario outline to be visible
     Scenario Outline: Testing
         When set examples
-        Then "<Expected>" is equal to "<ExpectedResult>"
-        @phone
+        Then item "<Expected>" is equal to "<ExpectedResult>"
         Examples:
             | Phone | Expected | ExpectedResult |
-            | 1     | ${Phone} | 1              |
+            | 1     | Phone | 1              |
 
-        @next
         Examples:
             | Next | Expected | ExpectedResult |
-            | 2    | ${Next}  | 2              |
+            | 2    | Next   | 2              |
+            | 3    | Next  | 3              |
+        
+        Examples:
+            | Next | Expected | ExpectedResult | Bla |
+            | 2    | Next  | 2              | 5   | 
+            | 3    | Next  | 3              | 6   |
 
-
+    Scenario: See if more children
+       When set "a" to 5

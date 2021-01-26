@@ -1,4 +1,4 @@
-Feature: Equivalence testing
+Feature: Validations : Equivalence testing
   Scenario: Last item not null
     Given set "lastRun" to "5"
     Then it is not null

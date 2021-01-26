@@ -1,4 +1,4 @@
-Feature: JSON manipulation
+Feature: Validations : JSON manipulation
     Testing JSON object key deletion and extraction
 
     Scenario: Readme simple extract Example

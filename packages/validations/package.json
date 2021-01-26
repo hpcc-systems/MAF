@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "cucumber-js -f json:test/report/cucumber_report.json"
+    "test": "cd ../.. && bash runFeature.sh validations"
   },
   "author": "",
   "license": "Apache-2.0",

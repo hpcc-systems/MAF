@@ -1,4 +1,15 @@
-Feature: Test Fill Template
+Feature: FillTemplate : Test Fill Template
+  Scenario: Test filling in json
+      When set "version" to "v3"
+    When set "request" to:
+    """
+      {
+        "url": "https://run.mocky.io",
+        "api": "${version}/d2bc61bc-bdf1-418b-a4d5-dc1b70c86861",
+        "method": "GET"
+      }
+    """
+
   Scenario: Test with xml in json
     Given set "a" to:
 """
@@ -11,14 +22,14 @@ Feature: Test Fill Template
   </h:tr>
 </h:table>
 
-<f:table xmlns:f="https://www.w3schools.com/furniture">
+  <f:table xmlns:f="https://www.w3schools.com/furniture">
   <f:name>African Coffee Table</f:name>
   <f:width>80</f:width>
   <f:length>120</f:length>
 </f:table>
 
 </root>
-"""
+  """
   And set "bob" to:
   """
   {

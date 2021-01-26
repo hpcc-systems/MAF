@@ -1,4 +1,4 @@
-Feature: Base 64
+Feature: Validations : Base 64
   Scenario: Decode Base 64
     Given set "expected" to "Hello World"
     And item "expected" is base64 encoded 

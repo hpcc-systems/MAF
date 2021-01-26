@@ -3,7 +3,13 @@ function replaceAll(string, search, replace) {
 }
 
 const fillTemplate = function(templateString, templateVars){
-  templateString=templateString.replace(/\"\${/g, '${JSON.stringify(').replace(/\}\"/g, ')}')
+  //Check if the template string is a json object
+  var isJSON=true
+  try {
+    var tmp=JSON.parse(templateString)
+  } catch(e) {
+    isJSON=false
+  } 
   templateVars.random=Math.floor(Math.random()*100000)
   if(typeof templateString !== "string") {
     templateString=JSON.stringify(templateString, null, 2)
@@ -49,9 +55,11 @@ const fillTemplate = function(templateString, templateVars){
            str=str.trim()
            var res=(new Function(...keys,  "return "+str +";"))(...vals)
            var ret=res
-           if(typeof res === "object") {
+           if((typeof res === "string" && isJSON) || typeof res === "object")
              ret=JSON.stringify(res, null, 2)
-           } 
+           if(isJSON && typeof res === "string" && ret.length>1 && ret[0]==="\"" && ret[ret.length-1] === "\"") {
+             ret=ret.substring(1, ret.length-1);
+           }
            append(ret)
          } else { 
            append('{' + l.str + '}')

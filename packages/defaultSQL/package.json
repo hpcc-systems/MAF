@@ -3,6 +3,9 @@
   "version": "2.1.0",
   "description": "Default Sql setup on Node with cucumber",
   "main": "index.js",
+  "scripts": {
+    "test": "cd ../.. && bash runFeature.sh defaultSQL"
+  },
   "author": "",
   "license": "Apache-2",
   "dependencies": {

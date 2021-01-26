@@ -5,14 +5,13 @@
   "description": "Modular Automation Framework",
   "main": "index.js",
   "scripts": {
-    "test": "cucumber-js -f json:test/report/cucumber_report.json"
+    "test": "lerna run test"
   },
   "devDependencies": {
     "@cucumber/cucumber": "^7.0.0",
     "cucumber-html-reporter": "^5.1.0",
-    "lerna": "^3.22.1",
-    "keytar": "4.*"
-
+    "keytar": "4.*",
+    "lerna": "^3.22.1"
   },
   "dependencies": {
     "chai": "^4.2.0",

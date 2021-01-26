@@ -1,4 +1,4 @@
-Feature: Hello world feature
+Feature: API - Test the basic items in api
   Scenario: Get Google
     When set "req" to:
       """
@@ -31,11 +31,12 @@ Feature: Hello world feature
     And blob item "response" is attached
 
   Scenario: Get a token
+    And set "version" to "v3"
     When set "request" to:
     """
       {
         "url": "https://run.mocky.io",
-        "api": "v3/d2bc61bc-bdf1-418b-a4d5-dc1b70c86861",
+        "api": "${version}/d2bc61bc-bdf1-418b-a4d5-dc1b70c86861",
         "method": "GET"
       }
     """
@@ -45,10 +46,9 @@ Feature: Hello world feature
     """
     And set "token" to item "response.token"
     And set "authorization" to "Auth ${token}"
-    And set "version" to "v3"
+    When api request from file "apiReq.json" is performed
+    Then status ok
     When api request from file "apiReq.json" is performed with:
     | version |
     | v2     |
     Then status not ok
-    When api request from file "apiReq.json" is performed
-    Then status ok
