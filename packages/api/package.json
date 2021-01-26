@@ -1,9 +1,9 @@
 {
   "name": "@ln-maf/api",
- "publishConfig": {
+  "publishConfig": {
     "access": "public"
   },
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@ln-maf/validations": "^1.0.5"
+    "@ln-maf/validations": "^1.0.6"
   },
   "peerDependencies": {
     "@cucumber/cucumber": "^7.0.0",
