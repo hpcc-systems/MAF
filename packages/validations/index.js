@@ -146,6 +146,21 @@ Given("add xPath namespace {string} = {string}", function (namespace, url) {
   this.results.namespace[namespace] = url
 })
 
+MAFWhen("generate rsa key", function() {
+  const crypto = require('crypto');
+  const { privateKey, publicKey } = crypto.generateKeyPairSync('rsa', {
+    modulusLength: 2048,
+    publicKeyEncoding: {
+      type: 'spki',
+      format: 'pem'
+    },
+    privateKeyEncoding: {
+      type: 'pkcs8',
+      format: 'pem'
+    }
+  }); 
+  return privateKey
+})
 MAFWhen("run xPath {string} on item {string}", function (xPath, element) {
   if (!this.results.namespace) {
     this.results.namespace = {}
