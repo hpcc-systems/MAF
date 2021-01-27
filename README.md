@@ -12,6 +12,7 @@ npm i @cucumber/cucumber
 npm i '@ln-maf/validations'
 npm i '@ln-maf/api'
 npm i '@ln-maf/mysql'
+npm i '@ln-maf/filltemplate'
 npm i '@ln-maf/core'
 ```
 
