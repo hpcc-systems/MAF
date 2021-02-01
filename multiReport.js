@@ -4,7 +4,7 @@ var platformMap={
   "darwin": "osx"
   
 }
-var platformName="Unknown"
+var platformName=os.platform()
 if(platformMap[os.platform()]) {
   platformName=platformMap[os.platform()]
 }
