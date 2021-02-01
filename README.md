@@ -28,7 +28,7 @@ Doing this indicates that these modules steps and [parameter types](https://cucu
 Modify the `package.json` to use cucumber:
 ```
   "scripts": {
-    "test": "cucumber-js --format json > test/report/report.json; node @ln-maf/core/multiReport"
+    "test": "cucumber-js --format json > test/report/report.json; node node_modules/@ln-maf/core/multiReport"
   },
 ```
 
