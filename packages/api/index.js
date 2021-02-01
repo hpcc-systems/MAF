@@ -6,7 +6,7 @@ var fs=require('fs')
 var conn=function() {
   return connectSetup(env.environment)
 }
-const fillTemplate = require('@ln-maf/filltemplate')
+const { filltemplate } = require('@ln-maf/core')
 const { canAttach, performJSONObjectTransform, MAFSave, getFilePath, MAFWhen} = require('@ln-maf/core')
 const { setDefaultTimeout, Given, Then } = require('@cucumber/cucumber');
 
@@ -17,7 +17,7 @@ var build=(scenario, value, name) => {
     scenario.request={}
     scenario.request.headers="{}"
   }
-  scenario.request[name]=fillTemplate(value, scenario.results)
+  scenario.request[name]=filltemplate(value, scenario.results)
 }
 Given('url {string}', function(url) {
   url=url.replace(/\/$/, "")
@@ -60,7 +60,7 @@ var performRequestFromJSONString=async function(string) {
   if(!this.results) {
     this.results={}
   }
-  var request=JSON.parse(fillTemplate(string, this.results))
+  var request=JSON.parse(filltemplate(string, this.results))
   return await performRequestFromJSON.call(this, request)
 }
 
@@ -173,7 +173,7 @@ MAFWhen('api request from {jsonObject} is performed with:', async function(reqIt
   var extraParams={}
   extraParams.results={...this.results}
   for(var i=0; i<indices.length; i++) {
-    var val=fillTemplate(item[i], this.results)
+    var val=filltemplate(item[i], this.results)
     eval(`extraParams.results.${indices[i]} = val`)
   }
 

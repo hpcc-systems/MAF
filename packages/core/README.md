@@ -26,3 +26,43 @@ Reads the file using the directory setup within maf or no directory if not set u
 
 ## applyJSONToString  - #deprecated
 Converts a string to apply the fillTemplate 
+
+## Fill template
+Fills the template literals similar to how js would handle them.  Allows use of template literal in a string.  There are a couple of key differences with how they are processed by fillTemplate.
+
+### Usage
+```
+var {fillTemplate}=require('@ln-maf/core')
+fillTemplate("Hello ${name}", { name: "World" })
+```
+
+For example: 
+```
+fillTemplate("Hello ${name}", { name: "World" })
+```
+Would return:
+```
+Hello world
+```
+
+Additionally supports the method `applyTemplateToJSON`
+This iterates through the entire json object applying filter to each of them.
+
+For Example:
+
+```
+var jsonObj={ hello: "${name}" }
+applyTemplateToJSON(jsonObj, { name: "World" })
+```
+Would apply:
+```
+{
+  "hello" : "World"
+}
+```
+to the `jsonObj`.
+
+
+### Differences
+All `"${JS_COMMAND_HERE}"` are replaced with `${JSON.stringify(command)}`.  This automatically escapes some characters to prevent invalid json within json files.
+

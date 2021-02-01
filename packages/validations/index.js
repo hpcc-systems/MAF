@@ -8,7 +8,7 @@ var Given = Cucumber.Given;
 var When = Cucumber.When;
 var Then = Cucumber.Then;
 var world = null
-const fillTemplate = require('@ln-maf/filltemplate')
+const { filltemplate }= require('@ln-maf/core')
 const { canAttach, performJSONObjectTransform, applyJSONToString, readFile, writeFile, writeFileBuffer, readFileBuffer, getFilePath, MAFWhen } = require('@ln-maf/core')
 
 Before((scenario) => {
@@ -95,8 +95,8 @@ var equalTo = function (location, value, equals = true) {
   if (!this.results) {
     this.results = {}
   }
-  location = fillTemplate(location, this.results)
-  value = fillTemplate(value, this.results)
+  location = filltemplate(location, this.results)
+  value = filltemplate(value, this.results)
   if (equals) {
     assert(`${location}` === `${value}`, `${location} not equal to ${value}`)
   } else {
@@ -287,7 +287,7 @@ MAFWhen("JSON key {string} is extracted from {jsonObject}", function (jsonpath, 
  * Returns the JSON key from a variable to lastRun
  */
 MAFWhen('JSON keys {string} are extracted from {string}', function (array, variable) {
-  array = fillTemplate(array, this.results)
+  array = filltemplate(array, this.results)
   try {
     array = JSON.parse(array)
   } catch (e) {
@@ -296,7 +296,7 @@ MAFWhen('JSON keys {string} are extracted from {string}', function (array, varia
     array = array.split(",")
     array = array.map(i => i.trim())
   }
-  variable = fillTemplate(variable, this.results)
+  variable = filltemplate(variable, this.results)
   return whitelistJson.call(this, eval(`this.results.${variable}`), array)
 })
 
@@ -304,7 +304,7 @@ MAFWhen('JSON keys {string} are extracted from {string}', function (array, varia
  * Returns the JSON key from the JSON Object in lastRun as lastRun
  */
 MAFWhen('JSON keys {string} are extracted from it', function (array) {
-  array = fillTemplate(array, this.results)
+  array = filltemplate(array, this.results)
   try {
     array = JSON.parse(array)
   } catch (e) {
@@ -335,7 +335,7 @@ When("{string} is written to file {string} on JSON path {string}", function (val
 When("{string} is applied to item {string} on JSON path {string}", function (value, item, jsonPath) {
   var jp = require('jsonpath')
   var fileContents = this.results[item]
-  value = fillTemplate(value, this.results)
+  value = filltemplate(value, this.results)
   if (value.trim() !== "") {
     try {
       var tmp = JSON.parse(value)
@@ -352,13 +352,13 @@ When("item {string} is written in json line delimited format to file {string}", 
   if (!this.results) {
     this.results = {}
   }
-  file = fillTemplate(file, this.results)
+  file = filltemplate(file, this.results)
   writeFile(file, this.results[item].map(i => JSON.stringify(i)).join("\n"), this)
 })
 
 When("{jsonObject} is written to file {string}", function (jsonObject, file) {
   var obj = performJSONObjectTransform.call(this, jsonObject)
-  file = fillTemplate(file, this.results)
+  file = filltemplate(file, this.results)
   if (typeof (obj) === "object") {
     obj = JSON.stringify(obj)
   }
@@ -381,7 +381,7 @@ Then("it matches the set {string}", function (set) {
 })
 
 When('the file {string} is gzipped', function (filename) {
-  filename = fillTemplate(filename, this.results)
+  filename = filltemplate(filename, this.results)
   try {
     fs.deleteFileSync(getFilePath(filename, this))
   } catch (e) {
@@ -396,7 +396,7 @@ When('file {string} is gzip unzipped to file {string}', function (file, fileOut)
   if (!this.results) {
     this.results = {}
   }
-  file = fillTemplate(file, this.results)
+  file = filltemplate(file, this.results)
   var zlib = require('zlib');
   var bf = readFileBuffer(file, this)
   var buffer = zlib.unzipSync(bf)
@@ -551,7 +551,7 @@ Then('{jsonObject} is not equal to:', function (item1, item2) {
   if (!this.results) {
     this.results = {}
   }
-  var expected = fillTemplate(item2, this.results)
+  var expected = filltemplate(item2, this.results)
   try {
     expected = JSON.parse(expected)
   } catch (e) { }
@@ -568,7 +568,7 @@ Then('{jsonObject} is equal to:', function (item1, item2) {
   if (!this.results) {
     this.results = {}
   }
-  var expected = fillTemplate(item2, this.results)
+  var expected = filltemplate(item2, this.results)
   try {
     expected = JSON.parse(expected)
   } catch (e) { }
@@ -581,17 +581,17 @@ Then('{jsonObject} is equal to:', function (item1, item2) {
 
 Then('element {string} does not exist in {jsonObject}', function (element, jsonObject) {
   var obj = performJSONObjectTransform.call(this, jsonObject)
-  element = fillTemplate(element, this.results)
+  element = filltemplate(element, this.results)
   assert.doesNotHaveAnyKeys(obj, [element])
 })
 Then('element {string} exists in {jsonObject}', function (element, jsonObject) {
   var obj = performJSONObjectTransform.call(this, jsonObject)
-  element = fillTemplate(element, this.results)
+  element = filltemplate(element, this.results)
   assert.containsAllKeys(obj, [element])
 })
 Then('elements {string} do not exist in {jsonObject}', function (element, jsonObject) {
   var obj = performJSONObjectTransform.call(this, jsonObject)
-  element = fillTemplate(element, this.results)
+  element = filltemplate(element, this.results)
   try {
     element = JSON.parse(element)
   } catch (e) {
@@ -604,7 +604,7 @@ Then('elements {string} do not exist in {jsonObject}', function (element, jsonOb
 })
 Then('elements {string} exist in {jsonObject}', function (element, jsonObject) {
   var obj = performJSONObjectTransform.call(this, jsonObject)
-  element = fillTemplate(element, this.results)
+  element = filltemplate(element, this.results)
   try {
     element = JSON.parse(element)
   } catch (e) {
@@ -627,8 +627,8 @@ var performEncrypt = function () {
   setToString("lastRun", jwt.sign(this.results.jwtPayload, this.results.privateKey, options), this);
 }
 When('sign item {string} using jwt', function (item) {
-  item = fillTemplate(item, this.results)
-  item = fillTemplate(this.results[item], this.results)
+  item = filltemplate(item, this.results)
+  item = filltemplate(this.results[item], this.results)
   setToString("jwtPayload", item, this, false)
   performEncrypt.call(this)
 })
@@ -676,7 +676,7 @@ Given('set examples', async function () {
   var keys = Object.keys(res)
   for (var key in keys) {
     key = keys[key]
-    res[key] = fillTemplate(res[key], this.results)
+    res[key] = filltemplate(res[key], this.results)
     this.results[key] = res[key]
   }
   if (canAttach.call(this))
@@ -685,31 +685,31 @@ Given('set examples', async function () {
 
 Then("{jsonObject} contains {string}", function (jsonObject, checkString) {
   var obj = performJSONObjectTransform.call(this, jsonObject)
-  checkString = fillTemplate(checkString, this.results)
+  checkString = filltemplate(checkString, this.results)
   obj = JSON.stringify(obj)
   assert.isTrue(obj.includes(checkString), `String '${checkString}' is not in ${obj}`)
 })
 
 Then("{jsonObject} does not contain {string}", function (jsonObject, checkString) {
   var obj = performJSONObjectTransform.call(this, jsonObject)
-  checkString = fillTemplate(checkString, this.results)
+  checkString = filltemplate(checkString, this.results)
   obj = JSON.stringify(obj)
   assert.isFalse(obj.includes(checkString), `String '${checkString}' is in ${obj}`)
 })
 When("blob item {string} is written to file {string}", async function (blob, fileName) {
-  blob = fillTemplate(blob, this.results);
+  blob = filltemplate(blob, this.results);
   blob = eval("this.results." + blob)
   var b = Buffer.from(await blob.arrayBuffer())
   writeFile(`${fileName}`, b, this);
 })
 When("blob item {string} is attached", async function (blob) {
-  blob = fillTemplate(blob, this.results);
+  blob = filltemplate(blob, this.results);
   blob = eval("this.results." + blob)
   var b = Buffer.from(await blob.arrayBuffer())
   return this.attach(b, 'image/png');
 })
 Then("blob item {string} is equal to file {string}", async function (blob, fileName) {
-  blob = fillTemplate(blob, this.results);
+  blob = filltemplate(blob, this.results);
   blob = eval("this.results." + blob)
   var b = await blob.arrayBuffer()
   var actualImage = readFile(`${fileName}`, this);

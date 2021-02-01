@@ -1,4 +1,5 @@
-const fillTemplate = require('@ln-maf/filltemplate')
+var filltemplate = require('./filltemplate')
+
 var Cucumber = require('@cucumber/cucumber')
 var When = Cucumber.When;
 
@@ -16,7 +17,7 @@ var applyJSONToString = function (string, scenario) {
   if (!scenario.results.moment) {
     scenario.results.moment = require('moment')
   }
-  string = fillTemplate(string, scenario.results)
+  string = filltemplate(string, scenario.results)
   try {
     if (string.trim() !== "") {
       var obj = JSON.parse(string)
@@ -51,10 +52,10 @@ var performJSONObjectTransform = function (items) {
     case "it":
       return this.results.lastRun
     case "item":
-      items.value = fillTemplate(items.value, this.results)
+      items.value = filltemplate(items.value, this.results)
       return eval("this.results." + items.value)
     case "file":
-      items.value = fillTemplate(items.value, this.results)
+      items.value = filltemplate(items.value, this.results)
       return applyJSONToString(readFile(items.value, this), this)
     case "":
     case "string":
@@ -112,4 +113,4 @@ var MAFSave=function(name, value) {
   }
   this.results[name]=value  
 }
-module.exports={performJSONObjectTransform, applyJSONToString, readFile, writeFile, writeFileBuffer,readFileBuffer, getFilePath, canAttach, MAFWhen, MAFSave}
+module.exports={performJSONObjectTransform, applyJSONToString, readFile, writeFile, writeFileBuffer,readFileBuffer, getFilePath, canAttach, MAFWhen, MAFSave, filltemplate}

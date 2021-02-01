@@ -17,7 +17,6 @@
   "peerDependencies": {
     "@cucumber/cucumber": "^7.0.0",
     "@ln-maf/core": "*",
-    "@ln-maf/filltemplate": "*",
     "chai": "^4.2.0"
   },
   "dependencies": {

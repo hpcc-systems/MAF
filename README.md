@@ -12,7 +12,6 @@ npm i @cucumber/cucumber
 npm i '@ln-maf/validations'
 npm i '@ln-maf/api'
 npm i '@ln-maf/mysql'
-npm i '@ln-maf/filltemplate'
 npm i '@ln-maf/core'
 ```
 
@@ -127,11 +126,8 @@ There are several included modules, below are links to the READMEs.  You can als
 
 [DefaultSql](packages/defaultSQL/README.md) - This project is used to create other sql modules.  Just implement what is in MySQL and read the README to get it set up.
 
-[Core](packages/core/README.md) - This contains details about the core.  If you are attempting to set up your own cucumber steps it is a good place to start.  Specifically for the function `MAFWhen`.
+[Core](packages/core/README.md) - This contains details about the core.  If you are attempting to set up your own cucumber steps it is a good place to start.  Specifically for the function `MAFWhen`.  Additionally discusses the parsing of how template literals is done; which is needed to provide easy access to variables within strings.
 
-[filltemplate](packages/filltemplate/README.md) - This contains details on how the parsing of template literals is done.  There are some slight changes over the default.  This is needed to provide easy access to variables within strings.
-
-## Variable usage
 Variables can be used within almost any step.  These can be used as follows:
 
 Feature: Variable example with api

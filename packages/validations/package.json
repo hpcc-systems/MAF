@@ -22,8 +22,7 @@
   },
   "peerDependencies": {
     "@cucumber/cucumber": "^7.0.0",
-    "@ln-maf/core": "*",
-    "@ln-maf/filltemplate": "*"
+    "@ln-maf/core": "*"
   },
   "devDependencies": {
     "@cucumber/cucumber": "^7.0.0",
