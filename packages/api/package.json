@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@ln-maf/validations": "^1.0.8"
+    "@ln-maf/validations": "^1.0.9"
   },
   "peerDependencies": {
     "@cucumber/cucumber": "^7.0.0",
