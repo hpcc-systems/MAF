@@ -38,7 +38,7 @@ mkdir -p test/report
 
 If you want to see your results in a nice looking report I would recommend using [`npm i multiple-cucumber-html-reporter`](https://github.com/wswebcreation/multiple-cucumber-html-reporter).
 
-You can use the `multiReport.js` file to build it; just copy this into the root of your project and make sure your cucumber tests are written to `test/report/report.json`.  Then you can run `node multiReport` to generate a report of your tests.
+You can use the `multiReport.js` file to build it; just run `node node_modules/@ln-maf/core/multiReport` to run the base version.  You can also, copy this file into the root of your project and read the instructables at https://github.com/wswebcreation/multiple-cucumber-html-reporter .
 
 ## Hello World API Example
 
