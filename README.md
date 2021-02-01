@@ -6,13 +6,14 @@ An expandable fast, easy to use automation framework built in the cucumber langu
 Dependencies
 - node
 
-Create a new npm project `npm init` and install the following dependencies:
+Create a new npm project using `npm init` and install the following dependencies:
 ```
-npm i @cucumber/cucumber
-npm i '@ln-maf/validations'
-npm i '@ln-maf/api'
-npm i '@ln-maf/mysql'
-npm i '@ln-maf/core'
+npm i @cucumber/cucumber --save-dev
+npm i @ln-maf/validations --save-dev
+npm i @ln-maf/api --save-dev
+npm i @ln-maf/mysql --save-dev
+npm i @ln-maf/core --save-dev
+npm i multiple-cucumber-html-reporter --save-dev
 ```
 
 Then create a features directory `mkdir features` with the following in `features/steps.js` file:
@@ -27,7 +28,7 @@ Doing this indicates that these modules steps and [parameter types](https://cucu
 Modify the `package.json` to use cucumber:
 ```
   "scripts": {
-    "test": "cucumber-js --format json > test/report/report.json"
+    "test": "cucumber-js --format json > test/report/report.json; node @ln-maf/core/multiReport"
   },
 ```
 
@@ -36,9 +37,7 @@ Please also create a directory to store your test results in the root of your pr
 mkdir -p test/report
 ```
 
-If you want to see your results in a nice looking report I would recommend using [`npm i multiple-cucumber-html-reporter`](https://github.com/wswebcreation/multiple-cucumber-html-reporter).
-
-You can use the `multiReport.js` file to build it; just run `node node_modules/@ln-maf/core/multiReport` to run the base version.  You can also, copy this file into the root of your project and read the instructables at https://github.com/wswebcreation/multiple-cucumber-html-reporter .
+Now, when you run `npm t` you should be able to view your test results in a nice looking report.
 
 ## Hello World API Example
 
@@ -46,17 +45,16 @@ You can use the `multiReport.js` file to build it; just run `node node_modules/@
 ```
 Feature: View the text "Hello World"
   Scenario: Hello World
-    When api request from file "helloWorld.json" is performed
+    When perform api request:
+    """
+    {
+      "url": "http://www.mocky.io/v2/",
+      "api": "5ec540242f00004cb1dc30dd",
+      "method": "GET"
+    }
+    """
     Then status ok
-    And "${response}" is equal to "Hello World"
-```
-`./helloWorld.json`
-```
-{
-  "url": "http://www.mocky.io/v2/",
-  "api": "5ec540242f00004cb1dc30dd",
-  "method": "GET"
-}
+    And item "response" is equal to "Hello World"
 ```
 
 ### The Generated report:
