@@ -7,7 +7,7 @@
   "description": "Setup for sql on Node",
   "main": "index.js",
   "scripts": {
-    "test": "cd ../.. && bash runFeature.sh mysql"
+    "test": "sh runTests.sh"
   },
   "bin": {
     "mysql-configure": "./config.js"
