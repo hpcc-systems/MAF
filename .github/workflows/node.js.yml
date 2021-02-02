@@ -29,4 +29,4 @@ jobs:
     - run: yarn
     - run: npm test
       env: 
-       USE_ENV_VARIABLES: true
+       USE_ENV_VARIABLES: TRUE
