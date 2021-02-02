@@ -1,0 +1,27 @@
+{
+  "name": "@ln-maf/preprocessor",
+  "version": "1.0.0",
+  "description": "This project will preprocess feature files to allow more input variables to be supplied.  This can be supplied through javascript, a csv/psv/json array file or a mixture of these.  This will hopefully allow it to be easier to maintain larger test sets.",
+  "main": "index.js",
+  "bin": {
+    "preprocessor": "exec.js"
+  },
+  "scripts": {
+    "test": "cd ../.. && bash runFeature.sh preprocessor",
+    "postinstall": "tsc",
+    "tsc": "tsc"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@cucumber/cucumber-expressions": "^11.0.0",
+    "@cucumber/messages": "^13.2.1",
+    "app-root-path": "^3.0.0",
+    "command-line-args": "^5.1.1",
+    "glob": "^7.1.6",
+    "papaparse": "^5.2.0"
+  },
+  "devDependencies": {
+    "typescript": "^3.9.6"
+  }
+}

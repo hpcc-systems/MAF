@@ -6,7 +6,8 @@
   "main": "index.js",
   "prepare": "cd packages && node createAutoComplete.js",
   "scripts": {
-    "test": "lerna run test"
+    "test": "lerna run test",
+    "postinstall": "sh postinstall.sh"
   },
   "devDependencies": {
     "@cucumber/cucumber": "^7.0.0",

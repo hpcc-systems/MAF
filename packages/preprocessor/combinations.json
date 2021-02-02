@@ -1,0 +1,5 @@
+{
+  "userStatus": [ "LoggedIn", "LoggedOut", "Banned" ],
+  "screen": ["HomeScreen", "Profile", "Settings", "BanPage"]
+}
+

@@ -1,0 +1,5 @@
+
+{
+  "VIN": ["empty", "invalid", "valid"],
+  "VRN": ["empty", "invalid", "valid"]
+}
