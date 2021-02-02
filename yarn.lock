@@ -938,19 +938,6 @@
     npmlog "^4.1.2"
     write-file-atomic "^2.3.0"
 
-"@ln-maf/validations@^1.0.9":
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/@ln-maf/validations/-/validations-1.0.9.tgz#8fd0c9def9465d4f486dff9398cede13e80feae8"
-  integrity sha512-H8pDChgQTk7vV6tm4LL7Nc/L2ajOdtTQU5XzIDJPzJ9scxOU30QrUmdpVK1dwWhb/jSC7j+UtNmdlKAtx/Yuqg==
-  dependencies:
-    chai "^4.2.0"
-    jsonpath "^1.0.2"
-    jsonwebtoken "^8.5.1"
-    moment "^2.24.0"
-    validator "^12.1.0"
-    xmldom "^0.2.1"
-    xpath "0.0.27"
-
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"

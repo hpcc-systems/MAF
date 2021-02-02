@@ -15,5 +15,17 @@
     "@cucumber/cucumber": "^7.0.0",
     "moment": "^2.29.1"
   },
-  "gitHead": "9bf55a2c86fa17707fabfb4320c3d722e270f9e6"
+  "gitHead": "9bf55a2c86fa17707fabfb4320c3d722e270f9e6",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hpcc-systems/MAF.git"
+  },
+  "keywords": [
+    "cucumber-js",
+    "testing"
+  ],
+  "bugs": {
+    "url": "https://github.com/hpcc-systems/MAF/issues"
+  },
+  "homepage": "https://github.com/hpcc-systems/MAF#readme"
 }

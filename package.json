@@ -24,5 +24,17 @@
     "packages/*"
   ],
   "author": "",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hpcc-systems/MAF.git"
+  },
+  "keywords": [
+    "cucumber-js",
+    "testing"
+  ],
+  "bugs": {
+    "url": "https://github.com/hpcc-systems/MAF/issues"
+  },
+  "homepage": "https://github.com/hpcc-systems/MAF#readme"
 }
