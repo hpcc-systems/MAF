@@ -124,6 +124,8 @@ There are several included modules, below are links to the READMEs.  You can als
 
 [DefaultSql](packages/defaultSQL/README.md) - This project is used to create other sql modules.  Just implement what is in MySQL and read the README to get it set up.
 
+[Preprocessor](packages/preprocessor/README.md) - This contains details about the preprocessor.  It is used to add information in feature files and runs before the feature filee would.   
+
 [Core](packages/core/README.md) - This contains details about the core.  If you are attempting to set up your own cucumber steps it is a good place to start.  Specifically for the function `MAFWhen`.  Additionally discusses the parsing of how template literals is done; which is needed to provide easy access to variables within strings.
 
 Variables can be used within almost any step.  These can be used as follows:
