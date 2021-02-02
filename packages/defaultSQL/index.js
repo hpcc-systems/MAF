@@ -9,6 +9,7 @@ const { MAFWhen, performJSONObjectTransform } = require('@ln-maf/core')
 var setItUp=function(moduleInfo) {
   const { name, runQuery, connect, disconnect } = moduleInfo
   MAFWhen(name + ' query from {jsonObject} is run', async function(query) {
+    console.log(process.env.USE_ENV_VARIABLES)
     if(!this.results) {
       this.results={}
     }
