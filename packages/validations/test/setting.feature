@@ -9,7 +9,7 @@ Scenario: Check that we can identify a null or undefined element
   And item "b" is null  
 
 Scenario:  Set config as the first step
-  When set config from json file "newconfig2.json"
+  When set config from json file "newConfig2.json"
   And set "hello" to "${environment}"
 
 Scenario: Set an empty string

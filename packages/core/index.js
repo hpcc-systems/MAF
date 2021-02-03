@@ -78,7 +78,11 @@ var getFilePath = (filename, scenario) => {
   return dir + filename
 }
 var writeFile = (filename, data, scenario) => {
-  return fs.writeFileSync(getFilePath(filename, scenario), data, "utf-8")
+  var toWrite=data
+  if(typeof data === "number") {
+     toWrite=JSON.stringify(data)
+  }
+  return fs.writeFileSync(getFilePath(filename, scenario), toWrite, "utf-8")
 }
 var writeFileBuffer = (filename, data, scenario) => {
   return fs.writeFileSync(getFilePath(filename, scenario), data)
