@@ -1,5 +1,8 @@
 Feature: Validations : JSON manipulation
     Testing JSON object key deletion and extraction
+   Background:
+     When set "directory" to "./test"
+
     Scenario: Readme simple extract Example
     When set "response" to
     """

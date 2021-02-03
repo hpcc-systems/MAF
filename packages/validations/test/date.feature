@@ -1,4 +1,7 @@
 Feature: Validations : Date validation
+   Background:
+     When set "directory" to "./test"
+
 
   Scenario: Validate date "11/11/2019" is before now
   Given set "created_date" to "11/11/2019"

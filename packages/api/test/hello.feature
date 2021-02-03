@@ -1,4 +1,6 @@
 Feature: API - Test the basic items in api
+  Background:
+    When set "directory" to "./test"
 
   Scenario: Use individual methods
     Given url "https://google.com"

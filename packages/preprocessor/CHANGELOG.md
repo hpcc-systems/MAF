@@ -18,3 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * SQL package for sql commands
 * Validations package for performing processing.
 
+## [1.2.1] (2020-02-03)
+### Added
+ * Fixes for set examples, there was an issue when a background step was included
+ * Add .npmignore
+ * Adding in eslint
+ * Multiple bug fixes due to issues found by eslint

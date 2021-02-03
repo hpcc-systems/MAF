@@ -1,5 +1,7 @@
 Feature: Validations : Set Examples from the scenario outline to be visible
+       
     Scenario Outline: Testing
+        When set "directory" to "./test"
         When set examples
         Then item "<Expected>" is equal to "<ExpectedResult>"
         Examples:

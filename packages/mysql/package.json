@@ -14,6 +14,13 @@
   },
   "author": "",
   "license": "Apache-2.0",
+  "devDependencies": {
+    "eslint": "^7.19.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1"
+  },
   "dependencies": {
     "@ln-maf/default-sql": "^1.2.1",
     "sync-mysql": "^3.0.1"

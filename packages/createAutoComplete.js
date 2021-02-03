@@ -1,7 +1,7 @@
 var textReplace=function(text) {
     var lines=text.split("\n")    
     var keywords=["Given", "When", "Then", "MAFWhen"]
-    return ["const { When, Given, Then } = require('@cucumber/cucumber');",
+    return ["/* eslint-disable */", "const { When, Given, Then } = require('@cucumber/cucumber');",
         ...lines.map(i=>i.trim()).filter(i=>{
           i=i.split("(")[0]
           return keywords.includes(i)
@@ -23,6 +23,8 @@ getDirectories('.').forEach(directory => {
     fs.writeFileSync('./' + directory + "/autoComplete.js", text.join("\n"))   
     var cl=fs.readFileSync("../CHANGELOG.md", "utf8")
     fs.writeFileSync('./' + directory + "/CHANGELOG.md", cl)
+    var gitignore=fs.readFileSync("../.npmignore", "utf8")
+    fs.writeFileSync('./' + directory + "/.npmignore", gitignore)
     
 });
   
