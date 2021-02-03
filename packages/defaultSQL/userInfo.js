@@ -1,5 +1,4 @@
 var getCreds=async function(environment) {
-  console.log("CREDS ")
   if(process.env.USE_ENV_VARIABLES !== "TRUE")  {
     var keytar=require('keytar')
     var username=await keytar.getPassword(environment, "username")
