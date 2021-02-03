@@ -26,9 +26,6 @@
     "gherkin",
     "cucumber-steps"
   ],
-  "devDependencies": {
-    "@ln-maf/validations": "^1.1.6"
-  },
   "bugs": {
     "url": "https://github.com/hpcc-systems/MAF/issues"
   },
