@@ -1,7 +1,7 @@
 var textReplace=function(text) {
     var lines=text.split("\n")    
     var keywords=["Given", "When", "Then", "MAFWhen"]
-    return ["const { When, Given, Then } = require('@cucumber/cucumber');",
+    return ["/* eslint-disable */", "const { When, Given, Then } = require('@cucumber/cucumber');",
         ...lines.map(i=>i.trim()).filter(i=>{
           i=i.split("(")[0]
           return keywords.includes(i)

@@ -1,13 +1,13 @@
-const util = require('util');
-var prompt=require('prompt')
-var check=async function(environment, skipIfNotRequired=false) {
-  if(process.env.USE_ENV_VARIABLES === "TRUE") {
-     return
-   }
-  var keytar=require('keytar')
-  var hasPassword=async (service, account)=>await keytar.getPassword(service, account)!==null
-  var required=!(await hasPassword(environment, "username"))
-  var schema = {
+const util = require('util')
+const prompt = require('prompt')
+const check = async function (environment, skipIfNotRequired = false) {
+  if (process.env.USE_ENV_VARIABLES === 'TRUE') {
+    return
+  }
+  const keytar = require('keytar')
+  const hasPassword = async (service, account) => await keytar.getPassword(service, account) !== null
+  const required = !(await hasPassword(environment, 'username'))
+  const schema = {
     properties: {
       username: {
         description: `Please enter your username for the ${environment} environment`,
@@ -16,25 +16,25 @@ var check=async function(environment, skipIfNotRequired=false) {
         required
       },
       password: {
-        description: "Please enter your password",
+        description: 'Please enter your password',
         hidden: true
       }
     }
-  };
-  if(required===false && skipIfNotRequired) {
+  }
+  if (required === false && skipIfNotRequired) {
     return
   }
-  var get=util.promisify(prompt.get)
-  var result=await get(schema)
+  const get = util.promisify(prompt.get)
+  const result = await get(schema)
   //
   // Store the results.
   //
-  if(result.username) {
-    console.log("STROING USERNAME IN ENVIRONMENT " + environment)
-    await keytar.setPassword(environment, "username", result.username)
-    if(result.password) {
-      await keytar.setPassword(environment, "password", result.password)
+  if (result.username) {
+    console.log('STROING USERNAME IN ENVIRONMENT ' + environment)
+    await keytar.setPassword(environment, 'username', result.username)
+    if (result.password) {
+      await keytar.setPassword(environment, 'password', result.password)
     }
   }
 }
-module.exports=check
+module.exports = check
