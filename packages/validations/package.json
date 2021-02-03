@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.1.7",
+  "version": "1.2.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "@cucumber/cucumber": "^7.0.0",
-    "@ln-maf/core": "^1.1.7",
+    "@ln-maf/core": "^1.2.0",
     "cucumber-html-reporter": "^5.3.0",
     "multiple-cucumber-html-reporter": "^1.18.0"
   },
