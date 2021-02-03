@@ -1,0 +1,47 @@
+name: Status Create
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  on-pull-request:
+    name: On pull request
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        run: echo '${{ toJson(github) }}'
+      - name: Check out
+        uses: actions/checkout@v2
+      - name: Use this action
+        uses: ./
+        id: status-create
+        with:
+          sha: ${{ github.event.pull_request.head.sha }}
+          state: success
+          description: Passed
+      - name: Show result
+        if: always()
+        run: echo '${{ steps.status-create.outputs.result }}'
+  on-push:
+    name: On push
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        run: echo '${{ toJson(github) }}'
+      - name: Check out
+        uses: actions/checkout@v2
+      - name: Use this action
+        uses: ./
+        id: status-create
+        with:
+          sha: ${{ github.sha }}
+          state: success
+          description: Passed
+      - name: Show result
+        if: always()
+        run: echo '${{ steps.status-create.outputs.result }}'
