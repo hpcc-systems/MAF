@@ -75,7 +75,7 @@ Feature: API - Test the basic items in api
     Then status not ok
 
   Scenario: Get Google
-    When set "req" to fail:
+    When set "req" to:
       """
       {
         "url": "https://google.com",
