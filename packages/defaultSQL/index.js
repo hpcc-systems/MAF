@@ -9,7 +9,6 @@ const { MAFWhen, performJSONObjectTransform } = require('@ln-maf/core')
 var setItUp=function(moduleInfo) {
   const { name, runQuery, connect, disconnect } = moduleInfo
   MAFWhen(name + ' query from {jsonObject} is run', async function(query) {
-    console.log(process.env.USE_ENV_VARIABLES)
     if(!this.results) {
       this.results={}
     }
@@ -21,10 +20,15 @@ var setItUp=function(moduleInfo) {
       connectionInfo=JSON.parse(connectionInfo)
     }
     var q=performJSONObjectTransform.call(this, query)
+     console.log("HERE ")
     var userInfoObtainer=require('./userInfo')
+     console.log("I ")
     var userInfo=await userInfoObtainer(`${name}.${connectionInfo.host}.${connectionInfo.database}`)
+     console.log("AM ")
     var connection=await connect(connectionInfo, userInfo.username, userInfo.password)
+     console.log("NOW ")
     var res=await runQuery(connection, q)
+     console.log("RUNNING ")
     await disconnect(connection)
     return res
   })

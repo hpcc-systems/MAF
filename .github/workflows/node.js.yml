@@ -30,3 +30,5 @@ jobs:
     - run: npm test
       env: 
        USE_ENV_VARIABLES: TRUE
+       FAKE_SQL_USERNAME: MAF
+       FAKE_SQL_PASSWORD: MAF

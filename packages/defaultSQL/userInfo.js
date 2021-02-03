@@ -10,7 +10,7 @@ var getCreds=async function(environment) {
     }
   return { username, password }
   } else {
-    return { username: process.env.SQL_USERNAME, password: process.env.SQL_PASSWORD}
+    return { username: process.env[environment+"_SQL_USERNAME"], password: process.env[environment+"_SQL_PASSWORD"]}
   }
 }
 module.exports= getCreds
