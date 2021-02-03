@@ -24,7 +24,7 @@ Defines the body for a given request
 ## `Given headers {string}`
 Takes a string of headers.  These should represent a json object.
 
-## `When api request from [{jsonObject}](../validations/JSONObject.md) is performed`
+## `When api request from `[{jsonObject}](../validations/JSONObject.md) `is performed`
 Performs a request based on the json file and given values.  An example json file would be:
 ```
 {
