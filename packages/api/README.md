@@ -24,7 +24,7 @@ Defines the body for a given request
 ## `Given headers {string}`
 Takes a string of headers.  These should represent a json object.
 
-## `When api request from {jsonObject} is performed`
+## `When api request from `[{jsonObject}](../validations/JSONObject.md)` is performed`
 Performs a request based on the json file and given values.  An example json file would be:
 ```
 {
@@ -137,7 +137,7 @@ When perform api request:
 """
 ```
 
-## `When api request from {jsonObject} is performed with: {dataTable}`
+## `When api request from `[{jsonObject}](../validations/JSONObject.md)` is performed with: {dataTable}`
 Performs an api request using a json file. `dataTable` contains the values that are replaced within the request.  This will assign the variables in dataTable globally.
 
 Example:

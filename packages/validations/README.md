@@ -5,7 +5,7 @@ This module is created to allow other projects to easily validate JSON utilizing
 Install with `npm i @ln-maf/validations`
 Add a step file with the following code:
 ```
-module.exports=require('cucumber-validations')
+require('cucumber-validations')
 ```
 
 Cucumber autocompletion
@@ -641,7 +641,7 @@ When set examples
 Then "${Next}" is equal to "2"
 ```
 
-### Then {jsonObject} contains {string}
+### Then [{jsonObject}](./JSONObject.md) contains {string}
 Checks if the `jsonObject` contains the string anywhere. The jsonObject is turned into one string and performs an include on the entire string
 
 For example:
@@ -668,5 +668,5 @@ Given set "test3" to:
 Then item "test3" contains "Oran"
 ```
 
-### Then {jsonObject} does not contain {string}
+### Then [{jsonObject}](../validations/JSONObject.md) does not contain {string}
 Checks if the `jsonObject`  does not contain the string. The opposite of `Then {jsonObject} contains {string}`

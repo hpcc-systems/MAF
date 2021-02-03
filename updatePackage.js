@@ -7,7 +7,9 @@ a.repository= { "type": "git",
 a.keywords=
   [
     "cucumber-js",
-    "testing"
+    "testing",
+    "cucumber-steps",
+    "gherkin"
   ]
 a.bugs= {
     "url": "https://github.com/hpcc-systems/MAF/issues"
