@@ -16,5 +16,12 @@ Feature: Validations : Set Examples from the scenario outline to be visible
             | 2    | Next  | 2              | 5   | 
             | 3    | Next  | 3              | 6   |
 
-    Scenario: See if more children
-       When set "a" to 5
+
+    Scenario Outline: Testing
+        When set "a" to 5
+        When set examples
+        Then item "<Expected>" is equal to "<ExpectedResult>"
+        Examples:
+            | Phone | Expected | ExpectedResult |
+            | 1     | Phone | 1              |
+

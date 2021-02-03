@@ -1,6 +1,3 @@
-function replaceAll(string, search, replace) {
-  return string.split(search).join(replace);
-}
 
 const fillTemplate = function(templateString, templateVars){
   //Check if the template string is a json object

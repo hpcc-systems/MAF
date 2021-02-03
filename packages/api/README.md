@@ -18,7 +18,7 @@ Assigns a string to the url item
 ## `Given api {string}`
 Assigns a string to the api item
 
-## `Given request {string}`
+## `Given body {string}`
 Defines the body for a given request
 
 ## `Given headers {string}`
