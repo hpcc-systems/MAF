@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Default Sql setup on Node with cucumber",
   "main": "index.js",
   "scripts": {
@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@cucumber/cucumber": "^7.0.0",
-    "@ln-maf/validations": "^1.2.0",
+    "@ln-maf/validations": "^1.2.1",
     "cucumber-html-reporter": "^5.3.0",
     "multiple-cucumber-html-reporter": "^1.18.0"
   },
