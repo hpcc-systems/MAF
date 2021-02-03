@@ -1,6 +1,6 @@
 Feature: API - Test the basic items in api
   Scenario: Get Google
-    When set "req" to:
+    When set "req" to fail:
       """
       {
         "url": "https://google.com",
