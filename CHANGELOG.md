@@ -23,3 +23,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * Fixes for set examples, there was an issue when a background step was included
  * Add .npmignore
  * Adding in eslint
+ * Multiple bug fixes due to issues found by eslint
