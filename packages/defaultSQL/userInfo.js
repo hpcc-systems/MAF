@@ -1,5 +1,7 @@
 var getCreds=async function(environment) {
+  console.log("CREDS ")
   if(process.env.USE_ENV_VARIABLES !== "TRUE")  {
+  console.log("HERE ")
     var keytar=require('keytar')
     var username=await keytar.getPassword(environment, "username")
 
@@ -10,6 +12,7 @@ var getCreds=async function(environment) {
     }
   return { username, password }
   } else {
+  console.log("I AM ")
     return { username: process.env[environment+"_SQL_USERNAME"], password: process.env[environment+"_SQL_PASSWORD"]}
   }
 }
