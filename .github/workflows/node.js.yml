@@ -40,7 +40,7 @@ jobs:
       id: status-create
       with:
         state: ${{ job.status }} 
-        sha: ${{ github.event.pull_request.head.sha }}
+        sha: ${{ github.sha }}
   
     - name: Show result
       if: always()
