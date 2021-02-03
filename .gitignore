@@ -1,7 +1,7 @@
 testItem.txt
 node_modules
+/test/
 .git.bfg-report/
-test
 *.sqlConfig.json
 passwords.txt
 image2.png
