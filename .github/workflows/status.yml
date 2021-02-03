@@ -1,15 +1,12 @@
 name: Status Create
-
 on:
-  pull_request:
   push:
-    branches:
-      - master
-
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 jobs:
-  on-pull-request:
+  run-status:
     name: On pull request
-    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - name: Dump GitHub context
@@ -19,23 +16,6 @@ jobs:
         id: status-create
         with:
           sha: ${{ github.event.pull_request.head.sha }}
-          state: success
-          description: Passed
-      - name: Show result
-        if: always()
-        run: echo '${{ steps.status-create.outputs.result }}'
-  on-push:
-    name: On push
-    if: github.event_name == 'push'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Dump GitHub context
-        run: echo '${{ toJson(github) }}'
-      - name: Status Create Action
-        uses: hkusu/status-create-action@v1.0.0
-        id: status-create
-        with:
-          sha: ${{ github.sha }}
           state: success
           description: Passed
       - name: Show result
