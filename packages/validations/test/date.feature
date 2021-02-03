@@ -1,6 +1,4 @@
 Feature: Validations : Date validation
-  Background:
-    When set "directory" to "packages/validations"
 
   Scenario: Validate date "11/11/2019" is before now
   Given set "created_date" to "11/11/2019"
@@ -17,6 +15,9 @@ Feature: Validations : Date validation
   Scenario: Validate date now-1 is before now
     Given set "created_date" to "${new Date().getTime()-1}"
     Then item "created_date" is before now
+  Scenario: Validate date now+10001 is after now
+    Given set "created_date" to "${new Date().getTime()+10001}"
+    Then item "created_date" is after now
 
   Scenario Outline: Validate date "<created_date>" is <when> "<checked_date>"
   Given set "created_date" to "<created_date>"

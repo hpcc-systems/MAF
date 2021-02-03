@@ -6,6 +6,7 @@
   "main": "index.js",
   "prepare": "cd packages && node createAutoComplete.js",
   "scripts": {
+    "codecov": "nyc --reporter=lcov --reporter=text cucumber-js test",
     "test": "lerna run test",
     "postinstall": "sh postinstall.sh"
   },
@@ -18,7 +19,8 @@
   "dependencies": {
     "chai": "^4.2.0",
     "multiple-cucumber-html-reporter": "^1.18.0",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "nyc": "^15.1.0"
   },
   "workspaces": [
     "packages/*"

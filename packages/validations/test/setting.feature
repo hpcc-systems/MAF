@@ -1,9 +1,9 @@
 Feature: Validations : Setting variables
-  Background:
-    When set "directory" to "packages/validations"
 
 
 Scenario: Check that we can identify a null or undefined element
+  When set result to "15"
+  Then it is equal to "15"
   When set "a" to 3
   Then item "a" is not null
   And item "b" is null  
@@ -17,6 +17,14 @@ Scenario: Set an empty string
   Then "${hi}" is equal to ""
 
 Scenario: Setting.
+  Then "5" is not equal to:
+  """
+  17
+  """
+  Then "5" is equal to:
+  """
+  5
+  """
   When set "hi" to "{}"
   When set "hi.there" to "yo"
   And set "hi.yo" to "yo"
@@ -84,3 +92,12 @@ Scenario: Check two json objects
   }
   """
 
+Scenario Outline: Set the examples
+  Given parameters are:
+  """
+  {
+     "hello": "world"
+  }
+  """
+  When apply parameters
+  Then 5 = 5

@@ -1,4 +1,6 @@
 testItem.txt
+coverage
+.nyc_output
 node_modules
 /test/
 .git.bfg-report/

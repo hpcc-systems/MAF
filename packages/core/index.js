@@ -4,10 +4,17 @@ var Cucumber = require('@cucumber/cucumber')
 var When = Cucumber.When;
 
 var fs=require('fs')
-var canAttach=function() {
-  if(!this.results) {
-    this.results={}
+var tryAttach=function(attach, type="text") {
+  if(canAttach.call(this))
+  {
+    if(typeof attach=== "object") {
+      this.attach(JSON.stringify(attach, null, 2))
+    } else {
+      this.attach(attach, type)
+    }
   }
+}
+var canAttach=function() {
   return this.results.attach!=="false"
 }
 var applyJSONToString = function (string, scenario) {
@@ -90,8 +97,8 @@ var writeFileBuffer = (filename, data, scenario) => {
 var readFileBuffer = (filename, scenario) => {
   return fs.readFileSync(getFilePath(filename, scenario))
 }
-var readFile = (filename, scenario) => {
-  return fs.readFileSync(getFilePath(filename, scenario), "utf-8")
+var readFile = (filename, scenario, dataType="utf-8") => {
+  return fs.readFileSync(getFilePath(filename, scenario), dataType)
 }
 
 var MAFWhen=function(name, func) {
@@ -111,10 +118,17 @@ var MAFWhen=function(name, func) {
   `)
   When(name, tmpFunc)
 }
-var MAFSave=function(name, value) {
+
+
+var MAFSave=function(location, obj) {
   if(!this.results) {
     this.results={}
   }
-  this.results[name]=value  
+  var loc = "this.results." + location
+  var set = loc + "=obj"
+  eval(set)
+  var res = {}
+  res[location] = eval(loc)
+  tryAttach.call(this, res)
 }
-module.exports={performJSONObjectTransform, applyJSONToString, readFile, writeFile, writeFileBuffer,readFileBuffer, getFilePath, canAttach, MAFWhen, MAFSave, filltemplate}
+module.exports={performJSONObjectTransform, applyJSONToString, readFile, writeFile, writeFileBuffer,readFileBuffer, getFilePath, canAttach, MAFWhen, MAFSave, filltemplate, tryAttach}
