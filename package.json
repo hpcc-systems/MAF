@@ -11,14 +11,14 @@
   },
   "devDependencies": {
     "@cucumber/cucumber": "^7.0.0",
-    "cucumber-html-reporter": "^5.1.0",
-    "keytar": "4.*",
+    "cucumber-html-reporter": "^5.3.0",
+    "keytar": "7.*",
     "lerna": "^3.22.1"
   },
   "dependencies": {
     "chai": "^4.2.0",
     "multiple-cucumber-html-reporter": "^1.18.0",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.1"
   },
   "workspaces": [
     "packages/*"
