@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "Setup for sql on Node",
   "main": "index.js",
   "scripts": {
@@ -15,7 +15,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ln-maf/default-sql": "^1.1.5",
+    "@ln-maf/default-sql": "^1.1.6",
     "sync-mysql": "^3.0.1"
   },
   "gitHead": "2a575448a74cfaee5ec68fa10db24cf4ccade849",
