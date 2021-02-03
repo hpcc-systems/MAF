@@ -1,4 +1,7 @@
 Feature: Validations : File writing
+   Background:
+     When set "directory" to "./test"
+
   Scenario:
     When set:
     |item|externalReferenceId|

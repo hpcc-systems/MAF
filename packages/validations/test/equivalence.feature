@@ -1,4 +1,7 @@
 Feature: Validations : Equivalence testing
+   Background:
+     When set "directory" to "./test"
+
   Scenario: JSON equivalence
 Given set "str" to:
 """

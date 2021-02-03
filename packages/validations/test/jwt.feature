@@ -1,4 +1,7 @@
 Feature: Validations : JWT
+   Background:
+     When set "directory" to "./test"
+
   Scenario:  Sign using JWT
    When generate rsa key
    And set "privateKey" to it

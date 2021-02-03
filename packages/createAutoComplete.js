@@ -23,6 +23,8 @@ getDirectories('.').forEach(directory => {
     fs.writeFileSync('./' + directory + "/autoComplete.js", text.join("\n"))   
     var cl=fs.readFileSync("../CHANGELOG.md", "utf8")
     fs.writeFileSync('./' + directory + "/CHANGELOG.md", cl)
+    var gitignore=fs.readFileSync("../.npmignore", "utf8")
+    fs.writeFileSync('./' + directory + "/.npmignore", gitignore)
     
 });
   

@@ -1,4 +1,6 @@
 Feature: FillTemplate : Test Fill Template
+   Background:
+     When set "directory" to "./test"
   Scenario: Test attaching
     When set "attach" to "false"
     And set "no" to "yes"

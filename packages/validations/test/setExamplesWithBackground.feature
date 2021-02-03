@@ -1,5 +1,6 @@
-Feature: Validations : Set Examples from the scenario outline to be visible
-       
+Feature: Validations : Set Examples from the scenario outline to be visible with a background step
+    Background:
+        When set "directory" to "./test"
     Scenario Outline: Testing
         When set "directory" to "./test"
         When set examples

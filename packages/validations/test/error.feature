@@ -1,4 +1,7 @@
 Feature: Validations : Error from response
+   Background:
+     When set "directory" to "./test"
+
   Scenario:  Validate error
     When set "response" to:
 """

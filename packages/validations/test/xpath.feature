@@ -1,4 +1,7 @@
 Feature: Validations: Test Xpath namespaces and xpaths
+   Background:
+     When set "directory" to "./test"
+
   Scenario:  Xpath sample
     Given xPath namespace is '{ "new": "TEst" }'
     When set "xml" to file "xml.xml"

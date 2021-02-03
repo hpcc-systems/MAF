@@ -1,4 +1,7 @@
 Feature: Validations : Json Path Testing
+   Background:
+     When set "directory" to "./test"
+
 
   Scenario: When set array value it is able to validate in the area
     When set "item" to file "file.json"

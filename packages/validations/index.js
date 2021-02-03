@@ -553,19 +553,35 @@ When('wait {int} milliseconds', function (milliseconds) {
 Given('set examples', async function () {
   // Write code here that turns the phrase above into concrete actions
   var a = world
-  var flatten = (acc, cumulator) => [...acc, ...cumulator]
+  var flatten = (acc, cumulator) => {
+    if(typeof cumulator === "undefined") {
+      return acc
+    } 
+    if(Array.isArray( cumulator) )
+    return [...acc, ...cumulator] 
+    else {
+      acc.push(cumulator)
+      return acc
+    }
+  }
   var extras = a.pickle.steps.map(i => i.astNodeIds)
   extras = extras.reduce(flatten)
   var examples = a.gherkinDocument.feature.children.map(i =>
-    i.scenario.examples.map(
+    {
+      if(!i.scenario) return
+    if(!i.scenario.examples) return
+    return i.scenario.examples.map(
       i => i.tableBody.filter(
-        i => extras.includes(i.id))))
-    .reduce(flatten)
-
-  var res = a.gherkinDocument.feature.children.map(i =>
-    i.scenario.examples.filter(i =>
-      i.tableBody.map(i => extras.includes(i.id)).includes(true)))
-  res = res.reduce(flatten, [])
+        i => extras.includes(i.id)))
+    })
+    .reduce(flatten, []) 
+    var res = a.gherkinDocument.feature.children.map(i => {
+      if(!i.scenario) return
+      return i.scenario.examples.filter(i=> {
+        if(!i.tableBody) return
+        return i.tableBody.map(i=>extras.includes(i.id)).includes(true)
+      })
+    }).reduce(flatten, [])
   var headers = res.map(i => i.tableHeader.cells).reduce(flatten, [])
   headers = headers.map(i => i.value)
   examples = examples.reduce(flatten, []).map(i => i.cells).reduce(flatten, []).map(i => i.value)

@@ -1,4 +1,7 @@
 Feature: Validations : Base 64
+   Background:
+     When set "directory" to "./test"
+
   Scenario: Decode Base 64
     Given set "bla" to '{ "json": "object" }'
     And item "bla" is base64 encoded
