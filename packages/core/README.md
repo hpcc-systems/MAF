@@ -1,7 +1,7 @@
 # MAF Core
 This contains several helper methods that can be useed by other packages.
 
-## performJSONObjectTransform - performs a transform on `[{jsonObject}](../validations/JSONObject.md)`
+## performJSONObjectTransform - performs a transform on [{jsonObject}](../validations/JSONObject.md)
 When a MAF method receives a json object from a file or some other area, the performJSONObjectTransform converts it appropriately.  An example call with the `MAFWhen` command would be:
 ```
 MAFWhen("run json path {string} on {jsonObject}", function (jPath, jsonObject) {

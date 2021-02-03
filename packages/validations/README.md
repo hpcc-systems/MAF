@@ -641,7 +641,7 @@ When set examples
 Then "${Next}" is equal to "2"
 ```
 
-### Then `[{jsonObject}](./JSONObject.md)` contains {string}
+### Then [{jsonObject}](./JSONObject.md) contains {string}
 Checks if the `jsonObject` contains the string anywhere. The jsonObject is turned into one string and performs an include on the entire string
 
 For example:
@@ -668,5 +668,5 @@ Given set "test3" to:
 Then item "test3" contains "Oran"
 ```
 
-### Then {jsonObject} does not contain {string}
+### Then [{jsonObject}](../validations/JSONObject.md) does not contain {string}
 Checks if the `jsonObject`  does not contain the string. The opposite of `Then {jsonObject} contains {string}`

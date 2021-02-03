@@ -24,9 +24,9 @@ Add a step definition file with the following line:
 require('@ln-maf/mysql)
 ```
 
-## Given mysql config from `[{jsonObject}](../validations/JSONObject.md)`
+## Given mysql config from [{jsonObject}](../validations/JSONObject.md)
 Utilizes the sql system associated with the item provided.  By default will use `mysql.sqlConfig.json` in the root directory of the project if none is provided.
 
-## When mysql query from {jsonObject} is run
+## When mysql query from [{jsonObject}](../validations/JSONObject.md) is run
 Runs a query from the provided item.  Allows templated args as per the global cucumber projects.  Stores the results in `this.results.lastRun`.  Usable in cucubmer as `${lastRun}` or the it keyword.
 
