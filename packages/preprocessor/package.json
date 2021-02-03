@@ -40,5 +40,6 @@
   "bugs": {
     "url": "https://github.com/hpcc-systems/MAF/issues"
   },
-  "homepage": "https://github.com/hpcc-systems/MAF#readme"
+  "homepage": "https://github.com/hpcc-systems/MAF#readme",
+  "gitHead": "2a575448a74cfaee5ec68fa10db24cf4ccade849"
 }

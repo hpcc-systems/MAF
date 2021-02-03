@@ -24,7 +24,7 @@ Add a step definition file with the following line:
 require('@ln-maf/mysql)
 ```
 
-## Given mysql config from {jsonObject}
+## Given mysql config from `[{jsonObject}](../validations/JSONObject.md)`
 Utilizes the sql system associated with the item provided.  By default will use `mysql.sqlConfig.json` in the root directory of the project if none is provided.
 
 ## When mysql query from {jsonObject} is run

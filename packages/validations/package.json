@@ -30,7 +30,7 @@
     "cucumber-html-reporter": "^4.0.5",
     "multiple-cucumber-html-reporter": "^1.16.0"
   },
-  "gitHead": "9bf55a2c86fa17707fabfb4320c3d722e270f9e6",
+  "gitHead": "2a575448a74cfaee5ec68fa10db24cf4ccade849",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hpcc-systems/MAF.git"
