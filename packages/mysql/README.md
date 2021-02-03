@@ -1,4 +1,9 @@
 # Node Sql Setup
+
+[![npm package][npm-image]][npm-url] 
+[![GitHub Actions](https://github.com/hpcc-systems/MAF/workflows/Build/badge.svg)](https://github.com/hpcc-systems/MAF/actions)
+[![Dependencies][dep-image]][dep-url]
+
 This module is created to allow other projects to easily utilize SQL when writing test cases.  Additionally, a utility function is used to test using this.
 
 # Setup

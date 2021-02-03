@@ -1,4 +1,5 @@
 # MAF - Modular Automation Framework
+[![npm package][npm-image]][npm-url] 
 [![GitHub Actions](https://github.com/hpcc-systems/MAF/workflows/Build/badge.svg)](https://github.com/hpcc-systems/MAF/actions)
 [![Dependencies](https://david-dm.org/hpcc-systems/MAF.svg)](https://david-dm.org/hpcc-systems/MAF)
 
@@ -156,3 +157,8 @@ Feature: View the text "Hello World"
 
 ## Add a module
 Please view [AddModule](./AddModule.md) for information on how to add a module.  This will allow the creation of new steps that can be used in your project.
+
+[npm-image]:https://img.shields.io/npm/v/@ln-maf/core.svg
+[npm-url]:https://www.npmjs.com/search?q=ln-maf
+
+

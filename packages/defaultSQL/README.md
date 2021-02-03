@@ -1,4 +1,8 @@
 # Node Default SQL Setup
+[![npm package][npm-image]][npm-url] 
+[![GitHub Actions](https://github.com/hpcc-systems/MAF/workflows/Build/badge.svg)](https://github.com/hpcc-systems/MAF/actions)
+[![Dependencies][dep-image]][dep-url]
+
 This module is created to allow other projects to easily create modules that perform sql using various platforms.  There are examples for mysql included.
 
 # Setup
@@ -36,3 +40,7 @@ Utilizes the sql system associated with the file provided.
 ## When $MODULENAME query from [{jsonObject}](../validations/JSONObject.md) is run
 Runs a query from the provided item.  Allows templated args as per the global cucumber projects.  Stores the results in `this.results.lastRun`.  Usable in MAF as `${lastRun}` or the it keyword.  Supports a string, file or item whenever this is used.
 
+[npm-image]:https://img.shields.io/npm/v/@ln-maf/defaultSQL.svg
+[npm-url]:https://www.npmjs.com/package/@ln-maf/defaultSQL
+[dep-image]:https://david-dm.org/hpcc-systems/MAF.svg?path=packages%2FdefaultSQL
+[dep-url]:https://david-dm.org/hpcc-systems/MAF?path=packages%2FdefaultSQL

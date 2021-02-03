@@ -1,5 +1,9 @@
 # MAF Core
-This contains several helper methods that can be useed by other packages.
+[![npm package][npm-image]][npm-url] 
+[![GitHub Actions](https://github.com/hpcc-systems/MAF/workflows/Build/badge.svg)](https://github.com/hpcc-systems/MAF/actions)
+[![Dependencies][dep-image]][dep-url]
+
+This contains several helper methods that can be used by other packages.
 
 ## performJSONObjectTransform - performs a transform on [{jsonObject}](../validations/JSONObject.md)
 When a MAF method receives a json object from a file or some other area, the performJSONObjectTransform converts it appropriately.  An example call with the `MAFWhen` command would be:
@@ -66,3 +70,7 @@ to the `jsonObj`.
 ### Differences
 All `"${JS_COMMAND_HERE}"` are replaced with `${JSON.stringify(command)}`.  This automatically escapes some characters to prevent invalid json within json files.
 
+[npm-image]:https://img.shields.io/npm/v/@ln-maf/core.svg
+[npm-url]:https://www.npmjs.com/package/@ln-maf/core
+[dep-image]:https://david-dm.org/hpcc-systems/MAF.svg?path=packages%2Fcore
+[dep-url]:https://david-dm.org/hpcc-systems/MAF?path=packages%2Fcore

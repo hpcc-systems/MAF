@@ -1,4 +1,9 @@
 # Validation Cucumber Steps
+[![npm package][npm-image]][npm-url] 
+[![GitHub Actions](https://github.com/hpcc-systems/MAF/workflows/Build/badge.svg)](https://github.com/hpcc-systems/MAF/actions)
+[![Dependencies][dep-image]][dep-url]
+
+
 This module is created to allow other projects to easily validate JSON utilizing a set of steps.
 
 ## Set up
@@ -670,3 +675,8 @@ Then item "test3" contains "Oran"
 
 ### Then [{jsonObject}](../validations/JSONObject.md) does not contain {string}
 Checks if the `jsonObject`  does not contain the string. The opposite of `Then {jsonObject} contains {string}`
+
+[npm-image]:https://img.shields.io/npm/v/@ln-maf/validations.svg
+[npm-url]:https://www.npmjs.com/package/@ln-maf/validations
+[dep-image]:https://david-dm.org/hpcc-systems/MAF.svg?path=packages%2Fvalidations
+[dep-url]:https://david-dm.org/hpcc-systems/MAF?path=packages%2Fvalidations

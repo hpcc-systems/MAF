@@ -1,4 +1,8 @@
 # API Cucumber Steps
+[![npm package][npm-image]][npm-url] 
+[![GitHub Actions](https://github.com/hpcc-systems/MAF/workflows/Build/badge.svg)](https://github.com/hpcc-systems/MAF/actions)
+[![Dependencies][dep-image]][dep-url]
+
 This module is created to allow other projects to easily perform API requests, utilizing a set of steps.
 
 ## Set up
@@ -198,3 +202,8 @@ Makes sure that `this.results.lastRun` is between 200 and 299.
 
 ## `Then status {int}`
 Makes sure that `this.results.lastRun.status` is equal to the integer specified.
+
+[npm-image]:https://img.shields.io/npm/v/@ln-maf/api.svg
+[npm-url]:https://www.npmjs.com/package/@ln-maf/api
+[dep-image]:https://david-dm.org/hpcc-systems/MAF.svg?path=packages%2Fapi
+[dep-url]:https://david-dm.org/hpcc-systems/MAF?path=packages%2Fapi

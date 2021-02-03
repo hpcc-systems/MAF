@@ -1,4 +1,8 @@
 # Cucumber-pre-processor
+[![npm package][npm-image]][npm-url] 
+[![GitHub Actions](https://github.com/hpcc-systems/MAF/workflows/Build/badge.svg)](https://github.com/hpcc-systems/MAF/actions)
+[![Dependencies][dep-image]][dep-url]
+
 This project will preprocess feature files to allow more input variables to be supplied.  This can be supplied through javascript, a csv/psv/json array file or a mixture of these.  This will hopefully allow it to be easier to maintain larger test sets.  This requires typescript to install some of the cucumber modules. And to currently run it, you must do `node exec.js` an example command for running a specific feature with this would be:
 ```
 mkdir -p test/report
@@ -78,3 +82,7 @@ Then this would become:
 |  VIN	|  VRN	|
 |  valid	|  valid	|
 ```
+[npm-image]:https://img.shields.io/npm/v/@ln-maf/preprocessor.svg
+[npm-url]:https://www.npmjs.com/package/@ln-maf/preprocessor
+[dep-image]:https://david-dm.org/hpcc-systems/MAF.svg?path=packages%2Fpreprocessor
+[dep-url]:https://david-dm.org/hpcc-systems/MAF?path=packages%2Fpreprocessor
