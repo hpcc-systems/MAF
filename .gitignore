@@ -6,4 +6,4 @@ node_modules
 .git.bfg-report/
 *.sqlConfig.json
 passwords.txt
-image2.png
+/image2.png
