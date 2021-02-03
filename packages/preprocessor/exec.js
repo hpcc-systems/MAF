@@ -19,7 +19,7 @@ require(appRoot + '/apply.js')
 } catch(e) {
 }
 var destDir = appRoot+'/destination'
-var pLoc=options.src
+var pLoc=options.packageLocation
 if(!pLoc) {
   pLoc="features"
 }

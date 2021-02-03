@@ -29,6 +29,19 @@ jobs:
     - run: yarn
     - run: npm test
       env: 
+       ENVIRONMENT: CI
        USE_ENV_VARIABLES: "TRUE"
        FAKE_SQL_USERNAME: MAF
        FAKE_SQL_PASSWORD: MAF
+     
+    - name: Status Create Action
+      if: ${{ always() }}
+      uses: hkusu/status-create-action@v1.0.0
+      id: status-create
+      with:
+        state: ${{ job.status }} 
+        sha: ${{ github.event.pull_request.head.sha }}
+  
+    - name: Show result
+      if: always()
+      run: echo '${{ steps.status-create.outputs.result }}'

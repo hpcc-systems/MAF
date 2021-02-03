@@ -1,6 +1,5 @@
 Feature: Validations : JSON manipulation
     Testing JSON object key deletion and extraction
-
     Scenario: Readme simple extract Example
     When set "response" to
     """
@@ -12,10 +11,12 @@ Feature: Validations : JSON manipulation
                     "subErrorMessage": "Phone Number is required"
                   }
                 ]
-              }
+              },
+              "doesnotexist": null
             }
    """
    When JSON key "subErrorCodes" is extracted from "response.error"
+   When JSON key "doesnotexist" is extracted from "response.error"
     When set "Data" to
     """
     {
@@ -23,6 +24,7 @@ Feature: Validations : JSON manipulation
         "b":"banana"
     }
     """
+    Then element "a" exists in item "Data"
     When JSON key "a" is extracted from "Data"
     Then it is equal to "apple" 
 
@@ -35,6 +37,7 @@ Feature: Validations : JSON manipulation
         }
         """
         And elements '["a", "b"]' exist in item "Data"
+        And elements 'a, b' exist in item "Data"
         When JSON key "a" is removed from "Data"
         Then "${Data.b}" is equal to "banana"
         And element "a" does not exist in item "Data"
@@ -87,9 +90,10 @@ Feature: Validations : JSON manipulation
     ]
     }
     """
-        When JSON key "deepMeh" is extracted from "TestJSON"
+        When JSON key "deepMeh" is extracted from item "TestJSON"
+        And JSON keys '["meh","deepMeh","deepMeh2.deep3", "arrayTest"]' are extracted from item "TestJSON"
         And JSON key "deep2" is extracted from it
-        And JSON keys '["meh","deepMeh","deepMeh2.deep3", "arrayTest"]' are extracted from "TestJSON"
+        And JSON keys 'meh,deepMeh,deepMeh2.deep3, arrayTest]' are extracted from item "TestJSON"
         And set "expected" to
         """
         {
@@ -109,6 +113,28 @@ Feature: Validations : JSON manipulation
         }
         """
         Then item "expected" is equal to item "lastRun"
+
+    Scenario: JSON Key Lowercase
+        When set "data" to:
+            """
+            {
+            "alreadylower": "lower",
+            "Alpha": "apple",
+            "BETA": "Banana",
+            "Charley": { "Coconut": "Hierarchy"}
+            }
+            """
+        When make json keys for item "data" lower case
+        Then item "data" is equal to:
+            """
+            {
+            "alreadylower": "lower",
+            "alpha": "apple",
+            "beta": "Banana",
+            "charley": { "coconut":  "Hierarchy" }
+            }
+            """
+
     Scenario: JSON Key Lowercase
         When set "data" to:
             """
@@ -166,6 +192,7 @@ Feature: Validations : JSON manipulation
             "Alpha": {
                 "Alpha_2": "Apple   "
                 },
+                "John": 5,
             "Beta": "_Banana_",
             "Charley": "Spaces are kept in between words",
             "Delta": { 
@@ -181,6 +208,7 @@ Feature: Validations : JSON manipulation
             "Alpha": {
               "Alpha_2": "Apple"
             },
+                            "John": 5,
             "Beta": "_Banana_",
             "Charley": "Spaces are kept in between words",
             "Delta": {
@@ -219,3 +247,30 @@ Feature: Validations : JSON manipulation
             "Delta_22": "Durian2"
             }
             """
+Scenario: Example for json path
+Given set "meh" to:
+"""
+{
+  "url": "http://google.com",
+  "arrayTest": [
+    "Testing1",
+    "Testing2",
+    "Testing3"
+  ]
+}
+"""
+And set "expected" to:
+"""
+{
+  "url": null,
+  "arrayTest": [
+    "Testing1",
+    "Testing2",
+    "Testing3"
+  ]
+}
+"""
+When "null" is applied to item "meh" on JSON path "$.url"
+Then item "expected" is equal to item "meh"
+When "" is applied to item "meh" on JSON path "$.url"
+

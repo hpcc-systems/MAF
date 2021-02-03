@@ -1,5 +1,13 @@
 Feature: FillTemplate : Test Fill Template
+  Scenario: Test attaching
+    When set "attach" to "false"
+    And set "no" to "yes"
+  Scenario: Attach an image
+    When blob is read from file "newBlob.png"
+    And blob item "lastRun" is attached
   Scenario: Test filling in json
+        When set "versionNum" to 3
+        And set "vNum" to "$100.00"
       When set "version" to "v3"
     When set "request" to:
     """
