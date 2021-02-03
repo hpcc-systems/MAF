@@ -21,5 +21,8 @@ getDirectories('.').forEach(directory => {
     var text=fs.readFileSync("./"+directory+"/index.js", 'utf8')
     text=textReplace(text)
     fs.writeFileSync('./' + directory + "/autoComplete.js", text.join("\n"))   
+    var cl=fs.readFileSync("../CHANGELOG.md", "utf8")
+    fs.writeFileSync('./' + directory + "/CHANGELOG.md", cl)
+    
 });
   
