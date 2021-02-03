@@ -10,7 +10,7 @@ const setItUp = function (moduleInfo) {
   MAFWhen(name + ' query from {jsonObject} is run', async function (query) {
     let connectionInfo = eval(`this.results.${name}` + 'ConnectionInfo')
     if (!connectionInfo) {
-      connectionInfo = JSON.parse(readFile('./' + name + '.sqlConfig.json', this))
+      connectionInfo = JSON.parse(readFile(name + '.sqlConfig.json', this))
     }
     const q = performJSONObjectTransform.call(this, query)
     const userInfoObtainer = require('./userInfo')
