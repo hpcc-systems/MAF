@@ -14,10 +14,8 @@ jobs:
     steps:
       - name: Dump GitHub context
         run: echo '${{ toJson(github) }}'
-      - name: Check out
-        uses: actions/checkout@v2
-      - name: Use this action
-        uses: ./
+      - name: Status Create Action
+        uses: hkusu/status-create-action@v1.0.0
         id: status-create
         with:
           sha: ${{ github.event.pull_request.head.sha }}
@@ -33,10 +31,8 @@ jobs:
     steps:
       - name: Dump GitHub context
         run: echo '${{ toJson(github) }}'
-      - name: Check out
-        uses: actions/checkout@v2
-      - name: Use this action
-        uses: ./
+      - name: Status Create Action
+        uses: hkusu/status-create-action@v1.0.0
         id: status-create
         with:
           sha: ${{ github.sha }}
