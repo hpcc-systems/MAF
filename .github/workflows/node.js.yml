@@ -29,6 +29,7 @@ jobs:
     - run: yarn
     - run: npm test
       env: 
+       ENVIRONMENT: CI
        USE_ENV_VARIABLES: "TRUE"
        FAKE_SQL_USERNAME: MAF
        FAKE_SQL_PASSWORD: MAF
