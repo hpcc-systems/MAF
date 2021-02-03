@@ -20,15 +20,10 @@ var setItUp=function(moduleInfo) {
       connectionInfo=JSON.parse(connectionInfo)
     }
     var q=performJSONObjectTransform.call(this, query)
-     console.log("HERE ")
     var userInfoObtainer=require('./userInfo')
-     console.log("I ")
     var userInfo=await userInfoObtainer(`${name}.${connectionInfo.host}.${connectionInfo.database}`)
-     console.log("AM ")
     var connection=await connect(connectionInfo, userInfo.username, userInfo.password)
-     console.log("NOW ")
     var res=await runQuery(connection, q)
-     console.log("RUNNING ")
     await disconnect(connection)
     return res
   })
