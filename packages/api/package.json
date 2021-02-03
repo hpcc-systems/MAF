@@ -30,7 +30,9 @@
   },
   "keywords": [
     "cucumber-js",
-    "testing"
+    "testing",
+    "gherkin",
+    "cucumber-steps"
   ],
   "bugs": {
     "url": "https://github.com/hpcc-systems/MAF/issues"

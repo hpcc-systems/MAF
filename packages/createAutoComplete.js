@@ -1,25 +1,20 @@
-var textReplace=function(text) {
-    var lines=text.split("\n")    
-    var keywords=["Given", "When", "Then", "MAFWhen"]
-    return ["const { When, Given, Then } = require('@cucumber/cucumber');",
-        ...lines.map(i=>i.trim()).filter(i=>{
-          i=i.split("(")[0]
-          return keywords.includes(i)
-        }).map(i=>i.replace("MAFWhen", "When")).map(
-          i=>i.replace(/,.*/, ')')
-        )
-    ]
+var fs=require('fs')
+fs.readFileSync('./package.json', 'utf8')
+var a=require('./package.json')
+a.repository= { "type": "git",
+    "url": "git+https://github.com/hpcc-systems/MAF.git"
   }
-const fs=require('fs')
-const { lstatSync, readdirSync } = fs
-const { join } = require('path')
+a.keywords=
+  [
+    "cucumber-js",
+    "testing",
+    "gherkin",
+    "cucumber-steps"
+  ]
+a.bugs= {
+    "url": "https://github.com/hpcc-systems/MAF/issues"
+  }
+a.homepage="https://github.com/hpcc-systems/MAF#readme"
+console.log(a)
 
-const isDirectory = source => lstatSync(source).isDirectory()
-const getDirectories = source =>
-  readdirSync(source).map(name => join(source, name)).filter(isDirectory)
-getDirectories('.').forEach(directory => {
-    var text=fs.readFileSync("./"+directory+"/index.js", 'utf8')
-    text=textReplace(text)
-    fs.writeFileSync('./' + directory + "/autoComplete.js", text.join("\n"))   
-});
-  
+fs.writeFileSync('./package.json', JSON.stringify(a, null,2), 'utf8')
