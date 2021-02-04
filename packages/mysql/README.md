@@ -36,3 +36,7 @@ Utilizes the sql system associated with the item provided.  By default will use 
 ## When mysql query from [{jsonObject}](../validations/JSONObject.md) is run
 Runs a query from the provided item.  Allows templated args as per the global cucumber projects.  Stores the results in `this.results.lastRun`.  Usable in cucubmer as `${lastRun}` or the it keyword.
 
+[npm-image]:https://img.shields.io/npm/v/@ln-maf/mysql.svg
+[npm-url]:https://www.npmjs.com/package/@ln-maf/mysql-sql
+[dep-image]:https://david-dm.org/hpcc-systems/MAF.svg?path=packages%2Fmysql
+[dep-url]:https://david-dm.org/hpcc-systems/MAF?path=packages%2Fmysql
