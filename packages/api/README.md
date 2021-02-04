@@ -1,9 +1,9 @@
 # API Cucumber Steps
+This module is created to allow other projects to easily perform API requests, utilizing a set of steps.
+
 [![npm package][npm-image]][npm-url] 
 [![GitHub Actions](https://github.com/hpcc-systems/MAF/workflows/Build/badge.svg)](https://github.com/hpcc-systems/MAF/actions)
 [![Dependencies][dep-image]][dep-url]
-
-This module is created to allow other projects to easily perform API requests, utilizing a set of steps.
 
 ## Set up
 1. Install by running `npm i @ln-maf/api`

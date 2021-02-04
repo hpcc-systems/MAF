@@ -1,8 +1,4 @@
 # Cucumber-pre-processor
-[![npm package][npm-image]][npm-url] 
-[![GitHub Actions](https://github.com/hpcc-systems/MAF/workflows/Build/badge.svg)](https://github.com/hpcc-systems/MAF/actions)
-[![Dependencies][dep-image]][dep-url]
-
 This project will preprocess feature files to allow more input variables to be supplied.  This can be supplied through javascript, a csv/psv/json array file or a mixture of these.  This will hopefully allow it to be easier to maintain larger test sets.  This requires typescript to install some of the cucumber modules. And to currently run it, you must do `node exec.js` an example command for running a specific feature with this would be:
 ```
 mkdir -p test/report
@@ -13,6 +9,12 @@ node multiReport.js;
 openPy $PWD/test/report/undefined/index.html
 exit $val
 ```
+
+[![npm package][npm-image]][npm-url] 
+[![GitHub Actions](https://github.com/hpcc-systems/MAF/workflows/Build/badge.svg)](https://github.com/hpcc-systems/MAF/actions)
+[![Dependencies][dep-image]][dep-url]
+
+
 
 ## Installation
 Install with `npm i @ln-maf/preprocessor.git`

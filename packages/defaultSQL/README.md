@@ -1,9 +1,9 @@
 # Node Default SQL Setup
+This module is created to allow other projects to easily create modules that perform sql using various platforms.  There are examples for mysql included.
+
 [![npm package][npm-image]][npm-url] 
 [![GitHub Actions](https://github.com/hpcc-systems/MAF/workflows/Build/badge.svg)](https://github.com/hpcc-systems/MAF/actions)
 [![Dependencies][dep-image]][dep-url]
-
-This module is created to allow other projects to easily create modules that perform sql using various platforms.  There are examples for mysql included.
 
 # Setup
 

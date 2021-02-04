@@ -1,10 +1,9 @@
 # Validation Cucumber Steps
+This module is created to allow other projects to easily validate JSON utilizing a set of steps.
+
 [![npm package][npm-image]][npm-url] 
 [![GitHub Actions](https://github.com/hpcc-systems/MAF/workflows/Build/badge.svg)](https://github.com/hpcc-systems/MAF/actions)
 [![Dependencies][dep-image]][dep-url]
-
-
-This module is created to allow other projects to easily validate JSON utilizing a set of steps.
 
 ## Set up
 Install with `npm i @ln-maf/validations`
