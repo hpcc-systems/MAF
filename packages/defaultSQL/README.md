@@ -40,7 +40,7 @@ Utilizes the sql system associated with the file provided.
 ## When $MODULENAME query from [{jsonObject}](../validations/JSONObject.md) is run
 Runs a query from the provided item.  Allows templated args as per the global cucumber projects.  Stores the results in `this.results.lastRun`.  Usable in MAF as `${lastRun}` or the it keyword.  Supports a string, file or item whenever this is used.
 
-[npm-image]:https://img.shields.io/npm/v/@ln-maf/defaultSQL.svg
-[npm-url]:https://www.npmjs.com/package/@ln-maf/defaultSQL
+[npm-image]:https://img.shields.io/npm/v/@ln-maf/default-sql.svg
+[npm-url]:https://www.npmjs.com/package/@ln-maf/default-sql
 [dep-image]:https://david-dm.org/hpcc-systems/MAF.svg?path=packages%2FdefaultSQL
 [dep-url]:https://david-dm.org/hpcc-systems/MAF?path=packages%2FdefaultSQL
