@@ -1,0 +1,22 @@
+{
+  "name": "@ln-maf/aws",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "1.1.0",
+  "description": "Setup for aws on Node. This contains s3, dynamoDB, sqs, and lamba stepDefinitions",
+  "main": "index.js",
+  "scripts": {
+    "test": "bash cleanLocalstack.sh > /dev/null; bash initLocalstack.sh && cd ../.. && bash runFeature.sh aws"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "chai": "^4.2.0",
+    "@cucumber/cucumber": "^7.0.0"
+  },
+  "peerDependencies": {
+    "@ln-maf/core": "^1.0.8"
+  },
+  "gitHead": "9bf55a2c86fa17707fabfb4320c3d722e270f9e6"
+}
