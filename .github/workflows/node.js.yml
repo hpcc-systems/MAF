@@ -42,6 +42,7 @@ jobs:
        USE_ENV_VARIABLES: "TRUE"
        FAKE_SQL_USERNAME: MAF
        FAKE_SQL_PASSWORD: MAF
+       LOCALSTACKHOST: localhost
      
     - name: Status Create Action
       if: ${{ always() }}
