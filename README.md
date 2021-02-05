@@ -12,6 +12,7 @@ Dependencies
 Create a new npm project using `npm init` and install the following dependencies:
 ```
 npm i @cucumber/cucumber --save-dev
+npm i @ln-maf/aws --save-dev
 npm i @ln-maf/validations --save-dev
 npm i @ln-maf/api --save-dev
 npm i @ln-maf/mysql --save-dev
@@ -22,6 +23,7 @@ npm i multiple-cucumber-html-reporter --save-dev
 Then create a features directory `mkdir features` with the following in `features/steps.js` file:
 ```
 require('@ln-maf/core/parameter_types')
+require('@ln-maf/aws')
 require('@ln-maf/validations')
 require('@ln-maf/api')
 require('@ln-maf/mysql')
@@ -120,6 +122,8 @@ Feature: SQL Hello World
 There are several included modules, below are links to the READMEs.  You can also find them in the projects directory.
 
 [Validations](packages/validations/README.md) - This project contains helper cucumber steps and various ways of setting objects.  It additionally performs validations on some of the objects.  This would include things like `Then item "a" is equal to 5` and `When "Hello World" is base64 encoded`
+
+[AWS](packages/aws/README.md) - This project contains cucumber steps to run calls on AWS (Amazon Web Services). Supported features include S3, SynamoDB, SQS.
 
 [API](packages/api/README.md) - This project contains cucumber steps for performing API Calls.
 
