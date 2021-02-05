@@ -13,7 +13,42 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    services:
+      localstack: 
+        image: localstack/localstack:0.11.1
+        ports: 
+          - 4567:4567
+          - 4568:4568
+          - 4569:4569
+          - 4570:4570
+          - 4571:4571
+          - 4572:4572
+          - 4573:4573
+          - 4574:4574
+          - 4575:4575
+          - 4576:4576
+          - 4577:4577
+          - 4578:4578
+          - 4579:4579
+          - 4580:4580
+          - 4581:4581
+          - 4582:4582
+          - 4583:4583
+          - 4584:4584
+          - 4585:4585
+          - 4586:4586
+          - 4587:4587
+          - 4588:4588
+          - 4589:4589
+          - 4590:4590
+          - 4591:4591
+          - 4592:4592
+          - 4593:4593
+          - 4594:4594
+          - 4595:4595
+          - 4596:4596
+          - 4597:4597
+          - 4598:4598
     strategy:
       matrix:
         node-version: [10.x, 12.x, 14.x, 15.x]
@@ -25,6 +60,11 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - name: Setup Python
+      uses: actions/setup-python@v2.2.1
+    - run: sudo apt-get install -y python3-pip
+    - run: yes | pip install awscliv2
+    - run: yes json | aws configure || true
     - run: npm i -g yarn
     - run: yarn
     - run: npm test
@@ -33,6 +73,7 @@ jobs:
        USE_ENV_VARIABLES: "TRUE"
        FAKE_SQL_USERNAME: MAF
        FAKE_SQL_PASSWORD: MAF
+       LOCALSTACKHOST: localhost
      
     - name: Status Create Action
       if: ${{ always() }}
