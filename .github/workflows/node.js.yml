@@ -17,7 +17,7 @@ jobs:
       localstack: 
         image: localstack/localstack:0.11.1
         ports: 
-          - 4567:4597
+          - 4567:4598
     strategy:
       matrix:
         node-version: [10.x, 12.x, 14.x, 15.x]
