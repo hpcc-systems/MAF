@@ -123,7 +123,7 @@ There are several included modules, below are links to the READMEs.  You can als
 
 [Validations](packages/validations/README.md) - This project contains helper cucumber steps and various ways of setting objects.  It additionally performs validations on some of the objects.  This would include things like `Then item "a" is equal to 5` and `When "Hello World" is base64 encoded`
 
-[AWS](packages/aws/README.md) - This project contains cucumber steps to run calls on AWS (Amazon Web Services). Supported features include S3, SynamoDB, SQS.
+[AWS](packages/aws/README.md) - This project contains cucumber steps to run calls on AWS (Amazon Web Services). Supported features include S3, DynamoDB, SQS.
 
 [API](packages/api/README.md) - This project contains cucumber steps for performing API Calls.
 
