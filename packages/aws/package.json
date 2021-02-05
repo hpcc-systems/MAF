@@ -7,7 +7,7 @@
   "description": "Setup for aws on Node. This contains s3, dynamoDB, sqs, and lamba stepDefinitions",
   "main": "index.js",
   "scripts": {
-    "test": "bash cleanLocalstack.sh"
+    "test": "cd ../.. && bash runFeature.sh api"
   },
   "author": "",
   "license": "Apache-2.0",
