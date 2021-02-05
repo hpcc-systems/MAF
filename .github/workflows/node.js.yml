@@ -13,7 +13,11 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    services:
+      localstack: 
+        image: localstack/localstack:0.11.1
+        ports: 
+          - 4567:4597
     strategy:
       matrix:
         node-version: [10.x, 12.x, 14.x, 15.x]
@@ -25,6 +29,11 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - name: Setup Python
+      uses: actions/setup-python@v2.2.1
+    - run: sudo apt-get install -y python3-pip
+    - run: yes | pip install awscliv2
+    - run: yes json | aws configure || true
     - run: npm i -g yarn
     - run: yarn
     - run: npm test
