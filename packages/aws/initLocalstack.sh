@@ -11,9 +11,3 @@ aws --endpoint-url=http://${LOCALSTACKHOST}:4569 dynamodb create-table \
     >/dev/null
 aws --endpoint-url=http://${LOCALSTACKHOST}:4569 dynamodb list-tables
 
-#Create a test queue
-aws --endpoint-url=http://${LOCALSTACKHOST}:4576 sqs create-queue \
-    --queue-name testQueue
-aws --endpoint-url=http://${LOCALSTACKHOST}:4576 sqs create-queue \
-    --queue-name testQueue2
-aws --endpoint-url=http://${LOCALSTACKHOST}:4576 sqs list-queues
