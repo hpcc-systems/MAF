@@ -30,7 +30,7 @@ const check = async function (environment, skipIfNotRequired = false) {
   // Store the results.
   //
   if (result.username) {
-    console.log('STROING USERNAME IN ENVIRONMENT ' + environment)
+    console.log('STORING USERNAME IN ENVIRONMENT ' + environment)
     await keytar.setPassword(environment, 'username', result.username)
     if (result.password) {
       await keytar.setPassword(environment, 'password', result.password)
