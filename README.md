@@ -82,9 +82,9 @@ Feature: View the text "Hello World"
 ![ApiResult](./APIResult.png)
 
 
-## Hello World SQL Example
+## Hello World MYSQL Example
 
-This requires the setup of your sql environment.  To utilize this, please run `node sqlConfigure` and it will prompt you for needed credentials, etc. for SQL to run properly.    It will store the config in a `sqlConfig.json` file and it will store your credentials using `node-keytar` which uses your OS's secure password storage:
+This requires the setup of your sql environment.  To utilize this, please run `npx mysql-configure` after installing `npm i @ln-maf/mysql`  and it will prompt you for needed credentials, etc. for SQL to run properly.    It will store the config in a `sqlConfig.json` file and it will store your credentials using `node-keytar` which uses your OS's secure password storage:
 - Windows - Credential Vault
 - MacOS - KeyChain
 - Linux - libSecret

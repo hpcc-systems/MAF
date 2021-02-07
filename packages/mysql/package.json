@@ -10,7 +10,7 @@
     "test": "sh runTests.sh"
   },
   "bin": {
-    "mysql-configure": "./config.js"
+    "mysql-configure": "node ./config.js"
   },
   "author": "",
   "license": "Apache-2.0",
