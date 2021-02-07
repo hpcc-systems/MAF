@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@ln-maf/default-sql": "^1.3.2",
+    "keytar": "^7.3.0",
     "sync-mysql": "^3.0.1"
   },
   "gitHead": "2a575448a74cfaee5ec68fa10db24cf4ccade849",
