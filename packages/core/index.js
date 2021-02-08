@@ -43,7 +43,7 @@ const performJSONObjectTransform = function (items, ft=true) {
   if (!this.results) {
     this.results = {}
   }
-  if(this.results.skipFillTemplate.toUpperCase() === "TRUE") {
+  if(this.results.skipFillTemplate && this.results.skipFillTemplate.toUpperCase() === "TRUE") {
     ft=false
   }
   if (items.value) {
