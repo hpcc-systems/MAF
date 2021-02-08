@@ -15,13 +15,14 @@ const tryAttach = function (attach, type = 'text') {
 const canAttach = function () {
   return this.results.attach !== 'false'
 }
-const applyJSONToString = function (string, scenario) {
+const applyJSONToString = function (string, scenario, ft=true) {
   if (!scenario.results) {
     scenario.results = {}
   }
   if (!scenario.results.moment) {
     scenario.results.moment = require('moment')
   }
+  if(ft)
   string = filltemplate(string, scenario.results)
   try {
     if (string.trim() !== '') {
@@ -42,8 +43,8 @@ const performJSONObjectTransform = function (items, ft=true) {
   if (!this.results) {
     this.results = {}
   }
-  if(this.results.skipFillTemplate) {
-    ft=true
+  if(this.results.skipFillTemplate.toUpperCase() === "TRUE") {
+    ft=false
   }
   if (items.value) {
     items.value = items.value.slice(1, items.value.length - 1)
@@ -64,12 +65,11 @@ const performJSONObjectTransform = function (items, ft=true) {
       items.value = filltemplate(items.value, this.results)
       return eval('this.results.' + items.value)
     case 'file':
-      if(ft)
       items.value = filltemplate(items.value, this.results)
-      return applyJSONToString(readFile(items.value, this), this)
+      return applyJSONToString(readFile(items.value, this), this, ft)
     case '':
     case 'string':
-      return applyJSONToString(items.value, this)
+      return applyJSONToString(items.value, this, ft)
     default:
       return parseInt(items.type)
   }
