@@ -38,9 +38,12 @@ const applyJSONToString = function (string, scenario) {
   return string
 }
 
-const performJSONObjectTransform = function (items) {
+const performJSONObjectTransform = function (items, ft=true) {
   if (!this.results) {
     this.results = {}
+  }
+  if(this.results.skipFillTemplate) {
+    ft=true
   }
   if (items.value) {
     items.value = items.value.slice(1, items.value.length - 1)
@@ -57,9 +60,11 @@ const performJSONObjectTransform = function (items) {
     case 'it':
       return this.results.lastRun
     case 'item':
+      if(ft)
       items.value = filltemplate(items.value, this.results)
       return eval('this.results.' + items.value)
     case 'file':
+      if(ft)
       items.value = filltemplate(items.value, this.results)
       return applyJSONToString(readFile(items.value, this), this)
     case '':
