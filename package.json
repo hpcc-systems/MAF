@@ -17,7 +17,7 @@
     "lerna": "^3.22.1"
   },
   "dependencies": {
-    "chai": "^4.2.0",
+    "chai": "^4.3.0",
     "multiple-cucumber-html-reporter": "^1.18.0",
     "node-fetch": "^2.6.1",
     "nyc": "^15.1.0"
