@@ -45,6 +45,7 @@ const performRequestFromJSONString = async function (string) {
 }
 
 const performRequestFromJSON = async function (request) {
+  if(request.url)
   build(this, request.url.replace(/\/$/, ''), 'url')
   if (request.body) {
     build(this, request.body, 'body')
