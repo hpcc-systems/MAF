@@ -7,7 +7,7 @@
   "description": "The core for the MAF framework.  Contains helpers to make it easy to use.",
   "main": "index.js",
   "scripts": {
-    "test": "cd ../.. && bash runFeature.sh core"
+    "test": "cd ../.. && bash runFeature.sh core $EXTRAS"
   },
   "author": "",
   "license": "Apache-2.0",

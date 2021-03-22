@@ -74,6 +74,7 @@ jobs:
        FAKE_SQL_USERNAME: MAF
        FAKE_SQL_PASSWORD: MAF
        LOCALSTACKHOST: localhost
+       USEPORTMAP: true
      
     - name: Status Create Action
       if: ${{ always() }}

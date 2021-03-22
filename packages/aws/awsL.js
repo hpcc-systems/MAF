@@ -10,7 +10,11 @@ const AWSRun = function (args) {
   }
   const port = ports[args[0]]
   if (process.env.AWSENV === undefined || process.env.AWSENV === '' || process.env.AWSENV.toUpperCase() === 'FALSE') {
-    args.unshift(`--endpoint-url=http://${getHost()}:${port}`)
+    let argURL=`--endpoint-url=http://${getHost()}`
+    if(process.env.USEPORTMAP) {
+      argURL+=`:${port}`
+    }
+    args.unshift(argURL)
   }
   const res = require('child_process').spawnSync('aws', args)
   if (res.status !== 0 || res.stdout.includes('Error:')) {
