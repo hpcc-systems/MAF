@@ -45,8 +45,8 @@ const performRequestFromJSONString = async function (string) {
 }
 
 const performRequestFromJSON = async function (request) {
-  if(request.url)
-  build(this, request.url.replace(/\/$/, ''), 'url')
+  if (request.url)
+    build(this, request.url.replace(/\/$/, ''), 'url')
   if (request.body) {
     build(this, request.body, 'body')
   }
@@ -161,7 +161,11 @@ const performRequest = async (method, scenario) => {
     body: request.body,
     ...additionalParams
   }
-  const url = [request.url, request.api].join('/')
+  let items=[request.url]
+  if(request.api) {
+    items.push(request.api)
+  }
+  const url = items.join('/')
   const req = await fetch(url, params)
   let text
   if (scenario.results.apiRetrieveType) {
@@ -173,12 +177,12 @@ const performRequest = async (method, scenario) => {
         const tmpBlob = Buffer.from(await text.arrayBuffer())
         scenario.attach(tmpBlob, 'image/png')
       }
-    } catch (err) {}
+    } catch (err) { }
   } else {
     try {
       text = await req.text()
       text = JSON.parse(text)
-    } catch (err) {}
+    } catch (err) { }
   }
   const headers = await req.headers.raw()
   Object.keys(headers).forEach(header => {
