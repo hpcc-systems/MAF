@@ -6,34 +6,25 @@ const fs = require('fs')
 const { filltemplate } = require('@ln-maf/core')
 const { canAttach, performJSONObjectTransform, MAFSave, getFilePath, MAFWhen } = require('@ln-maf/core')
 const { setDefaultTimeout, Given, Then } = require('@cucumber/cucumber')
+const { build, performRequestFromJSON, performRequest } = require('./helpers')
 
 setDefaultTimeout(15 * 1000)
 
-const build = (scenario, value, name) => {
-  if (!scenario.results) {
-    scenario.results = {}
-  }
-  if (!scenario.request) {
-    scenario.request = {}
-    scenario.request.headers = '{}'
-  }
-  scenario.request[name] = filltemplate(value, scenario.results)
-}
 Given('url {string}', function (url) {
   url = url.replace(/\/$/, '')
-  build(this, url, 'url')
+  build.call(this, url, 'url')
 })
 Given('api {string}', function (api) {
   api = api.replace(/^\//, '')
-  build(this, api, 'api')
+  build.call(this, api, 'api')
 })
 
 Given('body {string}', function (request) {
-  build(this, request, 'body')
+  build.call(this, request, 'body')
 })
 
 Given('headers {string}', function (headers) {
-  build(this, headers, 'headers')
+  build.call(this, headers, 'headers')
 })
 
 const b64toBuffer = (b64Data, contentType = '', sliceSize = 512) => {
@@ -41,75 +32,18 @@ const b64toBuffer = (b64Data, contentType = '', sliceSize = 512) => {
 }
 const performRequestFromJSONString = async function (string) {
   const request = JSON.parse(filltemplate(string, this.results))
-  return await performRequestFromJSON.call(this, request)
+  return await performRequestFromJSONMAF.call(this, request)
 }
 
-const performRequestFromJSON = async function (request) {
-  if (request.url)
-    build(this, request.url.replace(/\/$/, ''), 'url')
-  if (request.body) {
-    build(this, request.body, 'body')
-  }
-  if (request.jsonBody) {
-    this.request.body = JSON.stringify(request.jsonBody, this.results)
-  }
-  if (request.urlEncodedBody) {
-    let formBody = []
-    const details = request.urlEncodedBody
-    for (const property in details) {
-      const encodedKey = encodeURIComponent(property)
-      const encodedValue = encodeURIComponent(details[property])
-      formBody.push(encodedKey + '=' + encodedValue)
-    }
-    formBody = formBody.join('&')
-    build(this, formBody, 'body')
-  }
-  const formBodyMap = function (item) {
-    switch (item.type) {
-      case 'file':
-        return fs.createReadStream(getFilePath(item.fileName, this))
-      case 'base64blob':
-        return b64toBuffer(item.base64blob)
-      default:
-        return item
-    }
-  }
-  if (request.headers) { build(this, JSON.stringify(request.headers), 'headers') }
-  if (request.formBody) {
-    const data = new FormData()
-    const details = request.formBody
-    for (const property in details) {
-      if (Array.isArray(details[property])) {
-        details[property].map(formBodyMap.bind(this)).forEach(i => {
-          data.append(property + '[]', i)
-        })
-      } else {
-        data.append(property, formBodyMap.call(this, details[property]))
-      }
-    }
-    this.request.body = data
-  }
-
-  if (request.api) { build(this, request.api.replace(/^\//, ''), 'api') }
-  if (request.apiParams) {
-    let formBody = []
-    const details = request.apiParams
-    for (const property in details) {
-      const encodedKey = encodeURIComponent(property)
-      const encodedValue = encodeURIComponent(details[property])
-      formBody.push(encodedKey + '=' + encodedValue)
-    }
-    formBody = formBody.join('&')
-    const api = this.request.api ? this.request.api : ''
-    build(this, api + '?' + formBody, 'api')
-  }
-
-  return await performRequest(request.method, this)
+const performRequestFromJSONMAF = async function (request) {
+  let res=await performRequestFromJSON.call(this, request)
+  MAFSave.call(this, 'response', res.response)
+  return res
 }
 
 MAFWhen('api request from {jsonObject} is performed', async function (item) {
   item = performJSONObjectTransform.call(this, item)
-  return await performRequestFromJSON.call(this, item)
+  return await performRequestFromJSONMAF.call(this, item)
 })
 MAFWhen('perform api request:', performRequestFromJSONString)
 MAFWhen('api request from {jsonObject} is performed with:', async function (reqItem, dataTable) {
@@ -140,75 +74,20 @@ MAFWhen('api request from {jsonObject} is performed with:', async function (reqI
   }
 
   const item = performJSONObjectTransform.call(extraParams, reqItem)
-  return await performRequestFromJSON.call(this, item)
+  return await performRequestFromJSONMAF.call(this, item)
 })
 
-const performRequest = async (method, scenario) => {
-  const request = scenario.request
-  if (!request.headers) {
-    request.headers = {}
-  }
-  if (typeof request.headers === 'string') {
-    request.headers = JSON.parse(request.headers)
-  }
-  let additionalParams = {}
-  if (scenario.results && scenario.results.api) {
-    additionalParams = scenario.results.api.additionalParams
-  }
-  const params = {
-    method: method,
-    headers: request.headers,
-    body: request.body,
-    ...additionalParams
-  }
-  let items=[request.url]
-  if(request.api) {
-    items.push(request.api)
-  }
-  const url = items.join('/')
-  const req = await fetch(url, params)
-  let text
-  if (scenario.results.apiRetrieveType) {
-    text = await (req[scenario.results.apiRetrieveType])()
-  } else if (req.headers.get('content-type') && req.headers.get('content-type').includes('image')) {
-    text = await req.blob()
-    try {
-      if (canAttach.call(scenario)) {
-        const tmpBlob = Buffer.from(await text.arrayBuffer())
-        scenario.attach(tmpBlob, 'image/png')
-      }
-    } catch (err) { }
-  } else {
-    try {
-      text = await req.text()
-      text = JSON.parse(text)
-    } catch (err) { }
-  }
-  const headers = await req.headers.raw()
-  Object.keys(headers).forEach(header => {
-    headers[header] = headers[header][0]
-  })
-  const res = {
-    request: {
-      url: url,
-      ...params
-    },
-    ok: req.ok,
-    status: req.status,
-    response: text,
-    headers: headers
-  }
-  MAFSave.call(scenario, 'response', res.response)
-  scenario.request.headers = null
-  scenario.request.body = null
+async function performRequestMAF(method) {
+  let res=await performRequest.call(this, method)
+  MAFSave.call(this, 'response', res.response)
   return res
 }
 
 MAFWhen('method post', async function () {
-  return await performRequest('POST', this)
+  return await performRequestMAF.call(this, 'POST')
 })
 MAFWhen('method get', async function () {
-  return await performRequest('GET', this)
+  return await performRequestMAF.call(this, 'GET')
 })
 Then('the status is ok', function () {
   assert(this.results.lastRun.ok, `The status ${this.results.lastRun.status} was not in the range of valid http response codes 200-299`)
