@@ -15,7 +15,7 @@ function build(value, name) {
     this.request = {}
     this.request.headers = '{}'
   }
-  this.request[name] = filltemplate(value, this)
+  this.request[name] = filltemplate(value, this.results)
 }
 
 const b64toBuffer = (b64Data, contentType = '', sliceSize = 512) => {
