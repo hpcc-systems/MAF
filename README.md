@@ -149,7 +149,7 @@ Feature: View the text "Hello World"
   Scenario: Hello World
     Given set "url" to "https://mocky.io"
     Given set "exampleLiteral" to "${5+5}Works?"
-    When api request "helloWorld.json" is performed
+    When api request from file "helloWorld.json" is performed
     Then status ok
     And "${response}" is equal to "Hello World"
 ```
