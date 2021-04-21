@@ -147,7 +147,7 @@ Feature: Variable example with api
 ```
 Feature: View the text "Hello World"
   Scenario: Hello World
-    Given set "url" to "https://mocky.io"
+    Given set "url" to "https://mocky.io/v2/"
     Given set "exampleLiteral" to "${5+5}Works?"
     When api request from file "helloWorld.json" is performed
     Then status ok
