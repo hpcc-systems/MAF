@@ -13,19 +13,19 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@ln-maf/validations": "^1.3.11",
-    "eslint": "^7.22.0",
+    "eslint": "^7.24.0",
     "eslint-config-standard": "^16.0.2",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.3.1"
+    "eslint-plugin-promise": "^5.1.0"
   },
   "peerDependencies": {
-    "@cucumber/cucumber": "^7.0.0",
+    "@cucumber/cucumber": "^7.2.1",
     "@ln-maf/core": "*",
     "chai": "^4.3.4"
   },
   "dependencies": {
-    "fetch-blob": "^2.1.1",
+    "fetch-blob": "^2.1.2",
     "form-data": "^4.0.0",
     "node-fetch": "^2.6.1"
   },
