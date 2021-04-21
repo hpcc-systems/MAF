@@ -1,5 +1,7 @@
 # MAF - Modular Automation Framework
-An expandable fast, easy to use automation framework built in the cucumber language.  Supports API Testing and SQL Testing in a simple manner.  Allows the usage of modules in isolation as well as in an integrated fashion.  Utilizes the cucumber language to clearly articulate intent while preserving test data for further debugging and record-keeping.  Allows the integration of custom modules and provides a core to allow for simple integration between components.
+An expandable fast, easy to use automation framework built in the cucumber language.  Supports API Testing and SQL Testing in a simple manner.  Allows the usage of modules in isolation as well as in an integrated fashion.  Utilizes the cucumber language to clearly articulate intent while preserving test data for further debugging and record-keeping.  Allows the integration of custom modules and provides a core to allow for simple integration between components.  
+You can view an example report at:
+https://maf-test-reports.web.app/
 
 [![npm package][npm-image]][npm-url] 
 [![GitHub Actions](https://github.com/hpcc-systems/MAF/workflows/Build/badge.svg)](https://github.com/hpcc-systems/MAF/actions)
@@ -33,7 +35,8 @@ Doing this indicates that these modules steps and [parameter types](https://cucu
 Modify the `package.json` to use cucumber:
 ```
   "scripts": {
-    "test": "cucumber-js --format json > test/report/report.json; node node_modules/@ln-maf/core/multiReport"
+    "test": "cucumber-js -f json:test/report/report.json",
+    "report": "node node_modules/@ln-maf/core/multiReport"
   },
 ```
 
@@ -42,7 +45,7 @@ Please also create a directory to store your test results in the root of your pr
 mkdir -p test/report
 ```
 
-Now, when you run `npm t` you should be able to view your test results in a nice looking report.
+Now, when you run `npm t` it will run the tests and you can run `npm run report` to get an html report of your test cases. 
 
 ## Hello World API Example
 
@@ -144,9 +147,9 @@ Feature: Variable example with api
 ```
 Feature: View the text "Hello World"
   Scenario: Hello World
-    Given set "url" to "https://mocky.io"
+    Given set "url" to "https://mocky.io/v2/"
     Given set "exampleLiteral" to "${5+5}Works?"
-    When api request "helloWorld.json" is performed
+    When api request from file "helloWorld.json" is performed
     Then status ok
     And "${response}" is equal to "Hello World"
 ```
