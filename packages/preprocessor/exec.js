@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const glob = require('glob')
 // eslint-disable-next-line no-unused-vars
 const defaultSteps = require('./apply')
