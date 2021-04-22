@@ -35,8 +35,7 @@ Doing this indicates that these modules steps and [parameter types](https://cucu
 Modify the `package.json` to use cucumber:
 ```
   "scripts": {
-    "test": "cucumber-js -f json:test/report/report.json",
-    "report": "node node_modules/@ln-maf/core/multiReport"
+    "test": "cucumber-js -f json:test/report/report.json"
   },
 ```
 
@@ -45,7 +44,7 @@ Please also create a directory to store your test results in the root of your pr
 mkdir -p test/report
 ```
 
-Now, when you run `npm t` it will run the tests and you can run `npm run report` to get an html report of your test cases. 
+Now, when you run `npm t` it will run the tests and you can run `npx report` to get an html report of your test cases. 
 
 ## Hello World API Example
 

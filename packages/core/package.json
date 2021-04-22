@@ -20,6 +20,9 @@
     "type": "git",
     "url": "git+https://github.com/hpcc-systems/MAF.git"
   },
+  "bin": {
+    "multiReport": "multiReport.js"
+  },
   "keywords": [
     "cucumber-js",
     "testing",

@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const report = require('multiple-cucumber-html-reporter')
 const os = require('os')
 const platformMap = {
