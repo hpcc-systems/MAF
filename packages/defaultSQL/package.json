@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.2.4",
+  "version": "1.4.3",
   "description": "Default Sql setup on Node with cucumber",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "chai": "^4.2.0",
+    "chai": "^4.3.4",
     "fstream": "^1.0.12",
     "prompt": "^1.1.0"
   },
@@ -20,14 +20,14 @@
     "keytar": "7.*"
   },
   "devDependencies": {
-    "@cucumber/cucumber": "^7.0.0",
-    "@ln-maf/validations": "^1.2.4",
-    "cucumber-html-reporter": "^5.3.0",
-    "eslint": "^7.19.0",
+    "@cucumber/cucumber": "^7.2.1",
+    "@ln-maf/validations": "^1.4.3",
+    "cucumber-html-reporter": "^5.4.0",
+    "eslint": "^7.24.0",
     "eslint-config-standard": "^16.0.2",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-promise": "^5.1.0",
     "multiple-cucumber-html-reporter": "^1.18.0"
   },
   "gitHead": "9bf55a2c86fa17707fabfb4320c3d722e270f9e6",

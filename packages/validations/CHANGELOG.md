@@ -24,3 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * Add .npmignore
  * Adding in eslint
  * Multiple bug fixes due to issues found by eslint
+
+## [1.3.0] (2020-02-05)
+### Added
+ * Added in AWS testing for S3, DynamoDB, SQS, Lambda (not tested yet).  
+     * Is able to run on localstack but uses the portmap due to some configurability issues with SQS.

@@ -3,7 +3,8 @@ Feature: API - Test the basic items in api
     When set "directory" to "./test"
 
   Scenario: Use individual methods
-    Given url "https://google.com"
+    Given set "url" to "https://google.com"
+    Given url "${url}"
     And headers '{"User-Agent" : "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36" }'
     When method get
     Then status ok

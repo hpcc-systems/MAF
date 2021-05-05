@@ -93,6 +93,8 @@ Feature: Validations : JSON manipulation
     ]
     }
     """
+        When set "newJSON" to item "TestJSON"
+        When JSON key "arrayTest[0]" is extracted from item "newJSON"
         When JSON key "deepMeh" is extracted from item "TestJSON"
         And JSON keys '["meh","deepMeh","deepMeh2.deep3", "arrayTest"]' are extracted from item "TestJSON"
         And JSON key "deep2" is extracted from it

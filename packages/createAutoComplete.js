@@ -15,10 +15,18 @@ const { lstatSync, readdirSync } = fs
 const { join } = require('path')
 
 const isDirectory = source => lstatSync(source).isDirectory()
+const isFile = source => lstatSync(source).isFile()
 const getDirectories = source =>
   readdirSync(source).map(name => join(source, name)).filter(isDirectory)
+const getFiles = source =>
+  readdirSync(source).map(name => join(source, name)).filter(isFile)
 getDirectories('.').forEach(directory => {
-    var text=fs.readFileSync("./"+directory+"/index.js", 'utf8')
+    let text=""
+    if(directory==="aws") {
+      text=getFiles('./aws/stepDefinitions').map(i=>fs.readFileSync(i, 'utf8')).join("\n")
+    } else {
+      text=fs.readFileSync("./"+directory+"/index.js", 'utf8')
+    }
     text=textReplace(text)
     fs.writeFileSync('./' + directory + "/autoComplete.js", text.join("\n"))   
     var cl=fs.readFileSync("../CHANGELOG.md", "utf8")

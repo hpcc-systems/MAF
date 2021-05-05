@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.2.4",
+  "version": "1.4.3",
   "description": "Setup for sql on Node",
   "main": "index.js",
   "scripts": {
@@ -15,14 +15,15 @@
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
-    "eslint": "^7.19.0",
+    "eslint": "^7.24.0",
     "eslint-config-standard": "^16.0.2",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1"
+    "eslint-plugin-promise": "^5.1.0"
   },
   "dependencies": {
-    "@ln-maf/default-sql": "^1.2.4",
+    "@ln-maf/default-sql": "^1.4.3",
+    "keytar": "^7.6.0",
     "sync-mysql": "^3.0.1"
   },
   "gitHead": "2a575448a74cfaee5ec68fa10db24cf4ccade849",
