@@ -314,6 +314,9 @@ Then('it matches the set {string}', function (set) {
 })
 
 When('the file {string} is gzipped', function (filename) {
+  if (!this.results){
+    this.results = {}
+  }
   filename = filltemplate(filename, this.results)
   try {
     fs.deleteFileSync(getFilePath(filename, this))
@@ -326,12 +329,16 @@ When('the file {string} is gzipped', function (filename) {
 })
 
 MAFWhen('file {string} is gzip unzipped to file {string}', function (file, fileOut) {
+  if (!this.results){
+    this.results = {}
+  }
   file = filltemplate(file, this.results)
   const zlib = require('zlib')
   const bf = readFileBuffer(file, this)
   const buffer = zlib.unzipSync(bf)
   writeFileBuffer(fileOut, buffer, this)
 })
+
 When('set config from json {jsonObject}', function (jsonObject) {
   const obj = performJSONObjectTransform.call(this, jsonObject)
   for (const i in obj) {
