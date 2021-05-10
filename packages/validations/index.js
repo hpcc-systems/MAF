@@ -333,6 +333,7 @@ MAFWhen('file {string} is gzip unzipped to file {string}', function (file, fileO
   const bf = readFileBuffer(file, this)
   const buffer = zlib.unzipSync(bf)
   writeFileBuffer(fileOut, buffer, this)
+  return ""
 })
 
 When('set config from json {jsonObject}', function (jsonObject) {
