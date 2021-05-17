@@ -8,7 +8,8 @@ const getCreds = async function (environment) {
     }
     return { username, password }
   } else {
-    return { username: process.env[environment + '_SQL_USERNAME'], password: process.env[environment + '_SQL_PASSWORD'] }
+    const dbName = /^[^\.]*/.exec(environment)[0].toUpperCase()
+    return { username: process.env[dbName + '_SQL_USERNAME'], password: process.env[dbName + '_SQL_PASSWORD'] }
   }
 }
 module.exports = getCreds

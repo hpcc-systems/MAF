@@ -138,6 +138,7 @@ MAFWhen('generate rsa key', function () {
   })
   return privateKey
 })
+
 MAFWhen('run xPath {string} on item {string}', function (xPath, element) {
   if (!this.results.namespace) {
     this.results.namespace = {}
@@ -313,7 +314,7 @@ Then('it matches the set {string}', function (set) {
   return setMatch.call(this, 'lastRun', set)
 })
 
-When('the file {string} is gzipped', function (filename) {
+MAFWhen('the file {string} is gzipped', function (filename) {
   filename = filltemplate(filename, this.results)
   try {
     fs.deleteFileSync(getFilePath(filename, this))
@@ -323,6 +324,7 @@ When('the file {string} is gzipped', function (filename) {
   const bf = readFileBuffer(filename, this)
   const buffer = zlib.gzipSync(bf)
   writeFileBuffer(filename + '.gz', buffer, this)
+  return ""
 })
 
 MAFWhen('file {string} is gzip unzipped to file {string}', function (file, fileOut) {
@@ -331,7 +333,9 @@ MAFWhen('file {string} is gzip unzipped to file {string}', function (file, fileO
   const bf = readFileBuffer(file, this)
   const buffer = zlib.unzipSync(bf)
   writeFileBuffer(fileOut, buffer, this)
+  return ""
 })
+
 When('set config from json {jsonObject}', function (jsonObject) {
   const obj = performJSONObjectTransform.call(this, jsonObject)
   for (const i in obj) {
@@ -362,6 +366,7 @@ When('set:', function (dataTable) {
     setToString(i, item[index], this)
   })
 })
+
 MAFWhen('set result to {jsonObject}', function (item) {
   return performJSONObjectTransform.call(this, item)
 })
@@ -374,6 +379,7 @@ MAFWhen('{jsonObject} is base64 encoded', function (item) {
   const encode = (Buffer.from(item, 'ascii').toString('base64'))
   return encode
 })
+
 MAFWhen('{jsonObject} is base64 decoded', function (item) {
   item = performJSONObjectTransform.call(this, item)
   assert(typeof item === 'string', 'Item type needs to be a string for base64 decoding, but it was a ' + typeof item)
