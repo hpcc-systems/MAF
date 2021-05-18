@@ -16,14 +16,14 @@
     "chai": "^4.3.4"
   },
   "devDependencies": {
-    "eslint": "^7.24.0",
+    "eslint": "^7.26.0",
     "eslint-config-standard": "^16.0.2",
-    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-import": "^2.23.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0"
   },
   "peerDependencies": {
-    "@ln-maf/core": "^1.3.11"
+    "@ln-maf/core": "^1.4.3"
   },
   "gitHead": "9bf55a2c86fa17707fabfb4320c3d722e270f9e6"
 }

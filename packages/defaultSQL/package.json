@@ -23,9 +23,9 @@
     "@cucumber/cucumber": "^7.2.1",
     "@ln-maf/validations": "^1.4.3",
     "cucumber-html-reporter": "^5.4.0",
-    "eslint": "^7.24.0",
+    "eslint": "^7.26.0",
     "eslint-config-standard": "^16.0.2",
-    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-import": "^2.23.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
     "multiple-cucumber-html-reporter": "^1.18.0"
