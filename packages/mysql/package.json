@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "Setup for sql on Node",
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,7 @@
     "eslint-plugin-promise": "^5.1.0"
   },
   "dependencies": {
-    "@ln-maf/default-sql": "^1.4.3",
+    "@ln-maf/default-sql": "^1.4.4",
     "keytar": "^7.7.0",
     "sync-mysql": "^3.0.1"
   },
