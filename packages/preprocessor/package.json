@@ -18,7 +18,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@cucumber/cucumber-expressions": "^12.1.1",
-    "@cucumber/messages": "^16.0.0",
+    "@cucumber/messages": "^15.0.0",
     "app-root-path": "^3.0.0",
     "command-line-args": "^5.1.1",
     "glob": "^7.1.7",
