@@ -1,5 +1,4 @@
 provider "aws" {
-
   profile                     = "default"
   region                      = "us-east-1"
   access_key                  = "1234"
@@ -34,18 +33,9 @@ resource "aws_dynamodb_table" "test-table" {
 }
 
 resource "aws_sqs_queue" "testQueue1" {
-  name                      = "testQueue"
-  delay_seconds             = 90
-  max_message_size          = 2048
-  message_retention_seconds = 86400
-  receive_wait_time_seconds = 10
+  name = "testQueue"
 }
 
-
 resource "aws_sqs_queue" "testQueue2" {
-  name                      = "testQueue2"
-  delay_seconds             = 90
-  max_message_size          = 2048
-  message_retention_seconds = 86400
-  receive_wait_time_seconds = 10
+  name = "testQueue2"
 }
