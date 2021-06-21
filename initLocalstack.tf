@@ -27,15 +27,25 @@ resource "aws_dynamodb_table" "test-table" {
   read_capacity  = 2
   write_capacity = 2
   hash_key       = "label"
-  range_key      = "other"
   attribute {
     name = "label"
     type = "S"
   }
-
-  attribute {
-    name = "other"
-    type = "S"
-  }
 }
 
+resource "aws_sqs_queue" "testQueue1" {
+  name                      = "testQueue"
+  delay_seconds             = 90
+  max_message_size          = 2048
+  message_retention_seconds = 86400
+  receive_wait_time_seconds = 10
+}
+
+
+resource "aws_sqs_queue" "testQueue2" {
+  name                      = "testQueue2"
+  delay_seconds             = 90
+  max_message_size          = 2048
+  message_retention_seconds = 86400
+  receive_wait_time_seconds = 10
+}

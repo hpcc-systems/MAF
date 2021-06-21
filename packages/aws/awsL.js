@@ -10,9 +10,9 @@ const AWSRun = function (args) {
   }
   const port = ports[args[0]]
   if (process.env.AWSENV === undefined || process.env.AWSENV === '' || process.env.AWSENV.toUpperCase() === 'FALSE') {
-    let argURL=`--endpoint-url=http://${getHost()}`
-    if(process.env.USEPORTMAP) {
-      argURL+=`:${port}`
+    let argURL = `--endpoint-url=http://${getHost()}`
+    if (process.env.USEPORTMAP) {
+      argURL += `:${port}`
     }
     args.unshift(argURL)
   }
