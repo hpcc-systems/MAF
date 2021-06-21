@@ -2,7 +2,7 @@ provider "aws" {
 
   profile                     = "default"
   region                      = "us-east-1"
-  access_key                  = "123"
+  access_key                  = "1234"
   secret_key                  = "xyz"
   skip_credentials_validation = true
   skip_requesting_account_id  = true
