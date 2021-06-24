@@ -8,3 +8,10 @@ node_modules
 passwords.txt
 /image2.png
 package-lock.json
+
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
