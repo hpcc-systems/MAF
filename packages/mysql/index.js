@@ -1,5 +1,5 @@
 const create = require('@ln-maf/default-sql')
-const Mysql = require('sync-mysql')
+const mysql = require('mysql2/promise')
 create({
   name: 'mysql',
   connect: async (connectionInfo, username, password) => {
@@ -8,14 +8,15 @@ create({
       user: username,
       password: password
     }
-    const connection = new Mysql(dets)
-    connection.query('SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;')
+    const connection=await mysql.createConnection(dets)
+    await connection.execute('SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;')
     return connection
   },
   runQuery: async (connection, query) => {
-    return connection.query(query)
+    let res= await connection.execute(query)
+    return res[0]
   },
   disconnect: async (connection) => {
-    connection.dispose()
+    await connection.end()
   }
 })
