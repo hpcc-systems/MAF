@@ -25,9 +25,9 @@
     "chai": "^4.3.4"
   },
   "dependencies": {
-    "fetch-blob": "^3.1.2",
+    "fetch-blob": "^2.1.2",
     "form-data": "^4.0.0",
-    "node-fetch": "^3.0.0"
+    "node-fetch": "^2.6.1"
   },
   "gitHead": "2a575448a74cfaee5ec68fa10db24cf4ccade849",
   "repository": {
