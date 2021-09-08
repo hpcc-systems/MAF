@@ -1,7 +1,6 @@
 var { filltemplate }=require('../index')
 var Cucumber=require('@cucumber/cucumber')
 
-var equal=require('deep-equal')
 var chai=require('chai')
 var assert=chai.assert;
 var Given = Cucumber.Given;
