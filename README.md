@@ -35,7 +35,7 @@ Doing this indicates that these modules steps and [parameter types](https://cucu
 Modify the `package.json` to use cucumber:
 ```
   "scripts": {
-    "test": "cucumber-js -f json:test/report/report.json"
+    "test": "cucumber-js -f json:test/report/report.json $EXTRAS"
   },
 ```
 
