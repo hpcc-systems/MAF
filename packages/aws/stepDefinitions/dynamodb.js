@@ -251,7 +251,13 @@ function putItem (activeArgs, additionalArgs) {
     args.push(...additionalArgs)
   }
   this.attach(`Query: ${args}`)
-  this.results.lastRun = JSON.parse(runAWS(args).stdout.toString())
+  this.results.lastRun = {}
+  try {
+    const output = runAWS(args).stdout.toString()
+    if (output.length > 0) this.results.lastRun = JSON.parse(output)
+  } catch(error) {
+    
+  }
   this.attach(JSON.stringify({ lastRun: this.results.lastRun }, null, 2))
 }
 
