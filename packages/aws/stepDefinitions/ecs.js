@@ -87,7 +87,9 @@ function ecsRunTask (activeArgs, additionalArgs) {
   if (additionalArgs) {
     args.push(...additionalArgs)
   }
-  return JSON.parse(runAWS(args).stdout)
+  const result = JSON.parse(runAWS(args).stdout)
+  result.args = args
+  return result
 }
 
 /**
