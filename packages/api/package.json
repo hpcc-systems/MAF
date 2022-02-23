@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.4.4",
+  "version": "1.5.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -12,15 +12,15 @@
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@ln-maf/validations": "^1.4.4",
-    "eslint": "^7.26.0",
-    "eslint-config-standard": "^16.0.2",
-    "eslint-plugin-import": "^2.23.2",
+    "@ln-maf/validations": "^1.5.0",
+    "eslint": "^7.32.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0"
   },
   "peerDependencies": {
-    "@cucumber/cucumber": "^7.2.1",
+    "@cucumber/cucumber": "^7.3.1",
     "@ln-maf/core": "*",
     "chai": "^4.3.4"
   },

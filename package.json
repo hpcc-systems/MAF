@@ -11,15 +11,14 @@
     "postinstall": "sh postinstall.sh"
   },
   "devDependencies": {
-    "@cucumber/cucumber": "^7.2.1",
-    "cucumber-html-reporter": "^5.4.0",
-    "keytar": "7.*",
+    "@cucumber/cucumber": "^7.3.1",
+    "cucumber-html-reporter": "^5.5.0",
+    "keytar": "^7.7.0",
     "lerna": "^4.0.0"
   },
   "dependencies": {
     "chai": "^4.3.4",
     "multiple-cucumber-html-reporter": "^1.18.0",
-    "node-fetch": "^2.6.1",
     "nyc": "^15.1.0"
   },
   "workspaces": [
