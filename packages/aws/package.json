@@ -4,7 +4,7 @@
     "access": "public"
   },
   "version": "1.4.4",
-  "description": "Setup for aws on Node. This contains s3, dynamoDB, sqs, and lamba stepDefinitions",
+  "description": "Setup for aws on Node. This contains s3, dynamoDB, sqs, ecs, and lamba stepDefinitions",
   "main": "index.js",
   "scripts": {
     "test": "cd ../.. && bash runFeature.sh aws"

@@ -17,7 +17,6 @@ This module provides scenarios where Gherkins/Cucumber is implemented for AWS.
 
 1. Install [AWS-CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
 
-
 2. Install by running `npm i @ln-maf/aws`.
 
 3. Add a step file with the following code in the features folder of the project:
