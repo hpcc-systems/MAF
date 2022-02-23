@@ -77,7 +77,11 @@ function ecsRunTask (activeArgs, additionalArgs) {
     )
   }
   if (ecsArgs.enableECSManagedTags) {
-    args.push('--enable-ecs-managed-tags')
+    if (ecsArgs.enableECSManagedTags === false) {
+      args.push('--no-enable-ecs-managed-tags')
+    } else {
+      args.push('--enable-ecs-managed-tags')
+    }
   }
   args.push('--launch-type', ecsArgs.launchType ? ecsArgs.launchType : 'FARGATE')
   if (additionalArgs) {
