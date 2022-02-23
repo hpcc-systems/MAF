@@ -83,9 +83,7 @@ function ecsRunTask (activeArgs, additionalArgs) {
   if (additionalArgs) {
     args.push(...additionalArgs)
   }
-
-  this.attach(`Query: ${args}`)
-  return runAWS(args).stdout.toString()
+  return JSON.parse(runAWS(args).stdout)
 }
 
 /**
