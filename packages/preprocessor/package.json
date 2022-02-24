@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "This project will preprocess feature files to allow more input variables to be supplied.  This can be supplied through javascript, a csv/psv/json array file or a mixture of these.  This will hopefully allow it to be easier to maintain larger test sets.",
   "main": "index.js",
   "bin": {
