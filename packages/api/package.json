@@ -20,7 +20,7 @@
     "eslint-plugin-promise": "^6.0.0"
   },
   "peerDependencies": {
-    "@cucumber/cucumber": "^7.3.1",
+    "@cucumber/cucumber": "*",
     "@ln-maf/core": "*",
     "chai": "^4.3.4"
   },
