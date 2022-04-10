@@ -13,14 +13,14 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@cucumber/cucumber": "*",
-    "chai": "^4.3.4"
+    "chai": "^4.3.6"
   },
   "devDependencies": {
-    "eslint": "^7.32.0",
+    "eslint": "^8.13.0",
     "eslint-config-standard": "^16.0.3",
-    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.1.0"
+    "eslint-plugin-promise": "^6.0.0"
   },
   "peerDependencies": {
     "@ln-maf/core": "^1.4.4"
