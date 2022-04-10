@@ -20,7 +20,7 @@
     "keytar": "7.*"
   },
   "devDependencies": {
-    "@cucumber/cucumber": "^8.0.0",
+    "@cucumber/cucumber": "*",
     "@ln-maf/validations": "^1.6.0",
     "cucumber-html-reporter": "^5.5.0",
     "eslint": "^8.13.0",
