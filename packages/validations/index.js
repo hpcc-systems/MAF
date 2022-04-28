@@ -144,7 +144,7 @@ MAFWhen('run xPath {string} on item {string}', function (xPath, element) {
     this.results.namespace = {}
   }
   const xpath = require('xpath')
-  const Dom = require('xmldom').DOMParser
+  const Dom = require('@xmldom/xmldom').DOMParser
   const doc = new Dom().parseFromString(eval('this.results.' + element))
   const sel = xpath.useNamespaces(this.results.namespace)
   return sel(xPath, doc).map(i => i.toString()).join('\n')
