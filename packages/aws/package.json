@@ -12,18 +12,20 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@cucumber/cucumber": "*",
+    "@cucumber/cucumber": "^8.2.0",
+    "@aws-sdk/client-dynamodb": "^3.118.0",
+    "@aws-sdk/client-s3": "^3.118.0",
     "chai": "^4.3.6"
   },
   "devDependencies": {
+    "@ln-maf/core": "^1.6.0",
+    "@ln-maf/validations": "^1.6.0",
     "eslint": "^8.13.0",
-    "eslint-config-standard": "^16.0.3",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-n": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0"
-  },
-  "peerDependencies": {
-    "@ln-maf/core": "^1.4.4"
   },
   "gitHead": "9bf55a2c86fa17707fabfb4320c3d722e270f9e6"
 }
