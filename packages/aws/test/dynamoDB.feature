@@ -100,7 +100,7 @@ Feature: DynamoDB
         "key": ${myKey}
       }
       """
-    And it is cleaned
+    And '${lastRun.Attributes}' is cleaned
     And it is equal to "<deletedItem>"
     Examples:
       | item               | deletedItem                                                                             |
