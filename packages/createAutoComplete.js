@@ -32,7 +32,5 @@ getDirectories('.').forEach(directory => {
     var cl=fs.readFileSync("../CHANGELOG.md", "utf8")
     fs.writeFileSync('./' + directory + "/CHANGELOG.md", cl)
     var gitignore=fs.readFileSync("../.npmignore", "utf8")
-    fs.writeFileSync('./' + directory + "/.npmignore", gitignore)
-    
+    fs.writeFileSync('./' + directory + "/.npmignore", gitignore) 
 });
-  

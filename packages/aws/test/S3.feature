@@ -5,8 +5,7 @@ Feature: S3 Testing
     And bucket "<bucket>" is created on S3
     And bucket "<bucket>" exists on S3
     Examples:
-      | bucket      |
-      | test-bucket  |
+      | bucket       |
       | test-bucket2 |
       | test-bucket3 |
       | test-bucket4 |
@@ -18,18 +17,18 @@ Feature: S3 Testing
     Given bucket "<bucket>" exists on S3
     When set "directory" to "test/"
     And test file "<file>" is created
-    And file "<file>" is uploaded to bucket "<bucket>" at path "<filePath>"
-    Then file exists with name "<file>" at path "<filePath>" in bucket "<bucket>"
+    And file "./test/<file>" is uploaded to bucket "<bucket>" as key "<s3FilePath><key>"
+    Then file exists with name "<key>" at path "<s3FilePath>" in bucket "<bucket>"
 
     Examples:
-      | file      | bucket      | filePath |
-      | test1.txt | test-bucket3 |          |
-      | test2.txt | test-bucket3 |          |
-      | test3.txt | test-bucket3 | foobar   |
-      | test2.txt | test-bucket4 | foobar   |
-      | test3.txt | test-bucket5 | foo/bar/ |
-      | test1.txt | test-bucket6 | foobar/  |
-      | test2.abc | test-bucket7 | foobar/  |
+      | file      | bucket       | key   | s3FilePath |
+      | test1.txt | test-bucket3 | test1 |            |
+      | test2.txt | test-bucket3 | test2 |            |
+      | test3.txt | test-bucket3 | test3 | foobar/    |
+      | test2.txt | test-bucket4 | test2 | foobar/    |
+      | test3.txt | test-bucket5 | test3 | foo/bar/   |
+      | test1.txt | test-bucket6 | test1 | foobar/    |
+      | test2.abc | test-bucket7 | test2 | foobar/    |
 
   Scenario: List Bucket Files
     Given bucket "test-bucket3" exists on S3
@@ -37,39 +36,35 @@ Feature: S3 Testing
     Then item "lastRun" is equal to:
       """
       [
-        "test1.txt",
-        "test2.txt"
+        "test1",
+        "test2"
       ]
       """
     When file list of bucket "test-bucket3" on path "foobar" is retrieved
     Then item "lastRun" is equal to:
       """
       [
-        "test3.txt"
+        "foobar/test3"
       ]
       """
-    When file list of bucket "test-bucket3" on path "foobar" is retrieved as json item
-    Then item "lastRun[0].name" is equal to "test3.txt"
-    And item "lastRun[0].size" is equal to 19
     When all files of bucket "test-bucket3" is retrieved
-    Then item "lastRun" contains "test3.txt"
-    When all files of bucket "test-bucket3" is retrieved as json item
-    Then item "lastRun" contains "test3.txt"
+    Then item "lastRun" contains "foobar/test3"
+    Then item "lastRun" contains "test2"
+    Then item "lastRun" contains "test1"
 
   Scenario Outline: File Upload and Download
     Given bucket "<bucket>" is created on S3
-    When set "directory" to "test/"
-    And "<text>" is written to file "<file>"
-    And file "<file>" is uploaded to bucket "<bucket>" at path "<s3FilePath>"
-    And file "<file>" from bucket "<bucket>" at path "<s3FilePath>" is retrieved
+    And "<text>" is written to file "./test/<file>"
+    And file "./test/<file>" is uploaded to bucket "<bucket>" as key "<s3FilePath><key>"
+    And file "<key>" from bucket "<bucket>" at path "<s3FilePath>" is retrieved
     Then it is equal to "<text>"
 
     Examples:
-      | file      | bucket       | s3FilePath | text                               |
-      | test1.txt | test-bucket8  |          | This is upload and download test 1 |
-      | test2.txt | test-bucket9  | foo/bar/ | This is upload and download test 2 |
-      | test1.txt | test-bucket10 | foobar/  | This is upload and download test 3 |
-      | test2.abc | test-bucket11 | foobar/  | This is upload and download test 4 |
+      | file      | bucket        | s3FilePath | key       | text                               |
+      | test1.txt | test-bucket8  |            | test1     | This is upload and download test 1 |
+      | test2.txt | test-bucket9  | foo/bar/   | test2     | This is upload and download test 2 |
+      | test1.txt | test-bucket10 | foobar/    | test1     | This is upload and download test 3 |
+      | test2.abc | test-bucket11 | foobar/    | test2.abc | This is upload and download test 4 |
 
   Scenario: File Deletion
     Given bucket "test-bucket3" exists on S3
@@ -78,15 +73,15 @@ Feature: S3 Testing
     Then item "lastRun" is equal to:
       """
       [
-        "test1.txt",
-        "test2.txt"
+        "test1",
+        "test2"
       ]
       """
-    When file "test1.txt" is deleted from bucket "test-bucket3" at path ""
+    When file "test1" is deleted from bucket "test-bucket3" at path ""
     And file list of bucket "test-bucket3" on path "" is retrieved
     Then item "lastRun" is equal to:
       """
       [
-        "test2.txt"
+        "test2"
       ]
       """
