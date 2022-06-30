@@ -15,6 +15,7 @@
     "@cucumber/cucumber": "^8.2.0",
     "@aws-sdk/client-dynamodb": "^3.118.0",
     "@aws-sdk/client-s3": "^3.118.0",
+    "@aws-sdk/client-sqs": "^3.118.0",
     "chai": "^4.3.6"
   },
   "devDependencies": {
