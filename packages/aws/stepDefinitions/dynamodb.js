@@ -123,7 +123,9 @@ MAFWhen('table {string} exists on dynamo', async function (tableName) {
  * expressionAttributeValues - Must be a JSON object
  *
  * AWS Documentation: https://docs.aws.amazon.com/cli/latest/reference/dynamodb/query.html
- * @param {Array} additionalArgs pairs of strings that will be added to the aws cli
+ * @param {JSON} activeArgs supported arguments for the AWS QueryCommand
+ * @param {JSON} additionalArgs unsupported pairs of other attributes for AWS QueryCommand
+ * @return {String[]} Items from AWS
  */
 async function dynamoQuery (activeArgs, additionalArgs) {
   const dynamoQueryArgs = {}
@@ -185,7 +187,7 @@ async function dynamoQuery (activeArgs, additionalArgs) {
  */
 async function performDynamoDBQueryFromJSON (payload) {
   const activeArgs = {}
-  const additionalArgs = []
+  const additionalArgs = {}
   Object.keys(payload).forEach((key) => {
     switch (key) {
       case 'tableName':
@@ -203,8 +205,7 @@ async function performDynamoDBQueryFromJSON (payload) {
             : payload[key]
         break
       default:
-        additionalArgs.push('--' + key)
-        additionalArgs.push(payload[key])
+        additionalArgs[key] = payload[key]
     }
   })
   return dynamoQuery.call(this, activeArgs, additionalArgs)
@@ -238,8 +239,9 @@ MAFWhen('dynamodb query is performed', async function () {
 
 /**
  * Places an item on a dynamoDB table
- * @param {Array} additionalArgs pairs of strings that will be added to the aws cli
- * @return {JSON} The placed dynamodb item and its values
+ * @param {JSON} activeArgs supported arguments for the AWS PutItemCommand
+ * @param {JSON} additionalArgs unsupported pairs of other attributes for AWS PutItemCommand
+ * @return {String[]} PutItemCommandOutput (https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/interfaces/putitemcommandoutput.html)
  */
 async function putItem (activeArgs, additionalArgs) {
   const dynamoPutItemArgs = {}
@@ -285,7 +287,7 @@ async function putItem (activeArgs, additionalArgs) {
  */
 async function performDynamoDBPutItemFromJSON (payload) {
   const activeArgs = {}
-  const additionalArgs = []
+  const additionalArgs = {}
   Object.keys(payload).forEach((key) => {
     switch (key) {
       case 'tableName':
@@ -298,8 +300,7 @@ async function performDynamoDBPutItemFromJSON (payload) {
             : payload[key]
         break
       default:
-        additionalArgs.push('--' + key)
-        additionalArgs.push(payload[key])
+        additionalArgs[key] = payload[key]
     }
   })
   return await putItem.call(this, activeArgs, additionalArgs)
@@ -340,7 +341,9 @@ MAFWhen('dynamodb put-item is performed', async function () {
  * expressionAttributeNames
  * expressionAttributeValues - Must be a JSON object
  *
- * @param {Array} additionalArgs pairs of strings that will be added to the aws cli
+ * @param {JSON} activeArgs supported arguments for the AWS UpdateItemCommand
+ * @param {JSON} additionalArgs unsupported pairs of other attributes for AWS UpdateItemCommand
+ * @return {String[]} UpdateItemCommandOutput (https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/interfaces/updateitemcommandoutput.html)
  */
 async function updateItem (activeArgs, additionalArgs) {
   const dynamoUpdateItemArgs = {}
@@ -389,7 +392,7 @@ async function updateItem (activeArgs, additionalArgs) {
  */
 async function performDynamoDBUpdateFromJSON (payload) {
   const activeArgs = {}
-  const additionalArgs = []
+  const additionalArgs = {}
   Object.keys(payload).forEach((key) => {
     switch (key) {
       case 'tableName':
@@ -404,8 +407,7 @@ async function performDynamoDBUpdateFromJSON (payload) {
             : payload[key]
         break
       default:
-        additionalArgs.push('--' + key)
-        additionalArgs.push(payload[key])
+        additionalArgs[key] = payload[key]
     }
   })
   return await updateItem.call(this, activeArgs, additionalArgs)
@@ -436,8 +438,9 @@ MAFWhen('dynamodb update-item is performed', async function () {
 
 /**
  * Deletes item on a dynamoDB table
- * @param {Array} additionalArgs pairs of strings that will be added to the aws cli
- * @return {JSON} The deleted dynamodb item and its old values
+ * @param {JSON} activeArgs supported arguments for the AWS DeleteItemCommand
+ * @param {JSON} additionalArgs unsupported pairs of other attributes for AWS DeleteItemCommand
+ * @return {String[]} DeleteItemCommandOutput (https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/interfaces/deleteitemcommandoutput.html)
  */
 async function deleteItem (activeArgs, additionalArgs) {
   const dynamoDeleteItemArgs = {}
@@ -486,7 +489,7 @@ async function deleteItem (activeArgs, additionalArgs) {
  */
 async function performDynamoDBDeleteFromJSON (payload) {
   const activeArgs = {}
-  const additionalArgs = []
+  const additionalArgs = {}
   Object.keys(payload).forEach((key) => {
     switch (key) {
       case 'tableName':
@@ -499,8 +502,7 @@ async function performDynamoDBDeleteFromJSON (payload) {
             : payload[key]
         break
       default:
-        additionalArgs.push('--' + key)
-        additionalArgs.push(payload[key])
+        additionalArgs[key] = payload[key]
     }
   })
   return deleteItem.call(this, activeArgs, additionalArgs)

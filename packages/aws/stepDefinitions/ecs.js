@@ -1,130 +1,165 @@
 const runAWS = require('../awsL')
-const { performJSONObjectTransform, MAFWhen, filltemplate } = require('@ln-maf/core')
-const fillTemplate = filltemplate
+const { setDefaultTimeout } = require('@cucumber/cucumber')
+const { MAFWhen, performJSONObjectTransform, filltemplate } = require('@ln-maf/core')
+const { ECSClient, ListTaskDefinitionsCommand, ListClustersCommand, RunTaskCommand } = require('@aws-sdk/client-ecs')
 
-function stringExists (list, string) {
-  if (list && list.length === 0) {
-    return false
-  }
-  return list.find(element => element.includes(string))
+setDefaultTimeout(15 * 60 * 1000)
+
+const ecsClientConfig = { maxAttempts: 3 }
+if (process.env.AWSENV === undefined || process.env.AWSENV === '' || process.env.AWSENV.toUpperCase() === 'FALSE') {
+  ecsClientConfig.endpoint = 'http://localhost:4566'
+}
+const ecsClient = new ECSClient(ecsClientConfig)
+
+/**
+ * lists ECS task definitions by family prefix
+ * @param {String} taskDefinitionFamilyPrefix the task definition name
+ * @returns {String[]} an array matching the task definition
+ */
+async function listTaskDefinitions (taskDefinitionFamilyPrefix) {
+  let taskDefinitionARNs = []
+  let res = {}
+  do {
+    const queryParameters = {
+      familyPrefix: taskDefinitionFamilyPrefix
+    }
+    if (res.NextToken) {
+      queryParameters.nextToken = res.nextToken
+    }
+    res = await ecsClient.send(new ListTaskDefinitionsCommand(queryParameters))
+    taskDefinitionARNs = taskDefinitionARNs.concat(res.taskDefinitionArns)
+  } while (res.NextToken)
+  return taskDefinitionARNs
 }
 
-function taskDefinitionExists (taskDefinitionName) {
-  const res = runAWS('ecs list-task-definitions --family-prefix ' + taskDefinitionName)
-  const taskDefinitionList = JSON.parse(res.stdout).taskDefinitionArns
-  return stringExists(taskDefinitionList, taskDefinitionName)
-}
-
-function clusterExists (clusterName) {
-  const res = runAWS('ecs list-clusters')
-  const clusterList = JSON.parse(res.stdout).clusterArns
-  return stringExists(clusterList, clusterName)
-}
-
-MAFWhen('ecs taskDefinition {string} does not exist', function (taskDefinitionName) {
-  taskDefinitionName = fillTemplate(taskDefinitionName, this.results)
-  if (taskDefinitionExists(taskDefinitionName)) {
+MAFWhen('ecs taskDefinition {string} does not exist', async function (taskDefinitionName) {
+  taskDefinitionName = filltemplate(taskDefinitionName, this.results)
+  const taskDefinitionARNs = await listTaskDefinitions(taskDefinitionName)
+  if (taskDefinitionARNs.some(arn => arn.includes(taskDefinitionName))) {
     throw new Error('ecs TaskDefinition  ' + taskDefinitionName + ' does exist')
   }
 })
 
-MAFWhen('ecs taskDefinition {string} exists', function (taskDefinitionName) {
-  taskDefinitionName = fillTemplate(taskDefinitionName, this.results)
-  if (!taskDefinitionExists(taskDefinitionName)) {
+MAFWhen('ecs taskDefinition {string} exists', async function (taskDefinitionName) {
+  taskDefinitionName = filltemplate(taskDefinitionName, this.results)
+  const taskDefinitionARNs = await listTaskDefinitions(taskDefinitionName)
+  if (!taskDefinitionARNs.some(arn => arn.includes(taskDefinitionName))) {
     throw new Error('ecs TaskDefinition  ' + taskDefinitionName + ' does not exist')
   }
 })
 
-MAFWhen('ecs cluster {string} does not exists', function (clusterName) {
-  clusterName = fillTemplate(clusterName, this.results)
-  if (clusterExists(clusterName)) {
-    throw new Error('Cluster ' + clusterName + ' does exists')
+/**
+ * lists all ECS clusters on AWS
+ * @returns {String[]} an array listing clusters
+ */
+async function listClusters () {
+  let clusters = []
+  let res = {}
+  do {
+    const queryParameters = {}
+    if (res.NextToken) {
+      queryParameters.nextToken = res.nextToken
+    }
+    res = await ecsClient.send(new ListClustersCommand(queryParameters))
+    clusters = clusters.concat(res.clusterArns)
+  } while (res.NextToken)
+  return clusters
+}
+
+MAFWhen('ecs clusters from AWS are retrieved', async function (clusterName) {
+  clusterName = filltemplate(clusterName, this.results)
+  return await listClusters()
+})
+
+MAFWhen('ecs cluster {string} does not exists', async function (clusterName) {
+  clusterName = filltemplate(clusterName, this.results)
+  const clusterARNs = await listClusters()
+  if (clusterARNs.some(arn => arn.includes(clusterName))) {
+    throw new Error('ECS cluster ' + clusterName + ' does exists')
   }
 })
 
-MAFWhen('ecs cluster {string} exists', function (clusterName) {
-  clusterName = fillTemplate(clusterName, this.results)
-  if (!clusterExists(clusterName)) {
-    throw new Error('Cluster ' + clusterName + ' does not exist')
+MAFWhen('ecs cluster {string} exists', async function (clusterName) {
+  clusterName = filltemplate(clusterName, this.results)
+  const clusterARNs = await listClusters()
+  if (!clusterARNs.some(arn => arn.includes(clusterName))) {
+    throw new Error('ECS cluster ' + clusterName + ' does exists')
+  }
+})
+
+MAFWhen('get ARN of ecs cluster {string}', async function (clusterName) {
+  clusterName = filltemplate(clusterName, this.results)
+  const clusterARNs = await listClusters()
+  const res = clusterARNs.fine(arn => arn.includes(clusterName))
+  if (!res) {
+    throw new Error('ECS cluster ' + clusterName + ' does exists')
   }
 })
 
 /**
- * Runs an ecs-task
- * Required: taskDefinition, cluster
- * @param {Array} supported arguments for the aws ecs run-task
- * @param {Array} additionalArgs pairs of strings that will be added to the aws cli
- * @return {JSON} The response from aws ecs run-task
+ * Runs an ecs task on an AWS ECS cluster
+ * @param {JSON} activeArgs supported arguments for the AWS RunTaskCommand
+ * @param {JSON} additionalArgs unsupported pairs of other attributes for AWS RunTaskCommand
+ * @return {JSON} RunTaskCommandOutput (https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-ecs/interfaces/runtaskcommandoutput.html)
  */
-function ecsRunTask (activeArgs, additionalArgs) {
-  const ecsArgs = {}
-  Object.assign(ecsArgs, this.results)
-  Object.assign(ecsArgs, activeArgs)
+async function ecsRunTask (activeArgs, additionalArgs) {
+  const ecsRunTaskArgs = {}
+  Object.assign(ecsRunTaskArgs, this.results)
+  Object.assign(ecsRunTaskArgs, activeArgs)
 
-  const args = ['ecs', 'run-task']
-  if (!ecsArgs.taskDefinition) {
+  let queryParameters = {}
+
+  if (!ecsRunTaskArgs.taskDefinition) {
     throw new Error("The 'taskDefinition' for ecs run-task is required")
   }
-  args.push('--task-definition', ecsArgs.taskDefinition)
-  if (!ecsArgs.cluster) {
+  queryParameters.taskDefinition = ecsRunTaskArgs.taskDefinition
+
+  if (!ecsRunTaskArgs.cluster) {
     throw new Error("The 'cluster' for ecs run-task is required since defaults are different for each account")
   }
-  args.push('--cluster', ecsArgs.cluster)
-  if (ecsArgs.networkConfiguration) {
-    args.push(
-      '--network-configuration',
-      'awsvpcConfiguration={subnets=' + JSON.stringify(ecsArgs.networkConfiguration.subnets) + ',securityGroups=' + JSON.stringify(ecsArgs.networkConfiguration.securityGroups) + ',assignPublicIp=' + (ecsArgs.networkConfiguration.assignPublicIp ? ecsArgs.networkConfiguration.assignPublicIp : 'DISABLED') + '}'
-    )
+  queryParameters.cluster = ecsRunTaskArgs.cluster
+  if (ecsRunTaskArgs.networkConfiguration) {
+    queryParameters.networkConfiguration = ecsRunTaskArgs.networkConfiguration
   }
-  if (ecsArgs.enableECSManagedTags) {
-    if (ecsArgs.enableECSManagedTags === false) {
-      args.push('--no-enable-ecs-managed-tags')
-    } else {
-      args.push('--enable-ecs-managed-tags')
-    }
+  if (ecsRunTaskArgs.enableECSManagedTags) {
+    queryParameters.enableECSManagedTags = ecsRunTaskArgs.enableECSManagedTags
+  } else {
+    queryParameters.enableECSManagedTags = false
   }
-  args.push('--launch-type', ecsArgs.launchType ? ecsArgs.launchType : 'FARGATE')
+  queryParameters.launchType = ecsRunTaskArgs.launchType ? ecsRunTaskArgs.launchType : 'FARGATE'
   if (additionalArgs) {
-    args.push(...additionalArgs)
+    queryParameters = { ...queryParameters, ...additionalArgs }
   }
-  const result = JSON.parse(runAWS(args).stdout)
-  result.args = args
-  return result
+  this.attach(JSON.stringify(queryParameters))
+  return await ecsClient.send(new RunTaskCommand(queryParameters))
 }
 
 /**
  * Extracts variables for ecs run-task and preforms the aws cli command
  * @param {JSON} payload an object containing keys / values for the run-task
  */
-function performECSRunTaskFromJSON (payload) {
+async function performECSRunTaskFromJSON (payload) {
   const activeArgs = {}
-  const additionalArgs = []
+  const additionalArgs = {}
   Object.keys(payload).forEach((key) => {
     switch (key) {
       case 'taskDefinition':
-        activeArgs[key] = payload[key]
-        break
       case 'cluster':
-        activeArgs[key] = payload[key]
-        break
       case 'networkConfiguration':
-        activeArgs[key] = payload[key]
-        break
       case 'enableECSManagedTags':
         activeArgs[key] = payload[key]
         break
       default:
-        additionalArgs.push('--' + key)
-        additionalArgs.push(payload[key])
+        additionalArgs[key] = payload[key]
     }
   })
-  return ecsRunTask.call(this, activeArgs, additionalArgs)
+  return await ecsRunTask.call(this, activeArgs, additionalArgs)
 }
 
 /**
  * Runs an ecs task from a provided JSONobject
  */
-MAFWhen('ecs run-task from {jsonObject} is performed', function (payload) {
+MAFWhen('ecs run-task from {jsonObject} is performed', async function (payload) {
   payload = performJSONObjectTransform.call(this, payload)
   return performECSRunTaskFromJSON.call(this, payload)
 })
@@ -132,19 +167,19 @@ MAFWhen('ecs run-task from {jsonObject} is performed', function (payload) {
 /**
  * Performs an ecs task based on the provided docstring and variables defined in a document string
  */
-MAFWhen('perform ecs run-task:', function (docString) {
-  const payload = JSON.parse(fillTemplate(docString, this.results))
-  return performECSRunTaskFromJSON.call(this, payload)
+MAFWhen('perform ecs run-task:', async function (docString) {
+  const payload = JSON.parse(filltemplate(docString, this.results))
+  return await performECSRunTaskFromJSON.call(this, payload)
+})
+
+MAFWhen('ecs cluster {string} information is retrieved', async function (clusterName) {
+  clusterName = filltemplate(clusterName, this.results)
+  return await JSON.parse(runAWS('ecs describe-clusters --cluster ' + clusterName).stdout).clusters
 })
 
 /**
  * Runs a new task based on existing items
  */
-MAFWhen('ecs run-task is performed', function () {
-  return ecsRunTask.call(this)
-})
-
-MAFWhen('ecs cluster {string} information is retrieved', function (clusterName) {
-  clusterName = fillTemplate(clusterName, this.results)
-  return JSON.parse(runAWS('ecs describe-clusters --cluster ' + clusterName).stdout).clusters
+MAFWhen('ecs run-task is performed', async function () {
+  return await ecsRunTask.call(this)
 })
