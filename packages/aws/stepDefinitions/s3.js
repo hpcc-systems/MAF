@@ -12,7 +12,7 @@ if (process.env.AWSENV === undefined || process.env.AWSENV === '' || process.env
 const s3Client = new S3Client(S3ClientConfig)
 
 /**
- * Creates an S3 URL for aws-cli
+ * Creates an S3 URL
  * @param {string} bucket the name of the bucket
  * @param {string} path The directory path of the S3 bucket
  */
@@ -53,10 +53,10 @@ MAFWhen('bucket {string} exists', async function (bucketName) {
 
 /**
  * Gets the file names in the bucket and path. User must have READ access to the bucket
- * @param {string} bucketName The name of the bucket to search
- * @param {string} path The path of the bucket to search on
+ * @param {String} bucketName The name of the bucket to search
+ * @param {String} path The path of the bucket to search on
  * @param {boolean} all true if you want to get all files from the bucket
- * @returns the files in the bucket/path
+ * @returns {String[]} the files on the bucket and path
  */
 async function listS3Files (bucketName, path, all = false) {
   let queryResults = {}
@@ -160,7 +160,7 @@ MAFWhen('bucket {string} is created on S3', async function (bucketName) {
 })
 
 /**
- * This will create a text test file
+ * This will create a text test file (For localstack testing)
  */
 MAFWhen('test file {string} is created', async function (fileName) {
   fileName = filltemplate(fileName, this.results)

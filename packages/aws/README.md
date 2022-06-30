@@ -54,24 +54,6 @@ Fails if a bucket with name {string} can be found on the s3 server
 
 Fails if a bucket with name {string} can not be found on the s3 server
 
-### `When file {string} is uploaded to bucket {string} at path {string}`
-
-Uploads a local file to the bucket. The file is place at the path provided within the bucket.
-
-Example:
-
-`When file "hello.txt" is uploaded to bucket "myBucket" at path "foo/bar/"`
-
-The file hello.txt and its contents now exist on s3://myBucket/foo/bar; s3://myBucket/foo/bar/hello.txt is now created
-
-### `Then file exists with name {string} at path {string} in bucket {string}`
-
-Checks to see if a file exists at the provided path in the bucket . Fails if it does not exist
-
-### `When file {string} from bucket {string} at path {string} is retrieved`
-
-Gets the contents of the file s3://[bucket]/[path]/[file] and sends it content value to `${lastRun}`
-
 ### `When file list of bucket {string} on path {string} is retrieved`
 
 Gets the list of files in the s3 bucket (s3://[bucket]/[path]). The file content list is stored to `${lastRun}`.
@@ -81,37 +63,26 @@ Example:
 
 ```
 When file list of bucket "testbucket" on path "folder1/folder2/" is retrieved
-Then it is equal to "test1.txt,test2.txt"
-```
-
-### `When file list of bucket {string} on path {string} is retrieved as json item`
-
-Gets the list of files in the s3 bucket (s3://[bucket]/[path]) as an array of JSON objects. The file content list is stored to `${lastRun}`.
-The JSON objects contain the _name_, _date_, and _size_ are stored as a json object
-
-Example:
-
-```
-When file list of bucket "testBucket3" on path "foobar" is retrieved as json item
-Then lastRun is equal to:
-"""
-[
-  {
-    "name" : "test3.txt",
-    "size" : 19,
-    "date" : "2021-02-01 15:38:50"
-  }
-]
-"""
+Then it is equal to "[test1.txt,test2.txt]"
 ```
 
 ### `When all files of bucket {string} is retrieved`
 
 Gets a list of all files on the bucket as an array.
 
-### `When all files of bucket {string} is retrieved as json item`
+### `Then file exists with name {string} at path {string} in bucket {string}`
 
-Gets a list of all files on the bucket as an array of JSONs. Follows the same json format as `When file list of bucket {string} on path {string} is retrieved as json item`
+Checks to see if a file exists at the provided path in the bucket . Fails if it does not exist
+
+### `When {jsonObject} is uploaded to bucket {string} as key {string}`
+
+Uploads a local file to the bucket. The file is placed at the path provided within the bucket.
+
+Example:
+
+`When file "hello.txt" is uploaded to bucket "myBucket" as key "foo/bar/hello"`
+
+The file hello.txt and its contents now exist at s3://myBucket/foo/bar/hello
 
 ### `When file {string} is deleted from bucket {string} at path {string}`
 
@@ -140,11 +111,15 @@ Then it is equal to:
 """
 ```
 
+### `When file {string} from bucket {string} at path {string} is retrieved`
+
+Gets the contents of the file s3://[bucket]/[path]/[file] and sends it content value to `${lastRun}`
+
 ## Lambda Step Definitions (NOT TESTED)
 
-### `When a user supplies {jsonObject} to endpoint {string}`
+### `When a user supplies {jsonObject} to function {string}`
 
-JSON Object includes the steps "item {string}", "it", {string}, {string}, file {string}" to retrieve a JSON object that is then used for processing on lambda.
+Invokes a lambda function On AWS. {jsonObject} is the payload and {string} is the function name
 
 ## AWS DynamoDB Step Definitions
 
@@ -436,13 +411,20 @@ When attributes of queue "testQueue" are received
 Then item "lastRun.ApproximateNumberOfMessages" is equal to "0"
 ```
 
+### `Given queue {string} exists on SQS`
+
+Passes if the queue can be found on AWS. This checks by checking if provided name is found at the end of any queue urls found on AWS
+
+### `When attributes of queue {string} are received`
+
+Gets all attributes for a SQS queue to `lastRun`. This checks by checking if provided name is found at the end of any queue urls found on AWS, then getting those attributes
 ### `When {jsonObject} is sent to queue {string}`
 
 Sends a new message to the SQS queue provided. `lastRun` will contain the message id and message
 
 ### `When the next message is received from queue {string}`
 
-Receives the message in the SQS queue and stores the value in `lastRun`
+Receives / Dequeues the message in the SQS queue and stores the value in `lastRun`
 
 ### `When {int} messages are received from queue {string}`
 
@@ -468,13 +450,11 @@ Then it is equal to:`
 ## AWS ECS Step Definitions
 
 ### `When ecs taskDefinition {string} exists`
-
 ### `When ecs taskDefinition {string} does not exist`
 
 Checks if the task definition exists on ecs
 
 ### `When ecs cluster {string} exists`
-
 ### `When ecs cluster {string} does not exists`
 
 Checks if the cluster exists on ecs
