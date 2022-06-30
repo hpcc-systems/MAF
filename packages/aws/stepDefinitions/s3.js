@@ -7,7 +7,7 @@ setDefaultTimeout(15 * 60 * 1000)
 
 const S3ClientConfig = { maxAttempts: 3, forcePathStyle: true }
 if (process.env.AWSENV === undefined || process.env.AWSENV === '' || process.env.AWSENV.toUpperCase() === 'FALSE') {
-  S3ClientConfig.endpoint = 'http://localhost:4566'
+  S3ClientConfig.endpoint = process.env.LOCALSTACK_HOSTNAME ? `http://${process.env.LOCALSTACK_HOSTNAME}:4566` : 'http://localhost:4566'
 }
 const s3Client = new S3Client(S3ClientConfig)
 

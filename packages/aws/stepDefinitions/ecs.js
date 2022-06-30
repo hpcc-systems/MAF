@@ -1,13 +1,12 @@
-const runAWS = require('../awsL')
 const { setDefaultTimeout } = require('@cucumber/cucumber')
 const { MAFWhen, performJSONObjectTransform, filltemplate } = require('@ln-maf/core')
-const { ECSClient, ListTaskDefinitionsCommand, ListClustersCommand, RunTaskCommand } = require('@aws-sdk/client-ecs')
+const { ECSClient, ListTaskDefinitionsCommand, ListClustersCommand, RunTaskCommand, DescribeClustersCommand } = require('@aws-sdk/client-ecs')
 
 setDefaultTimeout(15 * 60 * 1000)
 
 const ecsClientConfig = { maxAttempts: 3 }
 if (process.env.AWSENV === undefined || process.env.AWSENV === '' || process.env.AWSENV.toUpperCase() === 'FALSE') {
-  ecsClientConfig.endpoint = 'http://localhost:4566'
+  ecsClientConfig.endpoint = process.env.LOCALSTACK_HOSTNAME ? `http://${process.env.LOCALSTACK_HOSTNAME}:4566` : 'http://localhost:4566'
 }
 const ecsClient = new ECSClient(ecsClientConfig)
 
@@ -87,13 +86,31 @@ MAFWhen('ecs cluster {string} exists', async function (clusterName) {
   }
 })
 
+async function getClusterARNFromName (clusterName) {
+  const clusterARNs = await listClusters()
+  return clusterARNs.find(arn => arn.includes(clusterName))
+}
+
 MAFWhen('get ARN of ecs cluster {string}', async function (clusterName) {
   clusterName = filltemplate(clusterName, this.results)
-  const clusterARNs = await listClusters()
-  const res = clusterARNs.fine(arn => arn.includes(clusterName))
-  if (!res) {
-    throw new Error('ECS cluster ' + clusterName + ' does exists')
+  const name = getClusterARNFromName(clusterName)
+  if (!name) {
+    throw new Error('ECS cluster ' + clusterName + ' can not be found on AWS')
   }
+  return name
+})
+
+MAFWhen('information from ecs cluster {string} is retrieved', async function (clusterName) {
+  clusterName = filltemplate(clusterName, this.results)
+  const name = await getClusterARNFromName(clusterName)
+  if (!name) {
+    throw new Error('ECS cluster ' + clusterName + ' can not be found on AWS')
+  }
+  const queryParameters = {
+    clusters: [name],
+    include: ['CONFIGURATIONS', 'SETTINGS']
+  }
+  return await ecsClient.send(new DescribeClustersCommand(queryParameters))
 })
 
 /**
@@ -170,11 +187,6 @@ MAFWhen('ecs run-task from {jsonObject} is performed', async function (payload) 
 MAFWhen('perform ecs run-task:', async function (docString) {
   const payload = JSON.parse(filltemplate(docString, this.results))
   return await performECSRunTaskFromJSON.call(this, payload)
-})
-
-MAFWhen('ecs cluster {string} information is retrieved', async function (clusterName) {
-  clusterName = filltemplate(clusterName, this.results)
-  return await JSON.parse(runAWS('ecs describe-clusters --cluster ' + clusterName).stdout).clusters
 })
 
 /**

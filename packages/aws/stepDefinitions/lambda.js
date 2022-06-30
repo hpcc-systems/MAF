@@ -1,9 +1,21 @@
-const runAWS = require('../awsL')
-const { MAFWhen, performJSONObjectTransform } = require('@ln-maf/core')
-const fs = require('fs')
-MAFWhen('a user supplies {jsonObject} to endpoint {string}', function (payload, functionName) {
-  payload = JSON.stringify(performJSONObjectTransform.call(this, payload))
-  // Write code here that turns the phrase above into concrete actions
-  runAWS(`lambda invoke --function-name ${functionName} --payload '${payload}' lambdaTMPOutFile.txt`)
-  return JSON.parse(fs.readFileSync('lambdaTMPOutFile.txt', 'utf8'))
+const { setDefaultTimeout } = require('@cucumber/cucumber')
+const { MAFWhen, performJSONObjectTransform, filltemplate } = require('@ln-maf/core')
+const { LambdaClient, InvokeCommand } = require('@aws-sdk/client-lambda')
+
+setDefaultTimeout(15 * 60 * 1000)
+
+const lambdaClientConfig = { maxAttempts: 3 }
+if (process.env.AWSENV === undefined || process.env.AWSENV === '' || process.env.AWSENV.toUpperCase() === 'FALSE') {
+  lambdaClientConfig.endpoint = process.env.LOCALSTACK_HOSTNAME ? `http://${process.env.LOCALSTACK_HOSTNAME}:4566` : 'http://localhost:4566'
+}
+const lambdaClient = new LambdaClient(lambdaClientConfig)
+
+MAFWhen('a user supplies {jsonObject} to endpoint {string}', async function (payload, functionName) {
+  functionName = filltemplate(functionName, this.results)
+  payload = performJSONObjectTransform.call(this, payload)
+  const queryParameters = {
+    FunctionName: functionName,
+    Payload: payload
+  }
+  return await lambdaClient.send(new InvokeCommand(queryParameters))
 })

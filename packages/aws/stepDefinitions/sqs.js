@@ -6,7 +6,7 @@ setDefaultTimeout(15 * 60 * 1000)
 
 const sqsClientConfig = { maxAttempts: 3 }
 if (process.env.AWSENV === undefined || process.env.AWSENV === '' || process.env.AWSENV.toUpperCase() === 'FALSE') {
-  sqsClientConfig.endpoint = 'http://localhost:4566'
+  sqsClientConfig.endpoint = process.env.LOCALSTACK_HOSTNAME ? `http://${process.env.LOCALSTACK_HOSTNAME}:4566` : 'http://localhost:4566'
 }
 const sqsClient = new SQSClient(sqsClientConfig)
 
