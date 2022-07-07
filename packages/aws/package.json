@@ -23,8 +23,8 @@
     "luxon": "^2.4.0"
   },
   "devDependencies": {
-    "@ln-maf/core": "^1.6.0",
-    "@ln-maf/validations": "^1.6.0",
+    "@ln-maf/core": "*",
+    "@ln-maf/validations": "*",
     "eslint": "^8.18.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",

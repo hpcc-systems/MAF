@@ -1,6 +1,5 @@
 {
-  "packages": [
-    "packages/*"
-  ],
+  "packages": ["packages/*"],
+  "useNx": true,
   "version": "1.6.2"
 }
