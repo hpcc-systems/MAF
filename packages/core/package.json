@@ -3,11 +3,11 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.6.1",
-  "description": "The core for the MAF framework.  Contains helpers to make it easy to use.",
+  "version": "2.0.0",
+  "description": "The core for the MAF framework. Contains helpers to make it easier to use.",
   "main": "index.js",
   "scripts": {
-    "test": "cd ../.. && bash runFeature.sh core $EXTRAS"
+    "test": "bash runFeature.sh"
   },
   "author": "",
   "license": "Apache-2.0",
@@ -34,6 +34,7 @@
   },
   "homepage": "https://github.com/hpcc-systems/MAF#readme",
   "devDependencies": {
+    "nyc": "^15.1.0",
     "eslint": "^8.18.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",

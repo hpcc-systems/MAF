@@ -455,7 +455,7 @@ Then it is equal to:`
 Checks if the task definition exists on ecs
 
 ### `When ecs cluster {string} exists`
-### `When ecs cluster {string} does not exists`
+### `When ecs cluster {string} does not exist`
 
 Checks if the cluster exists on ecs
 

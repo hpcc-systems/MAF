@@ -70,7 +70,7 @@ MAFWhen('ecs clusters from AWS are retrieved', async function (clusterName) {
   return await listClusters()
 })
 
-MAFWhen('ecs cluster {string} does not exists', async function (clusterName) {
+MAFWhen('ecs cluster {string} does not exist', async function (clusterName) {
   clusterName = filltemplate(clusterName, this.results)
   const clusterARNs = await listClusters()
   if (clusterARNs.some(arn => arn.includes(clusterName))) {

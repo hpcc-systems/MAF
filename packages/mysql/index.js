@@ -6,14 +6,14 @@ create({
     const dets = {
       ...(connectionInfo),
       user: username,
-      password: password
+      password
     }
-    const connection=await mysql.createConnection(dets)
+    const connection = await mysql.createConnection(dets)
     await connection.execute('SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;')
     return connection
   },
   runQuery: async (connection, query) => {
-    let res= await connection.execute(query)
+    const res = await connection.execute(query)
     return res[0]
   },
   disconnect: async (connection) => {

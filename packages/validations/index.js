@@ -24,7 +24,7 @@ const toISO = d => {
 const setToString = function (location, value, scenario, attach = true) {
   MAFSave.call(scenario, location, applyJSONToString(value, scenario))
 }
-MAFWhen('convert csv {jsonObject} to json', async function(obj) {
+MAFWhen('convert csv {jsonObject} to json', async function (obj) {
   const content = performJSONObjectTransform.call(this, obj)
   const Papa = require('papaparse')
   let res = await Papa.parse(content, {
@@ -324,7 +324,7 @@ MAFWhen('the file {string} is gzipped', function (filename) {
   const bf = readFileBuffer(filename, this)
   const buffer = zlib.gzipSync(bf)
   writeFileBuffer(filename + '.gz', buffer, this)
-  return ""
+  return ''
 })
 
 MAFWhen('file {string} is gzip unzipped to file {string}', function (file, fileOut) {
@@ -333,7 +333,7 @@ MAFWhen('file {string} is gzip unzipped to file {string}', function (file, fileO
   const bf = readFileBuffer(file, this)
   const buffer = zlib.unzipSync(bf)
   writeFileBuffer(fileOut, buffer, this)
-  return ""
+  return ''
 })
 
 When('set config from json {jsonObject}', function (jsonObject) {

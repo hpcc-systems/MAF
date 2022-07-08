@@ -7,6 +7,7 @@ node_modules
 *.sqlConfig.json
 passwords.txt
 /image2.png
+.terraform.*
 
 # Local .terraform directories
 **/.terraform/*

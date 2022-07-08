@@ -1,6 +1,9 @@
-#Runs one feature file and opens a Web page displaying the test report. Example: ./runFeature.sh S3.feature
-mkdir -p ./test/report
-node node_modules/cucumber/bin/cucumber-js -f json:test/report/cucumber_report.json features/$*
+mkdir -p test/report
+if [[ "$ENVIRONMENT" == "COVERAGE" ]]; then
+    npx nyc --reporter=lcov --reporter=text cucumber-js $EXTRAS -f json:test/report/api.json --require "stepDefinitions/*.js" features/$*
+else
+    npx cucumber-js $EXTRAS -f json:test/report/api.json --require "stepDefinitions/*.js" features/$*
+fi
 result=$?
-node multiReport.js
+npx multiReport
 exit $result

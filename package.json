@@ -1,7 +1,7 @@
 {
   "name": "ln-maf",
   "private": true,
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "Modular Automation Framework",
   "main": "index.js",
   "prepare": "cd packages && node createAutoComplete.js",
@@ -11,7 +11,7 @@
     "postinstall": "sh postinstall.sh"
   },
   "devDependencies": {
-    "cucumber-html-reporter": "^5.5.0",
+    "multiple-cucumber-html-reporter": "^1.21.0",
     "keytar": "^7.9.0",
     "lerna": "^5.1.0",
     "nx": "^14.4.2"
@@ -19,7 +19,6 @@
   "dependencies": {
     "@cucumber/cucumber": "^8.1.0",
     "chai": "^4.3.6",
-    "multiple-cucumber-html-reporter": "^1.19.0",
     "nyc": "^15.1.0"
   },
   "workspaces": [
