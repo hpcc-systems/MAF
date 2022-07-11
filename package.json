@@ -10,16 +10,12 @@
     "test": "lerna run test",
     "postinstall": "sh postinstall.sh"
   },
-  "devDependencies": {
-    "multiple-cucumber-html-reporter": "^1.21.0",
-    "keytar": "^7.9.0",
-    "lerna": "^5.1.0",
-    "nx": "^14.4.2"
-  },
+  "devDependencies": {},
   "dependencies": {
-    "@cucumber/cucumber": "^8.1.0",
-    "chai": "^4.3.6",
-    "nyc": "^15.1.0"
+    "nyc": "^15.1.0",
+    "lerna": "^5.1.0",
+    "multiple-cucumber-html-reporter": "^1.21.0",
+    "nx": "^14.4.2"
   },
   "workspaces": [
     "packages/*"
