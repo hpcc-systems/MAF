@@ -10,7 +10,6 @@
     "test": "lerna run test",
     "postinstall": "sh postinstall.sh"
   },
-  "devDependencies": {},
   "dependencies": {
     "nyc": "^15.1.0",
     "lerna": "^5.1.0",
