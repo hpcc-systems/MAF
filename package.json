@@ -16,9 +16,6 @@
     "multiple-cucumber-html-reporter": "^1.21.0",
     "nx": "^14.4.2"
   },
-  "workspaces": [
-    "packages/*"
-  ],
   "author": "",
   "license": "Apache-2.0",
   "repository": {

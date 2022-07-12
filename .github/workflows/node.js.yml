@@ -33,7 +33,7 @@ jobs:
       uses: hashicorp/setup-terraform@v1.2.1
     - run: mkdir ~/.aws/
     - run: echo -e "[default]\noutput = json\nregion = us-east-1\naws_access_key_id = foo\naws_secret_access_key = bar" > ~/.aws/credentials
-    - run: npm i
+    - run: npm ci
     - name: Terraform - apply to localstack
       run: |
         terraform init
