@@ -24,6 +24,11 @@ const toISO = d => {
 const setToString = function (location, value, scenario, attach = true) {
   MAFSave.call(scenario, location, applyJSONToString(value, scenario))
 }
+
+MAFWhen('run templateString', function (docString) {
+  return filltemplate(docString, this.results)
+})
+
 MAFWhen('convert csv {jsonObject} to json', async function (obj) {
   const content = performJSONObjectTransform.call(this, obj)
   const Papa = require('papaparse')

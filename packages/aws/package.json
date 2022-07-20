@@ -12,19 +12,22 @@
   "author": "Dominick Martelly",
   "license": "Apache-2.0",
   "dependencies": {
+    "@ln-maf/core": "*",
+    "@aws-sdk/client-cloudwatch-logs": "^3.121.0",
     "@aws-sdk/client-dynamodb": "^3.121.0",
     "@aws-sdk/client-ecs": "^3.121.0",
     "@aws-sdk/client-lambda": "^3.121.0",
     "@aws-sdk/client-s3": "^3.121.0",
     "@aws-sdk/client-sqs": "^3.121.0",
-    "@aws-sdk/client-cloudwatch-logs": "^3.121.0",
-    "@cucumber/cucumber": "*",
     "chai": "^4.3.6",
     "luxon": "^2.4.0"
   },
+  "peerDependencies": {
+    "@cucumber/cucumber": ">= 7.0.0"
+  },
   "devDependencies": {
-    "@ln-maf/core": "*",
-    "@ln-maf/validations": "*",
+    "@cucumber/cucumber": "8.2.0",
+    "@ln-maf/validations": "file:../validations",
     "nyc": "^15.1.0",
     "eslint": "^8.18.0",
     "eslint-config-standard": "^17.0.0",

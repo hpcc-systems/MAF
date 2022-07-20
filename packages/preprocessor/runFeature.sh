@@ -1,5 +1,5 @@
 mkdir -p test/report
-npx preprocessor --src './'
+node ./exec --src './'
 if [[ "$ENVIRONMENT" == "COVERAGE" ]]; then
     npx nyc --reporter=lcov --reporter=text cucumber-js $EXTRAS -f json:test/report/preprocessor.json --require "stepDefinitions/*.js" tmp/features/$*
 else
