@@ -20,9 +20,11 @@
     "mysql2": "^2.3.3"
   },
   "peerDependencies": {
+    "@ln-maf/core": "*",
     "@cucumber/cucumber": ">= 7.0.0"
   },
   "devDependencies": {
+    "@ln-maf/core": "*",
     "@cucumber/cucumber": "8.2.0",
     "nyc": "^15.1.0",
     "eslint": "^8.18.0",

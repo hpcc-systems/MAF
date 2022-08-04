@@ -10,15 +10,15 @@
     "test": "lerna run test",
     "postinstall": "sh postinstall.sh"
   },
-  "dependencies": {
-    "@ln-maf/api": "file:packages/api",
-    "@ln-maf/aws": "file:packages/aws",
-    "@ln-maf/core": "file:packages/core",
-    "@ln-maf/default-sql": "file:packages/defaultSQL",
-    "@ln-maf/mysql": "file:packages/mysql",
-    "@ln-maf/preprocessor": "file:packages/preprocessor",
-    "@ln-maf/validations": "file:packages/validations"
-  },
+  "workspaces": [
+    "packages/api",
+    "packages/aws",
+    "packages/core",
+    "packages/defaultSQL",
+    "packages/mysql",
+    "packages/preprocessor",
+    "packages/validations"
+  ],
   "author": "",
   "license": "Apache-2.0",
   "repository": {
@@ -36,12 +36,6 @@
   },
   "homepage": "https://github.com/hpcc-systems/MAF#readme",
   "devDependencies": {
-    "@cucumber/cucumber": "8.2.0",
-    "eslint": "^8.18.0",
-    "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6.0.0",
     "lerna": "^5.1.8",
     "multiple-cucumber-html-reporter": "^1.21.0",
     "nyc": "^15.1.0"

@@ -12,7 +12,6 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ln-maf/core": "*",
     "@xmldom/xmldom": "^0.8.2",
     "chai": "^4.3.6",
     "jsonpath": "^1.1.1",
@@ -27,8 +26,8 @@
     "@ln-maf/core": "*"
   },
   "devDependencies": {
+    "@ln-maf/core": "*",
     "@cucumber/cucumber": "8.2.0",
-    "@ln-maf/core": "file:../core",
     "nyc": "^15.1.0",
     "eslint": "^8.18.0",
     "eslint-config-standard": "^17.0.0",
