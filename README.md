@@ -1,5 +1,5 @@
 # MAF - Modular Automation Framework
-An expandable fast, easy to use automation framework built in the cucumber language.  Supports API Testing and SQL Testing in a simple manner.  Allows the usage of modules in isolation as well as in an integrated fashion.  Utilizes the cucumber language to clearly articulate intent while preserving test data for further debugging and record-keeping.  Allows the integration of custom modules and provides a core to allow for simple integration between components.  
+An expandable, fast, easy to use automation framework built in the cucumber language.  Supports API Testing and SQL Testing in a simple manner.  Allows the usage of modules in isolation as well as in an integrated fashion.  Utilizes the cucumber language to clearly articulate intent while preserving test data for further debugging and record-keeping.  Allows the integration of custom modules and provides a core to allow for simple integration between components.  
 You can view an example report at:
 https://maf-test-reports.web.app/
 
@@ -166,5 +166,3 @@ Please view [AddModule](./AddModule.md) for information on how to add a module. 
 
 [npm-image]:https://img.shields.io/npm/v/@ln-maf/core.svg
 [npm-url]:https://www.npmjs.com/search?q=ln-maf
-
-

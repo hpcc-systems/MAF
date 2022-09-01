@@ -3,16 +3,16 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.6.1",
-  "description": "The core for the MAF framework.  Contains helpers to make it easy to use.",
+  "version": "2.0.0",
+  "description": "The core for the MAF framework. Contains helpers to make it easier to use.",
   "main": "index.js",
   "scripts": {
-    "test": "cd ../.. && bash runFeature.sh core $EXTRAS"
+    "test": "bash runFeature.sh"
   },
   "author": "",
   "license": "Apache-2.0",
   "peerDependencies": {
-    "@cucumber/cucumber": "*",
+    "@cucumber/cucumber": ">= 7.0.0",
     "moment": "^2.29.1"
   },
   "gitHead": "2a575448a74cfaee5ec68fa10db24cf4ccade849",
@@ -34,8 +34,10 @@
   },
   "homepage": "https://github.com/hpcc-systems/MAF#readme",
   "devDependencies": {
-    "eslint": "^8.13.0",
-    "eslint-config-standard": "^16.0.3",
+    "@cucumber/cucumber": "8.2.0",
+    "nyc": "^15.1.0",
+    "eslint": "^8.18.0",
+    "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0"

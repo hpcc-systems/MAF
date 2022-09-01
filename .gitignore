@@ -7,7 +7,7 @@ node_modules
 *.sqlConfig.json
 passwords.txt
 /image2.png
-package-lock.json
+.terraform.*
 
 # Local .terraform directories
 **/.terraform/*

@@ -1,7 +1,7 @@
 {
   "name": "ln-maf",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Modular Automation Framework",
   "main": "index.js",
   "prepare": "cd packages && node createAutoComplete.js",
@@ -10,19 +10,14 @@
     "test": "lerna run test",
     "postinstall": "sh postinstall.sh"
   },
-  "devDependencies": {
-    "cucumber-html-reporter": "^5.5.0",
-    "keytar": "^7.9.0",
-    "lerna": "^4.0.0"
-  },
-  "dependencies": {
-    "@cucumber/cucumber": "^8.0.0",
-    "chai": "^4.3.6",
-    "multiple-cucumber-html-reporter": "^1.19.0",
-    "nyc": "^15.1.0"
-  },
   "workspaces": [
-    "packages/*"
+    "packages/api",
+    "packages/aws",
+    "packages/core",
+    "packages/defaultSQL",
+    "packages/mysql",
+    "packages/preprocessor",
+    "packages/validations"
   ],
   "author": "",
   "license": "Apache-2.0",
@@ -39,5 +34,10 @@
   "bugs": {
     "url": "https://github.com/hpcc-systems/MAF/issues"
   },
-  "homepage": "https://github.com/hpcc-systems/MAF#readme"
+  "homepage": "https://github.com/hpcc-systems/MAF#readme",
+  "devDependencies": {
+    "lerna": "^5.1.8",
+    "multiple-cucumber-html-reporter": "^1.21.0",
+    "nyc": "^15.1.0"
+  }
 }

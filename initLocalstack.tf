@@ -6,18 +6,17 @@ provider "aws" {
   skip_credentials_validation = true
   skip_requesting_account_id  = true
   skip_metadata_api_check     = true
-  s3_force_path_style         = true
+  s3_use_path_style           = true
 
   endpoints {
-    dynamodb = "http://localhost:4569"
-    s3       = "http://localhost:4572"
-    sqs       = "http://localhost:4576"
+    dynamodb = "http://localhost:4566"
+    s3       = "http://localhost:4566"
+    sqs      = "http://localhost:4566"
   }
 }
 
-resource "aws_s3_bucket" "test-bucket" {
-  bucket = "testScriptbucket"
-
+resource "aws_s3_bucket" "testBucket" {
+  bucket = "test-bucket"
 }
 
 resource "aws_dynamodb_table" "test-table" {

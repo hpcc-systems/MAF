@@ -3,14 +3,14 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.6.1",
+  "version": "2.0.0",
   "description": "This project will preprocess feature files to allow more input variables to be supplied.  This can be supplied through javascript, a csv/psv/json array file or a mixture of these.  This will hopefully allow it to be easier to maintain larger test sets.",
   "main": "index.js",
   "bin": {
     "preprocessor": "exec.js"
   },
   "scripts": {
-    "test": "cd ../.. && bash runFeature.sh preprocessor",
+    "test": "bash runFeature.sh",
     "postinstall": "tsc",
     "tsc": "tsc"
   },
@@ -24,6 +24,22 @@
     "glob": "^7.2.0",
     "papaparse": "^5.3.2",
     "typescript": "^4.6.3"
+  },
+  "peerDependencies": {
+    "@ln-maf/core": "*",
+    "@cucumber/cucumber": ">= 7.0.0"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "8.2.0",
+    "@ln-maf/validations": "*",
+    "@ln-maf/core": "*",
+    "nyc": "^15.1.0",
+    "eslint": "^8.18.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "multiple-cucumber-html-reporter": "^1.21.0"
   },
   "repository": {
     "type": "git",

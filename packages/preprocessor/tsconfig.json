@@ -2,10 +2,7 @@
   "compilerOptions": {
     "declaration": true,
     "target": "es5",
-    "lib": [
-      "es2019",
-      "dom"
-    ],
+    "lib": ["es2019", "dom"],
     "sourceMap": true,
     "allowJs": false,
     "jsx": "react",
@@ -18,10 +15,5 @@
     "downlevelIteration": true,
     "skipLibCheck": true
   },
-  "include": [
-    "src/**/*",
-    "test/**/*",
-    "features/**/*"
-  ]
+  "include": ["src/**/*", "test/**/*", "features/**/*", "stepDefinitions/**/*"]
 }
-

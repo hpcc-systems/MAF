@@ -3,11 +3,11 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.6.2",
+  "version": "2.0.0",
   "description": "Default Sql setup on Node with cucumber",
   "main": "index.js",
   "scripts": {
-    "test": "cd ../.. && bash runFeature.sh defaultSQL"
+    "test": "bash runFeature.sh"
   },
   "author": "",
   "license": "Apache-2.0",
@@ -17,18 +17,21 @@
     "prompt": "^1.2.2"
   },
   "peerDependencies": {
+    "@ln-maf/core": "*",
+    "@cucumber/cucumber": ">= 7.0.0",
     "keytar": "7.*"
   },
   "devDependencies": {
-    "@cucumber/cucumber": "*",
-    "@ln-maf/validations": "^1.6.2",
-    "cucumber-html-reporter": "^5.5.0",
-    "eslint": "^8.13.0",
-    "eslint-config-standard": "^16.0.3",
+    "@cucumber/cucumber": "8.2.0",
+    "@ln-maf/core": "*",
+    "@ln-maf/validations": "*",
+    "nyc": "^15.1.0",
+    "eslint": "^8.18.0",
+    "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
-    "multiple-cucumber-html-reporter": "^1.19.0"
+    "multiple-cucumber-html-reporter": "^1.21.0"
   },
   "gitHead": "9bf55a2c86fa17707fabfb4320c3d722e270f9e6",
   "repository": {

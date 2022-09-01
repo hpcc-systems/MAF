@@ -3,28 +3,36 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.6.2",
+  "version": "2.0.0",
   "description": "Setup for sql on Node",
   "main": "index.js",
   "scripts": {
-    "test": "sh runTests.sh"
+    "test": "sh runFeature.sh"
   },
   "bin": {
     "mysql-configure": "./config.js"
   },
   "author": "",
   "license": "Apache-2.0",
-  "devDependencies": {
-    "eslint": "^8.13.0",
-    "eslint-config-standard": "^16.0.3",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6.0.0"
-  },
   "dependencies": {
-    "@ln-maf/default-sql": "^1.6.2",
+    "@ln-maf/default-sql": "*",
     "keytar": "^7.9.0",
     "mysql2": "^2.3.3"
+  },
+  "peerDependencies": {
+    "@ln-maf/core": "*",
+    "@cucumber/cucumber": ">= 7.0.0"
+  },
+  "devDependencies": {
+    "@ln-maf/core": "*",
+    "@cucumber/cucumber": "8.2.0",
+    "nyc": "^15.1.0",
+    "eslint": "^8.18.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "multiple-cucumber-html-reporter": "^1.21.0"
   },
   "gitHead": "2a575448a74cfaee5ec68fa10db24cf4ccade849",
   "repository": {

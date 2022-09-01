@@ -3,31 +3,35 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.6.2",
+  "version": "2.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "cd ../.. && bash runFeature.sh api"
+    "test": "bash runFeature.sh"
   },
   "author": "",
   "license": "Apache-2.0",
-  "devDependencies": {
-    "@ln-maf/validations": "^1.6.2",
-    "eslint": "^8.13.0",
-    "eslint-config-standard": "^16.0.3",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6.0.0"
-  },
-  "peerDependencies": {
-    "@cucumber/cucumber": "*",
-    "@ln-maf/core": "*",
-    "chai": "^4.3.4"
-  },
   "dependencies": {
     "fetch-blob": "^3.1.5",
     "form-data": "^4.0.0",
     "node-fetch": "^2.6.1"
+  },
+  "peerDependencies": {
+    "@ln-maf/core": "*",
+    "@cucumber/cucumber": ">= 7.0.0",
+    "chai": "^4.3.4"
+  },
+  "devDependencies": {
+    "@ln-maf/core": "*",
+    "@cucumber/cucumber": "8.2.0",
+    "@ln-maf/validations": "file:../validations",
+    "nyc": "^15.1.0",
+    "eslint": "^8.18.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "multiple-cucumber-html-reporter": "^1.21.0"
   },
   "gitHead": "2a575448a74cfaee5ec68fa10db24cf4ccade849",
   "repository": {
