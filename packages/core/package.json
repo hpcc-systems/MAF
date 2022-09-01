@@ -35,11 +35,11 @@
   "homepage": "https://github.com/hpcc-systems/MAF#readme",
   "devDependencies": {
     "@cucumber/cucumber": "8.2.0",
-    "nyc": "^15.1.0",
     "eslint": "^8.18.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6.0.0"
+    "eslint-plugin-promise": "^6.0.0",
+    "nyc": "^15.1.0"
   }
 }

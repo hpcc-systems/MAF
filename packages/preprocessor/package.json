@@ -26,20 +26,20 @@
     "typescript": "^4.6.3"
   },
   "peerDependencies": {
-    "@ln-maf/core": "*",
-    "@cucumber/cucumber": ">= 7.0.0"
+    "@cucumber/cucumber": ">= 7.0.0",
+    "@ln-maf/core": "*"
   },
   "devDependencies": {
     "@cucumber/cucumber": "8.2.0",
-    "@ln-maf/validations": "*",
-    "@ln-maf/core": "*",
-    "nyc": "^15.1.0",
+    "@ln-maf/core": "^2.0.0",
+    "@ln-maf/validations": "^2.0.0",
     "eslint": "^8.18.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
-    "multiple-cucumber-html-reporter": "^1.21.0"
+    "multiple-cucumber-html-reporter": "^1.21.0",
+    "nyc": "^15.1.0"
   },
   "repository": {
     "type": "git",
