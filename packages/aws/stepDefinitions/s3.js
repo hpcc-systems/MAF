@@ -107,7 +107,7 @@ MAFWhen('file exists with name {string} at path {string} in bucket {string}', as
  * Puts an object on s3 bucket User must have WRITE permissions on a bucket to add an object to it
  */
 MAFWhen('{jsonObject} is uploaded to bucket {string} as key {string}', async function (file, bucketName, key) {
-  file = performJSONObjectTransform.call(this.results, file)
+  file = performJSONObjectTransform.call(this, file)
   bucketName = filltemplate(bucketName, this.results)
   key = filltemplate(key, this.results).replace(/\/{2,}/g, '/')
   const queryParameters = {
