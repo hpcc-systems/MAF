@@ -25,6 +25,12 @@ This module provides scenarios where Gherkins/Cucumber is implemented for AWS.
 ```
 require('@ln-maf/aws')
 ```
+# Dev Testing
+
+- Run `docker run --rm -it -p 4566:4566 -p 4510-4559:4510-4559 localstack/localstack:0.14.4` to spin up a localstack environment.
+- Run `terraform apply -auto-approve` to prepare the localstack environment.
+- Be sure environment variable `AWSENV` is set to false or does not exist
+- Run individual tests, or run all tests using `npm t`
 
 # Configurations
 
