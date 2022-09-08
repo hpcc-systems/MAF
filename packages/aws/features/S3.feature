@@ -15,7 +15,6 @@ Feature: AWS: S3 Testing
 
   Scenario Outline: File Upload
     Given bucket "<bucket>" exists on S3
-    When set "directory" to "test/"
     And test file "<file>" is created
     And file "./test/<file>" is uploaded to bucket "<bucket>" as key "<s3FilePath><key>"
     Then file exists with name "<key>" at path "<s3FilePath>" in bucket "<bucket>"

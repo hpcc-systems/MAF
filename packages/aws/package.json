@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "2.0.0",
+  "version": "2.0.2",
   "description": "Setup for AWS on MAF. This contains s3, dynamoDB, sqs, ecs, cloudwatch, and lambda stepDefinitions",
   "main": "index.js",
   "scripts": {
@@ -12,31 +12,31 @@
   "author": "Dominick Martelly",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ln-maf/core": "*",
     "@aws-sdk/client-cloudwatch-logs": "^3.121.0",
     "@aws-sdk/client-dynamodb": "^3.121.0",
     "@aws-sdk/client-ecs": "^3.121.0",
     "@aws-sdk/client-lambda": "^3.121.0",
     "@aws-sdk/client-s3": "^3.121.0",
     "@aws-sdk/client-sqs": "^3.121.0",
+    "@ln-maf/core": "^2.0.1",
     "chai": "^4.3.6",
     "luxon": "^2.4.0"
   },
   "peerDependencies": {
-    "@ln-maf/core": "*",
-    "@cucumber/cucumber": ">= 7.0.0"
+    "@cucumber/cucumber": ">= 7.0.0",
+    "@ln-maf/core": "*"
   },
   "devDependencies": {
-    "@ln-maf/core": "*",
-    "@ln-maf/validations": "*",
     "@cucumber/cucumber": "8.2.0",
-    "nyc": "^15.1.0",
+    "@ln-maf/core": "*",
+    "@ln-maf/validations": "^2.0.1",
     "eslint": "^8.18.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
-    "multiple-cucumber-html-reporter": "^1.21.0"
+    "multiple-cucumber-html-reporter": "^1.21.0",
+    "nyc": "^15.1.0"
   },
   "gitHead": "9bf55a2c86fa17707fabfb4320c3d722e270f9e6"
 }
