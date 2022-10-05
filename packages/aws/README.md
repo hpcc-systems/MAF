@@ -506,6 +506,11 @@ When perform ecs run-task:
 """
 ```
 
+## AWS Cloudwatch Logs Step Definitions
+
+### `When cloudwatch logs from log group {string} from {int} minutes ago to now are retrieved
+Gets the cloudwatch logs from a specific log group and time frame
+
 [npm-image]:https://img.shields.io/npm/v/@ln-maf/aws.svg
 [npm-url]:https://www.npmjs.com/package/@ln-maf/aws
 [dep-image]:https://david-dm.org/hpcc-systems/MAF.svg?path=packages%2Faws
