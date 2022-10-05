@@ -104,7 +104,7 @@ MAFWhen('file exists with name {string} at path {string} in bucket {string}', as
 })
 
 /**
- * Puts an object on s3 bucket User must have WRITE permissions on a bucket to add an object to it
+ * Puts an object on s3 bucket. User must have WRITE permissions on a bucket to add an object to it
  */
 MAFWhen('{jsonObject} is uploaded to bucket {string} as key {string}', async function (file, bucketName, key) {
   file = performJSONObjectTransform.call(this, file)
@@ -116,6 +116,34 @@ MAFWhen('{jsonObject} is uploaded to bucket {string} as key {string}', async fun
     Key: key
   }
   return await s3Client.send(new PutObjectCommand(queryParameters))
+})
+
+MAFWhen('gz file {string} is uploaded to bucket {string} as key {string}', async function (filePath, bucketName, key) {
+  filePath = filltemplate(filePath, this.results)
+  bucketName = filltemplate(bucketName, this.results)
+  key = filltemplate(key, this.results).replace(/\/{2,}/g, '/')
+  const fileBuffer = fs.readFileSync(filePath)
+  const queryParameters = {
+    Bucket: bucketName.trim(),
+    Body: fileBuffer,
+    Key: key
+  }
+  return await new S3Client().send(new PutObjectCommand(queryParameters))
+})
+
+MAFWhen('gz file {string} is uploaded to bucket {string} as key {string} with sha256 check', async function (filePath, bucketName, key) {
+  const crypto = require('crypto')
+  filePath = filltemplate(filePath, this.results)
+  bucketName = filltemplate(bucketName, this.results)
+  key = filltemplate(key, this.results).replace(/\/{2,}/g, '/')
+  const fileBuffer = fs.readFileSync(filePath)
+  const queryParameters = {
+    Bucket: bucketName.trim(),
+    Body: fileBuffer,
+    Key: key,
+    ChecksumSHA256: crypto.createHash('sha256').update(fileBuffer).digest('base64')
+  }
+  return await new S3Client().send(new PutObjectCommand(queryParameters))
 })
 
 MAFWhen('file {string} is deleted from bucket {string} at path {string}', async function (key, bucketName, path) {

@@ -90,6 +90,11 @@ Example:
 
 The file hello.txt and its contents now exist at s3://myBucket/foo/bar/hello
 
+### `When gz file {string} is uploaded to bucket {string} as key {string}`
+### `When gz file {string} is uploaded to bucket {string} as key {string} with sha256 check`
+Uploads gz files to the s3 bucket. This is necessary for gz / compressed files as there is an encoding issue when using jsonObject with gzips.
+The gzip must be a local file and should not be in memory. the stepDefinition with sha256 will fail if the file uploaded is not matching the original gzip file.
+
 ### `When file {string} is deleted from bucket {string} at path {string}`
 
 Deletes a file from an s3 bucket.
