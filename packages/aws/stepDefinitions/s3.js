@@ -16,7 +16,7 @@ const s3Client = new S3Client(S3ClientConfig)
  * @param {string} bucket the name of the bucket
  * @param {string} path The directory path of the S3 bucket
  */
-function s3URL (bucket, path) {
+function s3URL(bucket, path) {
   return 's3://' + bucket + '/' + path
 }
 
@@ -25,7 +25,7 @@ function s3URL (bucket, path) {
  * @param {string} bucketName The name of the bucket
  * @returns {boolean} true if the bucket exists on S3
  */
-async function bucketExists (bucketName) {
+async function bucketExists(bucketName) {
   const res = await s3Client.send(new ListBucketsCommand({}))
   return res.Buckets.some(element => element.Name === bucketName.trim())
 }
@@ -58,7 +58,7 @@ MAFWhen('bucket {string} exists', async function (bucketName) {
  * @param {boolean} all true if you want to get all files from the bucket
  * @returns {String[]} the files on the bucket and path
  */
-async function listS3Files (bucketName, path, all = false) {
+async function listS3Files(bucketName, path, all = false) {
   let queryResults = {}
   let files = []
   do {
@@ -174,6 +174,20 @@ MAFWhen('file {string} from bucket {string} at path {string} is retrieved', asyn
       stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')))
     })
   return await streamToString(Body)
+})
+
+MAFWhen('gz file {string} from bucket {string} at path {string} is written to file {string}', async function (key, bucketName, path, saveName) {
+  key = filltemplate(key, this.results)
+  saveName = filltemplate(saveName, this.results)
+  bucketName = filltemplate(bucketName, this.results)
+  path = filltemplate(path, this.results).replace(/\/{2,}/g, '/').replace(/([^/]{1,})$/, '$1/')
+  const queryParameters = {
+    Bucket: bucketName.trim(),
+    Key: path + key
+  }
+  const { Body } = await s3Client.send(new GetObjectCommand(queryParameters))
+  Body.pipe(fs.createWriteStream(saveName))
+  return saveName
 })
 
 /**
