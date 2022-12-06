@@ -31,3 +31,15 @@ Feature: AWS: SQS Testing
                 "Charlie"
             ]
             """
+    Scenario: Test Purge Queue
+        Given queue "testQueue2" exists on SQS
+        And "123" is sent to queue "testQueue2"
+        And "456" is sent to queue "testQueue2"
+        And "789" is sent to queue "testQueue2"
+        Then wait 1000 milliseconds
+        And attributes of queue "testQueue2" are received
+        And item "lastRun.ApproximateNumberOfMessages" is equal to "3"
+        When queue "testQueue2" is purged
+        Then wait 1000 milliseconds
+        And attributes of queue "testQueue2" are received
+        And item "lastRun.ApproximateNumberOfMessages" is equal to "0"

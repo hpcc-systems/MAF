@@ -25,7 +25,7 @@ This module provides scenarios where Gherkins/Cucumber is implemented for AWS.
 ```
 require('@ln-maf/aws')
 ```
-# Dev Testing
+# Dev Testing Steps
 
 - Run `docker run --rm -it -p 4566:4566 -p 4510-4559:4510-4559 localstack/localstack:0.14.4` to spin up a localstack environment.
 - Run `terraform apply -auto-approve` to prepare the localstack environment.
@@ -38,7 +38,7 @@ The AWS SDK V3 is used for communication to AWS / Localstack.
 You need to provide credentials to AWS so that only your account and its resources are accessed by the SDK. For more information about obtaining your account credentials, see [Loading credentials in Node.js from the shared credentials file from AWS Documentation.](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/loading-node-credentials-shared.html)
 This can be point to a remote aws location, or point to a localstack configuration depending on the environment variable `AWSENV`. If `AWSENV` is set to `TRUE`, then the default configuration / credentials provided will be used. If `AWSENV` is set to false or does not exist, then the AWS MAF framework will use the default localstack configuration endpoint `http://localhost:4566`, or `http://${LOCALSTACK_HOSTNAME}:4566` if env variable `LOCALSTACK_HOSTNAME` is defined
 
-To run the example feature files, start the localstack and run terraform script `initLocalstack.tf`, then run `npm t`. `initLocalstack.tf` is needed for running the feature files in the features directory as this will set up the localstack environment for dev testing.
+To run the example feature files, start the localstack and run the terraform script by running `terraform apply -auto-approve` to run initLocalstack.tf, then run `npm t`. `initLocalstack.tf` is needed for running the feature files in the features directory as this will set up the localstack environment for dev testing.
 
 # Step Definitions
 
