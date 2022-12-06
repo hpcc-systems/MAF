@@ -83,13 +83,15 @@ MAFWhen('queue {string} exists on SQS', async function (queueName) {
  * @param {String} queueName The queue to get attributes from
  * @returns all queue attributes in JSON format
  */
-MAFWhen('attributes of queue {string} are received', async function (queueName) {
-  queueName = filltemplate(queueName, this.results)
-  const queues = await listQueueURLs()
-  const queueURL = queues.find(queueURL => queueURL.replace(/.*\/(.*)/, '$1').includes(queueName))
+MAFWhen('attributes of queue {string} are received', async function (QueueUrl) {
+  QueueUrl = filltemplate(QueueUrl, this.results)
+  if (!/^https?:\/\//.test(QueueUrl)) {
+    QueueUrl = await getURLfromQueueName(QueueUrl)
+  }
   const queryParameters = {
     AttributeNames: ['All'],
-    QueueUrl: queueURL
+    QueueUrl
+
   }
   const res = await sqsClient.send(new GetQueueAttributesCommand(queryParameters))
   return res.Attributes

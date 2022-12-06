@@ -424,11 +424,14 @@ Then item "lastRun.ApproximateNumberOfMessages" is equal to "0"
 
 ### `Given queue {string} exists on SQS`
 
-Passes if the queue can be found on AWS. This checks by checking if provided name is found at the end of any queue urls found on AWS
+Is true if the queue can be found on AWS. The string can be the url, or the queue name.
+If a queue name is used, a regex search will be done to find the queue.
 
 ### `When attributes of queue {string} are received`
 
-Gets all attributes for a SQS queue to `lastRun`. This checks by checking if provided name is found at the end of any queue urls found on AWS, then getting those attributes
+Gets all attributes for a SQS queue to `lastRun`. The string can be the url, or the queue name.
+If a queue name is used, a regex search will be done to find the queue.
+
 ### `When {jsonObject} is sent to queue {string}`
 
 Sends a new message to the SQS queue provided. `lastRun` will contain the message id and message
@@ -457,6 +460,11 @@ Then it is equal to:`
 ]
 """
 ```
+
+### `When queue {string} is purged`
+
+Removes all messages from the sqs queue. The string can be the url, or the queue name.
+If a queue name is used, a regex search will be done to find the queue.
 
 ## AWS ECS Step Definitions
 
