@@ -25,7 +25,7 @@ This module provides scenarios where Gherkins/Cucumber is implemented for AWS.
 ```
 require('@ln-maf/aws')
 ```
-# Dev Testing
+# Dev Testing Steps
 
 - Run `docker run --rm -it -p 4566:4566 -p 4510-4559:4510-4559 localstack/localstack:0.14.4` to spin up a localstack environment.
 - Run `terraform apply -auto-approve` to prepare the localstack environment.
@@ -38,7 +38,7 @@ The AWS SDK V3 is used for communication to AWS / Localstack.
 You need to provide credentials to AWS so that only your account and its resources are accessed by the SDK. For more information about obtaining your account credentials, see [Loading credentials in Node.js from the shared credentials file from AWS Documentation.](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/loading-node-credentials-shared.html)
 This can be point to a remote aws location, or point to a localstack configuration depending on the environment variable `AWSENV`. If `AWSENV` is set to `TRUE`, then the default configuration / credentials provided will be used. If `AWSENV` is set to false or does not exist, then the AWS MAF framework will use the default localstack configuration endpoint `http://localhost:4566`, or `http://${LOCALSTACK_HOSTNAME}:4566` if env variable `LOCALSTACK_HOSTNAME` is defined
 
-To run the example feature files, start the localstack and run terraform script `initLocalstack.tf`, then run `npm t`. `initLocalstack.tf` is needed for running the feature files in the features directory as this will set up the localstack environment for dev testing.
+To run the example feature files, start the localstack and run the terraform script by running `terraform apply -auto-approve` to run initLocalstack.tf, then run `npm t`. `initLocalstack.tf` is needed for running the feature files in the features directory as this will set up the localstack environment for dev testing.
 
 # Step Definitions
 
@@ -89,6 +89,11 @@ Example:
 `When file "hello.txt" is uploaded to bucket "myBucket" as key "foo/bar/hello"`
 
 The file hello.txt and its contents now exist at s3://myBucket/foo/bar/hello
+
+### `When gz file {string} is uploaded to bucket {string} as key {string}`
+### `When gz file {string} is uploaded to bucket {string} as key {string} with sha256 check`
+Uploads gz files to the s3 bucket. This is necessary for gz / compressed files as there is an encoding issue when using jsonObject with gzips.
+The gzip must be a local file and should not be in memory. the stepDefinition with sha256 will fail if the file uploaded is not matching the original gzip file.
 
 ### `When file {string} is deleted from bucket {string} at path {string}`
 
@@ -419,11 +424,14 @@ Then item "lastRun.ApproximateNumberOfMessages" is equal to "0"
 
 ### `Given queue {string} exists on SQS`
 
-Passes if the queue can be found on AWS. This checks by checking if provided name is found at the end of any queue urls found on AWS
+Is true if the queue can be found on AWS. The string can be the url, or the queue name.
+If a queue name is used, a regex search will be done to find the queue.
 
 ### `When attributes of queue {string} are received`
 
-Gets all attributes for a SQS queue to `lastRun`. This checks by checking if provided name is found at the end of any queue urls found on AWS, then getting those attributes
+Gets all attributes for a SQS queue to `lastRun`. The string can be the url, or the queue name.
+If a queue name is used, a regex search will be done to find the queue.
+
 ### `When {jsonObject} is sent to queue {string}`
 
 Sends a new message to the SQS queue provided. `lastRun` will contain the message id and message
@@ -452,6 +460,11 @@ Then it is equal to:`
 ]
 """
 ```
+
+### `When queue {string} is purged`
+
+Removes all messages from the sqs queue. The string can be the url, or the queue name.
+If a queue name is used, a regex search will be done to find the queue.
 
 ## AWS ECS Step Definitions
 
@@ -500,6 +513,11 @@ When perform ecs run-task:
 }
 """
 ```
+
+## AWS Cloudwatch Logs Step Definitions
+
+### `When cloudwatch logs from log group {string} from {int} minutes ago to now are retrieved
+Gets the cloudwatch logs from a specific log group and time frame
 
 [npm-image]:https://img.shields.io/npm/v/@ln-maf/aws.svg
 [npm-url]:https://www.npmjs.com/package/@ln-maf/aws
