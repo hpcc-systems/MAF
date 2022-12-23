@@ -397,6 +397,7 @@ async function performDynamoDBUpdateFromJSON (payload) {
     switch (key) {
       case 'tableName':
       case 'expressionAttributeNames':
+      case 'updateExpression':
         activeArgs[key] = payload[key]
         break
       case 'expressionAttributeValues':

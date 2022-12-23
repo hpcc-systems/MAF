@@ -14,7 +14,7 @@ Feature: AWS: SQS Testing
         Given queue "testQueue" exists on SQS
         And "Hello there!" is written to file "./test/hello.txt"
         When file "./test/hello.txt" is sent to queue "testQueue"
-        Then wait 1000 milliseconds
+        Then wait 10000 milliseconds
         And the next message is received from queue "testQueue"
         And item "lastRun" is equal to "Hello there!"
 
@@ -23,7 +23,7 @@ Feature: AWS: SQS Testing
         When "Alpha" is sent to queue "testQueue2"
         And "Beta" is sent to queue "testQueue2"
         And "Charlie" is sent to queue "testQueue2"
-        Then wait 1000 milliseconds
+        Then wait 10000 milliseconds
         And 3 messages are received from queue "testQueue2"
         And item "lastRun" is equal to:
             """
@@ -33,6 +33,7 @@ Feature: AWS: SQS Testing
                 "Charlie"
             ]
             """
+            
     Scenario: Test Purge Queue
         Given queue "testQueue2" exists on SQS
         And "123" is sent to queue "testQueue2"
