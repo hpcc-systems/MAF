@@ -334,6 +334,7 @@ MAFWhen('the file {string} is gzipped', function (filename) {
 
 MAFWhen('file {string} is gzip unzipped to file {string}', function (file, fileOut) {
   file = filltemplate(file, this.results)
+  fileOut = filltemplate(fileOut, this.results)
   const zlib = require('zlib')
   const bf = readFileBuffer(file, this)
   const buffer = zlib.unzipSync(bf)
