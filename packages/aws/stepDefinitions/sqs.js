@@ -106,7 +106,7 @@ MAFWhen('queue {string} is purged', async function (QueueUrl) {
 })
 
 MAFWhen('{jsonObject} is sent to queue {string}', async function (message, queue) {
-  message = performJSONObjectTransform.call(this, message)
+  message = JSON.stringify(performJSONObjectTransform.call(this, message))
   queue = filltemplate(queue, this.results)
   return await sendMessageToQueue(message, queue)
 })
