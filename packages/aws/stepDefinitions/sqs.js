@@ -111,8 +111,8 @@ MAFWhen('{jsonObject} is sent to queue {string}', async function (message, queue
   return await sendMessageToQueue(message, queue)
 })
 
-MAFWhen('{jsonObject} message is sent to queue {string}', async function (message, queue) {
-  message = JSON.stringify(performJSONObjectTransform.call(this, message))
+MAFWhen('{string} message is sent to queue {string}', async function (message, queue) {
+  message = filltemplate(message, this.results)
   queue = filltemplate(queue, this.results)
   return await sendMessageToQueue(message, queue)
 })
