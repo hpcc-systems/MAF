@@ -36,8 +36,8 @@
   },
   "homepage": "https://github.com/hpcc-systems/MAF#readme",
   "devDependencies": {
-    "lerna": "^5.1.8",
-    "multiple-cucumber-html-reporter": "^1.21.0",
+    "lerna": "^7.1.4",
+    "multiple-cucumber-html-reporter": "^3.4.0",
     "nyc": "^15.1.0"
   }
 }

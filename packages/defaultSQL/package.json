@@ -22,7 +22,7 @@
     "keytar": "7.*"
   },
   "devDependencies": {
-    "@cucumber/cucumber": "8.2.0",
+    "@cucumber/cucumber": "^9.3.0",
     "@ln-maf/core": "^2.0.1",
     "@ln-maf/validations": "^2.0.1",
     "eslint": "^8.18.0",
@@ -30,7 +30,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
-    "multiple-cucumber-html-reporter": "^1.21.0",
+    "multiple-cucumber-html-reporter": "^3.4.0",
     "nyc": "^15.1.0"
   },
   "gitHead": "9bf55a2c86fa17707fabfb4320c3d722e270f9e6",
