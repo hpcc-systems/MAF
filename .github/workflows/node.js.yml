@@ -1,7 +1,7 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node.
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Build
+name: Build / Test
 
 on:
   push:
@@ -20,17 +20,17 @@ jobs:
           - 4566:4566
     strategy:
       matrix:
-        node-version: [16.x, 18.x]
+        node-version: [18.x, 20.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
     - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1.2.1
+      uses: hashicorp/setup-terraform@v2.0.3
     - run: mkdir ~/.aws/
     - run: echo -e "[default]\noutput = json\nregion = us-east-1\naws_access_key_id = foo\naws_secret_access_key = bar" > ~/.aws/credentials
     - run: npm ci
@@ -39,7 +39,6 @@ jobs:
         terraform init
         terraform plan
         terraform apply -auto-approve
-    - run: npx lerna bootstrap
     - run: npx lerna run test
       env: 
        ENVIRONMENT: CI
@@ -50,7 +49,7 @@ jobs:
      
     - name: Status Create Action
       if: ${{ always() }}
-      uses: hkusu/status-create-action@v1.0.0
+      uses: hkusu/status-create-action@v1.0.1
       id: status-create
       with:
         state: ${{ job.status }} 
