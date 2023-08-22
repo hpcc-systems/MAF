@@ -468,6 +468,8 @@ If a queue name is used, a regex search will be done to find the queue.
 
 ## AWS ECS Step Definitions
 
+### `When at least one task is running for service {string} in cluster {string}`
+
 ### `When ecs taskDefinition {string} exists`
 ### `When ecs taskDefinition {string} does not exist`
 
