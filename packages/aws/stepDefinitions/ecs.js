@@ -1,6 +1,6 @@
 const { setDefaultTimeout } = require('@cucumber/cucumber')
 const { MAFWhen, performJSONObjectTransform, filltemplate } = require('@ln-maf/core')
-const { ECSClient, ListTaskDefinitionsCommand, ListClustersCommand, RunTaskCommand, DescribeClustersCommand } = require('@aws-sdk/client-ecs')
+const { ECSClient, ListTaskDefinitionsCommand, ListClustersCommand, RunTaskCommand, DescribeClustersCommand, DescribeServicesCommand } = require('@aws-sdk/client-ecs')
 
 setDefaultTimeout(15 * 60 * 1000)
 
@@ -194,4 +194,20 @@ MAFWhen('perform ecs run-task:', async function (docString) {
  */
 MAFWhen('ecs run-task is performed', async function () {
   return await ecsRunTask.call(this)
+})
+
+MAFWhen('at least one task is running for service {string} in cluster {string}', async function (serviceName, clusterName) {
+  serviceName = filltemplate(serviceName, this.results)
+  clusterName = filltemplate(clusterName, this.results)
+  const ecsClient = new ECSClient({ maxAttempts: 2 })
+  const res = await ecsClient.send(new DescribeServicesCommand({
+    cluster: clusterName,
+    services: [serviceName]
+  }))
+  if (res.services.length === 0) {
+    throw new Error('Can\'t find service ' + serviceName + ' in cluster ' + clusterName)
+  }
+  if (res.services[0].runningCount < 1) {
+    throw new Error('Service ' + serviceName + ' is not currently running in cluster ' + clusterName)
+  }
 })
