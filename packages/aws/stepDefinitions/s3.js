@@ -128,7 +128,7 @@ MAFWhen('gz file {string} is uploaded to bucket {string} as key {string}', async
     Body: fileBuffer,
     Key: key
   }
-  return await new S3Client().send(new PutObjectCommand(queryParameters))
+  return await s3Client.send(new PutObjectCommand(queryParameters))
 })
 
 MAFWhen('gz file {string} is uploaded to bucket {string} as key {string} with sha256 check', async function (filePath, bucketName, key) {
@@ -143,7 +143,7 @@ MAFWhen('gz file {string} is uploaded to bucket {string} as key {string} with sh
     Key: key,
     ChecksumSHA256: crypto.createHash('sha256').update(fileBuffer).digest('base64')
   }
-  return await new S3Client().send(new PutObjectCommand(queryParameters))
+  return await s3Client.send(new PutObjectCommand(queryParameters))
 })
 
 MAFWhen('file {string} is deleted from bucket {string} at path {string}', async function (key, bucketName, path) {

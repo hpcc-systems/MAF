@@ -111,6 +111,12 @@ MAFWhen('{jsonObject} is sent to queue {string}', async function (message, queue
   return await sendMessageToQueue(message, queue)
 })
 
+MAFWhen('{string} message is sent to queue {string}', async function (message, queue) {
+  message = filltemplate(message, this.results)
+  queue = filltemplate(queue, this.results)
+  return await sendMessageToQueue(message, queue)
+})
+
 MAFWhen('the next message is received from queue {string}', async function (queueURL) {
   queueURL = filltemplate(queueURL, this.results)
   const res = await dequeueMessagesFromQueue(queueURL)

@@ -25,11 +25,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import { ITestCaseHookParameter } from './types'
 import { Expression } from '@cucumber/cucumber-expressions'
-import { messages } from '@cucumber/messages'
+import * as messages from '@cucumber/messages'
 
 export interface IGetInvocationDataRequest {
   hookParameter: ITestCaseHookParameter
-  step: messages.Pickle.IPickleStep
+  step: messages.PickleStep
   world: any
 }
 
