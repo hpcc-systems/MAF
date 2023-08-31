@@ -24,7 +24,7 @@
     "@ln-maf/core": "*"
   },
   "devDependencies": {
-    "@cucumber/cucumber": "8.2.0",
+    "@cucumber/cucumber": "^9.0.0",
     "@ln-maf/core": "^2.0.1",
     "eslint": "^8.18.0",
     "eslint-config-standard": "^17.0.0",

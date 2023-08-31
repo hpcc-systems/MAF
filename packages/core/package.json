@@ -34,7 +34,7 @@
   },
   "homepage": "https://github.com/hpcc-systems/MAF#readme",
   "devDependencies": {
-    "@cucumber/cucumber": "8.2.0",
+    "@cucumber/cucumber": "^9.0.0",
     "eslint": "^8.18.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
