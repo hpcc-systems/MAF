@@ -112,6 +112,12 @@ MAFWhen('{jsonObject} is sent to queue {string}', async function (message, queue
   return sendMessageToQueue(message, queue)
 })
 
+MAFWhen('{jsonObject} is sent to queue url {string}', async function (message, QueueUrl) {
+  message = performJSONObjectTransform.call(this, message)
+  QueueUrl = filltemplate(QueueUrl, this.results)
+  return await sqsClient.send(new SendMessageCommand({ MessageBody: message, QueueUrl }))
+})
+
 MAFWhen('{string} message is sent to queue {string}', async function (message, queue) {
   message = filltemplate(message, this.results)
   queue = filltemplate(queue, this.results)

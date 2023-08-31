@@ -38,5 +38,5 @@
     "multiple-cucumber-html-reporter": "^3.4.0",
     "nyc": "^15.1.0"
   },
-  "gitHead": "9bf55a2c86fa17707fabfb4320c3d722e270f9e6"
+  "gitHead": "9c565ac48ddb32311b115a463c45625de3ff29e4"
 }
