@@ -15,3 +15,4 @@ passwords.txt
 # .tfstate files
 *.tfstate
 *.tfstate.*
+*.log
