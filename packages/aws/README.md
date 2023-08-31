@@ -470,6 +470,8 @@ If a queue name is used, a regex search will be done to find the queue.
 
 ### `When at least one task is running for service {string} in cluster {string}`
 
+Checks if the service in a cluster has at least one task running on ecs
+
 ### `When ecs taskDefinition {string} exists`
 ### `When ecs taskDefinition {string} does not exist`
 
