@@ -196,6 +196,9 @@ MAFWhen('ecs run-task is performed', async function () {
   return await ecsRunTask.call(this)
 })
 
+/**
+ * Check that at least one task for a service is running
+ */
 MAFWhen('at least one task is running for service {string} in cluster {string}', async function (serviceName, clusterName) {
   serviceName = filltemplate(serviceName, this.results)
   clusterName = filltemplate(clusterName, this.results)
