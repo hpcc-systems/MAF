@@ -152,6 +152,9 @@ async function dynamoQuery (activeArgs, additionalArgs) {
     if (dynamoQueryArgs.projectionExpression) {
       queryParameters.ProjectionExpression = dynamoQueryArgs.projectionExpression
     }
+     if (dynamoQueryArgs.scanIndexForward) {
+      queryParameters.ScanIndexForward = dynamoQueryArgs.scanIndexForward
+     } 
     if (dynamoQueryArgs.indexName) {
       queryParameters.IndexName = dynamoQueryArgs.indexName
     }
@@ -193,6 +196,7 @@ async function performDynamoDBQueryFromJSON (payload) {
       case 'tableName':
       case 'indexName':
       case 'projectionExpression':
+      case 'scanIndexForward':
       case 'filterExpression':
       case 'keyConditionExpression':
       case 'expressionAttributeNames':
