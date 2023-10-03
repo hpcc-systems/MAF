@@ -1,13 +1,10 @@
 global.fetch = require('node-fetch')
 const FormData = require('form-data')
-const chai = require('chai')
-const assert = chai.assert
 const fs = require('fs')
 const { filltemplate } = require('@ln-maf/core')
-const { canAttach, performJSONObjectTransform, MAFSave, getFilePath } = require('@ln-maf/core')
+const { canAttach, getFilePath } = require('@ln-maf/core')
 
-
-function build(value, name) {
+function build (value, name) {
   if (!this.results) {
     this.results = {}
   }
@@ -21,14 +18,9 @@ function build(value, name) {
 const b64toBuffer = (b64Data, contentType = '', sliceSize = 512) => {
   return Buffer.from(b64Data, 'base64')
 }
-async function performRequestFromJSONString(string) {
-  const request = JSON.parse(filltemplate(string, this.results))
-  return await performRequestFromJSON.call(this, request)
-}
 
 async function performRequestFromJSON (request) {
-  if (request.url)
-    build.call(this, request.url.replace(/\/$/, ''), 'url')
+  if (request.url) { build.call(this, request.url.replace(/\/$/, ''), 'url') }
   if (request.body) {
     build.call(this, request.body, 'body')
   }
@@ -89,8 +81,7 @@ async function performRequestFromJSON (request) {
   return await performRequest.call(this, request.method)
 }
 
-
-async function performRequest(method) {
+async function performRequest (method) {
   const request = this.request
   if (!request.headers) {
     request.headers = {}
@@ -103,13 +94,13 @@ async function performRequest(method) {
     additionalParams = this.results.api.additionalParams
   }
   const params = {
-    method: method,
+    method,
     headers: request.headers,
     body: request.body,
     ...additionalParams
   }
-  let items=[request.url]
-  if(request.api) {
+  const items = [request.url]
+  if (request.api) {
     items.push(request.api)
   }
   const url = items.join('/')
@@ -137,17 +128,17 @@ async function performRequest(method) {
   })
   const res = {
     request: {
-      url: url,
+      url,
       ...params
     },
     ok: req.ok,
     status: req.status,
     response: text,
-    headers: headers
+    headers
   }
   this.request.headers = null
   this.request.body = null
   return res
 }
 
-module.exports= { performRequestFromJSON, performRequest, build }
+module.exports = { performRequestFromJSON, performRequest, build }
