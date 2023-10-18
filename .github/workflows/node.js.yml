@@ -46,6 +46,7 @@ jobs:
        FAKE_SQL_USERNAME: MAF
        FAKE_SQL_PASSWORD: MAF
        LOCALSTACK_HOSTNAME: localhost
+       AWSENV: LOCALSTACK
      
     - name: Status Create Action
       if: ${{ always() }}
