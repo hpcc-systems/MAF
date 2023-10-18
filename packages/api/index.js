@@ -1,10 +1,8 @@
 global.fetch = require('node-fetch')
-const FormData = require('form-data')
 const chai = require('chai')
 const assert = chai.assert
-const fs = require('fs')
 const { filltemplate } = require('@ln-maf/core')
-const { canAttach, performJSONObjectTransform, MAFSave, getFilePath, MAFWhen } = require('@ln-maf/core')
+const { performJSONObjectTransform, MAFSave, MAFWhen } = require('@ln-maf/core')
 const { setDefaultTimeout, Given, Then } = require('@cucumber/cucumber')
 const { build, performRequestFromJSON, performRequest } = require('./helpers')
 
@@ -27,16 +25,13 @@ Given('headers {string}', function (headers) {
   build.call(this, headers, 'headers')
 })
 
-const b64toBuffer = (b64Data, contentType = '', sliceSize = 512) => {
-  return Buffer.from(b64Data, 'base64')
-}
 const performRequestFromJSONString = async function (string) {
   const request = JSON.parse(filltemplate(string, this.results))
   return await performRequestFromJSONMAF.call(this, request)
 }
 
 const performRequestFromJSONMAF = async function (request) {
-  let res=await performRequestFromJSON.call(this, request)
+  const res = await performRequestFromJSON.call(this, request)
   MAFSave.call(this, 'response', res.response)
   return res
 }
@@ -77,8 +72,8 @@ MAFWhen('api request from {jsonObject} is performed with:', async function (reqI
   return await performRequestFromJSONMAF.call(this, item)
 })
 
-async function performRequestMAF(method) {
-  let res=await performRequest.call(this, method)
+async function performRequestMAF (method) {
+  const res = await performRequest.call(this, method)
   MAFSave.call(this, 'response', res.response)
   return res
 }

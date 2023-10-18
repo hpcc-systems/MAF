@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "2.1.2",
+  "version": "2.2.1",
   "description": "AWS steps for MAF. This contains S3, DynamoDB, SQS, ECS, Cloudwatch, and Lambda stepDefinitions",
   "main": "index.js",
   "scripts": {
@@ -12,14 +12,15 @@
   "author": "Dominick Martelly",
   "license": "Apache-2.0",
   "dependencies": {
-    "@aws-sdk/client-cloudwatch-logs": "^3.121.0",
-    "@aws-sdk/client-dynamodb": "^3.121.0",
-    "@aws-sdk/client-ecs": "^3.121.0",
-    "@aws-sdk/client-lambda": "^3.121.0",
-    "@aws-sdk/client-s3": "^3.121.0",
-    "@aws-sdk/client-sqs": "^3.121.0",
-    "@ln-maf/core": "^2.0.1",
-    "chai": "^4.3.6",
+    "@aws-sdk/client-cloudwatch-logs": "^3.430.0",
+    "@aws-sdk/client-dynamodb": "^3.430.0",
+    "@aws-sdk/client-ecs": "^3.430.0",
+    "@aws-sdk/client-lambda": "^3.430.0",
+    "@aws-sdk/client-s3": "^3.430.0",
+    "@aws-sdk/client-sqs": "^3.430.0",
+    "@aws-sdk/client-ssm": "^3.430.0",
+    "@ln-maf/core": "^2.0.0",
+    "chai": "^4.0.0",
     "luxon": "^2.4.0"
   },
   "peerDependencies": {
@@ -30,12 +31,12 @@
     "@cucumber/cucumber": "^9.0.0",
     "@ln-maf/core": "*",
     "@ln-maf/validations": "^2.0.3",
-    "eslint": "^8.18.0",
+    "eslint": "^8.51.0",
     "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-import": "^2.28.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
-    "multiple-cucumber-html-reporter": "^3.4.0",
+    "multiple-cucumber-html-reporter": "^3.5.0",
     "nyc": "^15.1.0"
   },
   "gitHead": "9c565ac48ddb32311b115a463c45625de3ff29e4"

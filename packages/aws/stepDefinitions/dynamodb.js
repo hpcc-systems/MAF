@@ -7,7 +7,7 @@ setDefaultTimeout(15 * 60 * 1000)
 const DynamoDBClientConfig = {
   maxAttempts: 3
 }
-if (process.env.AWSENV === undefined || process.env.AWSENV === '' || process.env.AWSENV.toUpperCase() === 'FALSE') {
+if (process.env.AWSENV && process.env.AWSENV.toUpperCase() === 'LOCALSTACK') {
   DynamoDBClientConfig.endpoint = process.env.LOCALSTACK_HOSTNAME ? `http://${process.env.LOCALSTACK_HOSTNAME}:4566` : 'http://localhost:4566'
 }
 const dbClient = new DynamoDBClient(DynamoDBClientConfig)
@@ -152,6 +152,9 @@ async function dynamoQuery (activeArgs, additionalArgs) {
     if (dynamoQueryArgs.projectionExpression) {
       queryParameters.ProjectionExpression = dynamoQueryArgs.projectionExpression
     }
+    if (dynamoQueryArgs.scanIndexForward) {
+      queryParameters.ScanIndexForward = dynamoQueryArgs.scanIndexForward
+    } 
     if (dynamoQueryArgs.indexName) {
       queryParameters.IndexName = dynamoQueryArgs.indexName
     }
@@ -193,6 +196,7 @@ async function performDynamoDBQueryFromJSON (payload) {
       case 'tableName':
       case 'indexName':
       case 'projectionExpression':
+      case 'scanIndexForward':
       case 'filterExpression':
       case 'keyConditionExpression':
       case 'expressionAttributeNames':
