@@ -1,15 +1,26 @@
 const { setDefaultTimeout } = require('@cucumber/cucumber')
 const { MAFWhen, filltemplate } = require('@ln-maf/core')
 const { CloudWatchLogsClient, FilterLogEventsCommand } = require('@aws-sdk/client-cloudwatch-logs')
+const { SSMClient, GetParameterCommand } = require('@aws-sdk/client-ssm')
 const { DateTime } = require('luxon')
 
 setDefaultTimeout(15 * 60 * 1000)
 
 const cloudwatchLogsClientConfig = { maxAttempts: 3 }
-if (process.env.AWSENV === undefined || process.env.AWSENV === '' || process.env.AWSENV.toUpperCase() === 'FALSE') {
+if (process.env.AWSENV.toUpperCase() === 'LOCALSTACK') {
   cloudwatchLogsClientConfig.endpoint = process.env.LOCALSTACK_HOSTNAME ? `http://${process.env.LOCALSTACK_HOSTNAME}:4566` : 'http://localhost:4566'
 }
 const cloudwatchLogsClient = new CloudWatchLogsClient(cloudwatchLogsClientConfig)
+
+/**
+ * Returns the value of the parameter from the parameter store
+ */
+MAFWhen('parameter {string} value is retrieved from the parameter store', async function (parameterName) {
+  parameterName = filltemplate(parameterName, this.results)
+  const ssmClient = new SSMClient()
+  const res = await ssmClient.send(new GetParameterCommand({ Name: parameterName }))
+  return res.Parameter.Value
+})
 
 /**
  * Returns at most 10 query calls of 1 MB / 10,000 logs from cloudwatch
