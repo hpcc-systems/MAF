@@ -5,7 +5,7 @@ const { ECSClient, ListTaskDefinitionsCommand, ListClustersCommand, RunTaskComma
 setDefaultTimeout(15 * 60 * 1000)
 
 const ecsClientConfig = { maxAttempts: 3 }
-if (process.env.AWSENV.toUpperCase() === 'LOCALSTACK') {
+if (process.env.AWSENV && process.env.AWSENV.toUpperCase() === 'LOCALSTACK') {
   ecsClientConfig.endpoint = process.env.LOCALSTACK_HOSTNAME ? `http://${process.env.LOCALSTACK_HOSTNAME}:4566` : 'http://localhost:4566'
 }
 const ecsClient = new ECSClient(ecsClientConfig)
