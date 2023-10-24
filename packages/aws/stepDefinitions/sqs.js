@@ -23,14 +23,17 @@ async function getURLfromQueueName (queueName) {
 }
 
 /**
- * Sends a message to a queue
+ * Sends a message to a queue using only the queue name
  * @param {JSON|String} message The message to send
- * @param {String} QueueUrl  The name of the queue to send the message to
+ * @param {String} QueueName  The name of the queue to send the message to
  * @returns {JSON} SendMessageCommandOutput (https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-sqs/interfaces/sendmessagecommandoutput.html)
  */
-async function sendMessageToQueue (message, QueueUrl) {
-  if (!/^https?:\/\//.test(QueueUrl)) {
-    QueueUrl = await getURLfromQueueName(QueueUrl)
+async function sendMessageToQueue (message, QueueName) {
+  let QueueUrl
+  if (!/^https?:\/\//.test(QueueName)) {
+    QueueUrl = await getURLfromQueueName(QueueName)
+  } else {
+    QueueUrl = QueueName
   }
   const queryParameters = { MessageBody: message, QueueUrl }
   return await sqsClient.send(new SendMessageCommand(queryParameters))
@@ -108,13 +111,25 @@ MAFWhen('queue {string} is purged', async function (QueueUrl) {
 MAFWhen('{jsonObject} is sent to queue {string}', async function (message, queue) {
   message = performJSONObjectTransform.call(this, message)
   queue = filltemplate(queue, this.results)
-  return await sendMessageToQueue(message, queue)
+  return sendMessageToQueue(message, queue)
+})
+
+MAFWhen('{jsonObject} is sent to queue url {string}', async function (message, QueueUrl) {
+  message = performJSONObjectTransform.call(this, message)
+  QueueUrl = filltemplate(QueueUrl, this.results)
+  return await sqsClient.send(new SendMessageCommand({ MessageBody: message, QueueUrl }))
 })
 
 MAFWhen('{string} message is sent to queue {string}', async function (message, queue) {
   message = filltemplate(message, this.results)
   queue = filltemplate(queue, this.results)
-  return await sendMessageToQueue(message, queue)
+  return sendMessageToQueue(message, queue)
+})
+
+MAFWhen('{string} message is sent to queue url {string}', async function (message, QueueUrl) {
+  message = filltemplate(message, this.results)
+  QueueUrl = filltemplate(QueueUrl, this.results)
+  return await sqsClient.send(new SendMessageCommand({ MessageBody: message, QueueUrl }))
 })
 
 MAFWhen('the next message is received from queue {string}', async function (queueURL) {
