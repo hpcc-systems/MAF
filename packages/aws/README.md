@@ -474,7 +474,10 @@ If a queue name is used, a regex search will be done to find the queue.
 
 ### `When at least one task is running for service {string} in cluster {string}`
 
-Checks if the service in a cluster has at least one task running on ecs
+Checks if the service in an AWS cluster has at least one task running on ECS. Returns the number of running tasks to `lastRun`
+
+### `When image name for service {string} in cluster {string} is retrieved`
+Retrieves the task definition image name / version of the running service in the cluster and set it to `lastRun`. Fails if the service is not running, or if there are no tasks running
 
 ### `When ecs taskDefinition {string} exists`
 ### `When ecs taskDefinition {string} does not exist`
