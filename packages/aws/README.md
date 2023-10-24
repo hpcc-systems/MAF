@@ -434,7 +434,11 @@ If a queue name is used, a regex search will be done to find the queue.
 
 ### `When {jsonObject} is sent to queue {string}`
 
-Sends a new message to the SQS queue provided. `lastRun` will contain the message id and message
+Sends a new message to the SQS queue name provided. The first queue that matches the provided name will be used. `lastRun` will contain the message id and message
+
+### `When {jsonObject} is sent to queue url {string}`
+
+Sends a new message to the SQS queue URL provided. `lastRun` will contain the message id and message
 
 ### `When the next message is received from queue {string}`
 

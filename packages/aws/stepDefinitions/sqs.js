@@ -32,6 +32,8 @@ async function sendMessageToQueue (message, QueueName) {
   let QueueUrl
   if (!/^https?:\/\//.test(QueueName)) {
     QueueUrl = await getURLfromQueueName(QueueName)
+  } else {
+    QueueUrl = QueueName
   }
   const queryParameters = { MessageBody: message, QueueUrl }
   return await sqsClient.send(new SendMessageCommand(queryParameters))
