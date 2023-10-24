@@ -1,6 +1,6 @@
 const { setDefaultTimeout } = require('@cucumber/cucumber')
 const { MAFWhen, performJSONObjectTransform, filltemplate } = require('@ln-maf/core')
-const { ECSClient, ListTaskDefinitionsCommand, ListClustersCommand, RunTaskCommand, DescribeClustersCommand, DescribeServicesCommand } = require('@aws-sdk/client-ecs')
+const { ECSClient, ListTaskDefinitionsCommand, ListClustersCommand, RunTaskCommand, DescribeClustersCommand, DescribeServicesCommand, DescribeTaskDefinitionCommand } = require('@aws-sdk/client-ecs')
 
 setDefaultTimeout(15 * 60 * 1000)
 
@@ -198,19 +198,45 @@ MAFWhen('ecs run-task is performed', async function () {
 
 /**
  * Check that at least one task for a service is running
+ * Returns the number of running tasks
+ * @param {String} serviceName the name of the service
+ * @param {String} clusterName the name of the cluster
  */
 MAFWhen('at least one task is running for service {string} in cluster {string}', async function (serviceName, clusterName) {
   serviceName = filltemplate(serviceName, this.results)
   clusterName = filltemplate(clusterName, this.results)
   const ecsClient = new ECSClient({ maxAttempts: 2 })
-  const res = await ecsClient.send(new DescribeServicesCommand({
+  const serviceDetails = await ecsClient.send(new DescribeServicesCommand({
     cluster: clusterName,
     services: [serviceName]
   }))
-  if (res.services.length === 0) {
+  if (serviceDetails.services.length === 0) {
     throw new Error('Can\'t find service ' + serviceName + ' in cluster ' + clusterName)
   }
-  if (res.services[0].runningCount < 1) {
+  const runningCount = serviceDetails.services[0].runningCount
+  if (runningCount < 1) {
     throw new Error('Service ' + serviceName + ' is not currently running in cluster ' + clusterName)
   }
+  return runningCount
+})
+
+/**
+ * Retrieves the image name / version of the running task in the service
+ * Fails if the service is not running, or if there are no tasks running
+ * @param {String} serviceName the name of the service
+ * @param {String} clusterName the name of the cluster
+ */
+MAFWhen('image name for service {string} in cluster {string} is retrieved', async function (serviceName, clusterName) {
+  serviceName = filltemplate(serviceName, this.results)
+  clusterName = filltemplate(clusterName, this.results)
+  const serviceDetails = await ecsClient.send(new DescribeServicesCommand({
+    cluster: clusterName,
+    services: [serviceName]
+  }))
+  if (serviceDetails.services[0].runningCount <= 0) {
+    throw new Error('Service ' + serviceName + ' is not currently running in cluster ' + clusterName)
+  }
+  const taskDefinitionDetails = await ecsClient.send(new DescribeTaskDefinitionCommand({ taskDefinition: serviceDetails.services[0].taskDefinition }))
+  const containerImageName = taskDefinitionDetails.taskDefinition.containerDefinitions[0].image
+  return containerImageName
 })
