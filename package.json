@@ -15,6 +15,7 @@
     "packages/aws",
     "packages/core",
     "packages/defaultSQL",
+    "packages/postgresql",
     "packages/mysql",
     "packages/preprocessor",
     "packages/validations"
@@ -35,7 +36,10 @@
     "url": "https://github.com/hpcc-systems/MAF/issues"
   },
   "homepage": "https://github.com/hpcc-systems/MAF#readme",
+  "dependencies": {
+  },
   "devDependencies": {
+    "@cucumber/cucumber": "^9.0.0",
     "lerna": "^7.1.4",
     "multiple-cucumber-html-reporter": "^3.4.0",
     "nyc": "^15.1.0"
