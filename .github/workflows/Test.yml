@@ -13,18 +13,20 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    services:
-      localstack: 
-        image: localstack/localstack:0.14.4
-        ports: 
-          - 4566:4566
     strategy:
       matrix:
         node-version: [18.x, 20.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        # See supported Node.js release schedule at https://nodejs.org/en/about/previous-releases
 
     steps:
     - uses: actions/checkout@v3
+    - name: Start LocalStack
+      run: |
+        pip install localstack==2.3.2
+        localstack start -d
+        echo "Waiting for LocalStack startup..."
+        localstack wait -t 30
+        echo "LocalStack startup complete"
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
