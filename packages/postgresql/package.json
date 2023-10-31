@@ -1,23 +1,23 @@
 {
-  "name": "@ln-maf/mysql",
+  "name": "@ln-maf/postgresql",
   "publishConfig": {
     "access": "public"
   },
-  "version": "2.0.2",
-  "description": "Setup for sql on Node",
+  "version": "2.0.1",
+  "description": "PostgreSQL support / step definitions for MAF",
   "main": "index.js",
   "scripts": {
     "test": "sh runFeature.sh"
   },
   "bin": {
-    "mysql-configure": "./config.js"
+    "postgresql-configure": "./config.js"
   },
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
     "@ln-maf/default-sql": "^2.0.1",
     "keytar": "^7.9.0",
-    "mysql2": "^2.3.3"
+    "pg": "^8.0.0"
   },
   "peerDependencies": {
     "@cucumber/cucumber": ">= 7.0.0",
@@ -25,14 +25,14 @@
   },
   "devDependencies": {
     "@cucumber/cucumber": "^9.0.0",
-    "@ln-maf/core": "^2.0.1",
+    "@ln-maf/core": "^2.0.0",
     "@ln-maf/validations": "^2.0.3",
-    "eslint": "^8.18.0",
+    "eslint": "^8.0.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
-    "multiple-cucumber-html-reporter": "^3.4.0",
+    "multiple-cucumber-html-reporter": "^3.0.0",
     "nyc": "^15.1.0"
   },
   "gitHead": "2a575448a74cfaee5ec68fa10db24cf4ccade849",
