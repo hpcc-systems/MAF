@@ -39,7 +39,7 @@
   "dependencies": {
   },
   "devDependencies": {
-    "@cucumber/cucumber": "^9.0.0",
+    "@cucumber/cucumber": "^10.0.0",
     "lerna": "^7.1.4",
     "multiple-cucumber-html-reporter": "^3.4.0",
     "nyc": "^15.1.0"
