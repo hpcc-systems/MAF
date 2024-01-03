@@ -4,7 +4,7 @@
     "access": "public"
   },
   "version": "2.0.5",
-  "description": "",
+  "description": "MAF module providing API steps",
   "main": "index.js",
   "scripts": {
     "test": "bash runFeature.sh"
@@ -14,16 +14,16 @@
   "dependencies": {
     "fetch-blob": "^3.1.5",
     "form-data": "^4.0.0",
-    "node-fetch": "^2.0.0"
+    "node-fetch": "^2.0.0",
+    "fetch-to-curl": "^0.6.0"
   },
   "peerDependencies": {
-    "@cucumber/cucumber": ">= 7.0.0",
+    "@cucumber/cucumber": ">= 10.0.0",
     "@ln-maf/core": "*",
     "chai": "^4.3.4"
   },
   "devDependencies": {
-    "@cucumber/cucumber": "^10.0.0",
-    "@ln-maf/core": "^2.0.1",
+    "@ln-maf/core": "*",
     "@ln-maf/validations": "file:../validations",
     "eslint": "^8.18.0",
     "eslint-config-standard": "^17.0.0",

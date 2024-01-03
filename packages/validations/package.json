@@ -22,7 +22,7 @@
     "xpath": "0.0.32"
   },
   "peerDependencies": {
-    "@cucumber/cucumber": ">= 7.0.0",
+    "@cucumber/cucumber": ">= 10.0.0",
     "@ln-maf/core": "*"
   },
   "devDependencies": {

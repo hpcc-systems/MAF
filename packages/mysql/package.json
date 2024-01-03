@@ -20,7 +20,7 @@
     "mysql2": "^2.3.3"
   },
   "peerDependencies": {
-    "@cucumber/cucumber": ">= 7.0.0",
+    "@cucumber/cucumber": ">= 10.0.0",
     "@ln-maf/core": "*"
   },
   "devDependencies": {
