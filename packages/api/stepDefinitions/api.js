@@ -46,17 +46,19 @@ MAFWhen('headers {string}', function (headers) {
 })
 
 /**
- * @deprecated Set the item 'method' instead
+ * @deprecated Set the item 'method' to 'POST' and call the method 'api request is performed' instead
  */
 MAFWhen('method post', async function () {
     MAFSave.call(this, 'method', 'POST')
+    return await requestBuilder.call(this, {})
 })
 
 /**
- * @deprecated Set the item 'method' instead
+ * @deprecated Set the item 'method' to 'GET' and call the method 'api request is performed' instead
  */
 MAFWhen('method get', async function () {
     MAFSave.call(this, 'method', 'GET')
+    return await requestBuilder.call(this, {})
 })
 
 // Builds a request object from the given request, populating any missing fields using the results object
@@ -85,6 +87,18 @@ async function requestBuilder(request) {
     if (!request.jsonBody && this.results && this.results.jsonBody) {
         request.jsonBody = this.results.jsonBody
     }
+    if (request.jsonBody && typeof request.jsonBody !== 'object') {
+        try {
+            request.jsonBody = JSON.parse(request.jsonBody)
+        } catch (err) {
+            throw new Error('The jsonBody could not be parsed as a JSON object')
+        }
+    }
+    // jsonBody has priority over body
+    if (request.jsonBody) {
+        request.body = request.jsonBody
+    }
+
     if (!request.urlEncodedBody && this.results && this.results.urlEncodedBody) {
         request.urlEncodedBody = this.results.urlEncodedBody
     }
@@ -126,6 +140,9 @@ async function requestBuilder(request) {
     if (!request.method && this.results && this.results.method) {
         request.method = this.results.method
     }
+    if (!request.method) {
+        throw new Error('A method must be provided either in the request or in the results object')
+    }
 
     if (!request.api && this.results && this.results.api) {
         request.api = this.results.api
@@ -156,7 +173,10 @@ async function requestBuilder(request) {
 
 // Performs the given request, returning the response
 async function performRequest(request, additionalParams = {}) {
-    const params = {
+    if (typeof request.body === 'object') {
+        request.body = JSON.stringify(request.body)
+    }
+    const parameters = {
         method: request.method,
         headers: request.headers,
         body: request.body,
@@ -167,38 +187,41 @@ async function performRequest(request, additionalParams = {}) {
         url.push(request.api)
     }
     const absoluteUrl = url.join('/')
-    const response = await fetch(absoluteUrl, params)
-    const curlCommand = fetchToCurl(absoluteUrl, params)
-    let text
+
+    let response = await fetch(absoluteUrl, parameters)
+    const curlCommand = fetchToCurl(absoluteUrl, parameters)
+
+    const headers = await response.clone().headers.raw()
+    Object.keys(headers).forEach(header => {
+        headers[header] = headers[header][0]
+    })
+    const ok = response.ok
+    const status = response.status
     if (this.results.apiRetrieveType) {
-        text = await (response[this.results.apiRetrieveType])()
-    } else if (response.headers.get('content-type') && response.headers.get('content-type').includes('image')) {
-        text = await response.blob()
+        response = await (response[this.results.apiRetrieveType])()
+    } else if (headers['content-type'] && headers['content-type'].includes('image')) {
+        response = await response.blob()
         try {
             if (canAttach.call(this)) {
-                const tmpBlob = Buffer.from(await text.arrayBuffer())
+                const tmpBlob = Buffer.from(await response.arrayBuffer())
                 this.attach(tmpBlob, 'image/png')
             }
         } catch (err) { }
     } else {
         try {
-            text = await response.text()
-            text = JSON.parse(text)
+            response = await response.text()
+            response = JSON.parse(response)
         } catch (err) { }
     }
-    const headers = await response.headers.raw()
-    Object.keys(headers).forEach(header => {
-        headers[header] = headers[header][0]
-    })
     const results = {
         request: {
             absoluteUrl,
-            ...params
+            ...parameters
         },
         curlCommand,
-        ok: response.ok,
-        status: response.status,
-        response: text,
+        ok,
+        status,
+        response,
         headers
     }
     return results
@@ -211,41 +234,14 @@ MAFWhen('api request from {jsonObject} is performed', async function (request) {
     return results
 })
 
-MAFWhen('perform api request:', async function (string) {
-    const request = JSON.parse(filltemplate(string, this.results))
-    const results = await requestBuilder.call(this, request)
+MAFWhen('api request is performed', async function () {
+    const results = await requestBuilder.call(this, {})
     MAFSave.call(this, 'response', results.response)
     return results
 })
 
-MAFWhen('api request from {jsonObject} is performed with:', async function (reqItem, dataTable) {
-    dataTable = dataTable.rawTable
-    const indices = dataTable[0]
-    let apiItem = []
-    indices.forEach((i, index) => {
-        apiItem[index] = []
-    })
-    dataTable = dataTable.slice(1)
-    dataTable.forEach((i) => {
-        i.forEach((j, index) => {
-            apiItem[index].push(j)
-        })
-    })
-    apiItem = apiItem.map(i => {
-        if (i.length === 1) {
-            return i[0]
-        }
-        return i
-    })
-    const extraParams = {}
-    extraParams.results = { ...this.results }
-    for (let i = 0; i < indices.length; i++) {
-    // eslint-disable-next-line no-unused-vars
-        const val = filltemplate(apiItem[i], this.results)
-        // eslint-disable-next-line no-eval
-        eval(`extraParams.results.${indices[i]} = val`)
-    }
-    const request = performJSONObjectTransform.call(extraParams, reqItem)
+MAFWhen('perform api request:', async function (string) {
+    const request = JSON.parse(filltemplate(string, this.results))
     const results = await requestBuilder.call(this, request)
     MAFSave.call(this, 'response', results.response)
     return results
