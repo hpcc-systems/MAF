@@ -1,5 +1,5 @@
 const { setDefaultTimeout } = require('@cucumber/cucumber')
-const { MAFWhen, performJSONObjectTransform, filltemplate } = require('@ln-maf/core')
+const { MAFWhen, performJSONObjectTransform, fillTemplate } = require('@ln-maf/core')
 const { LambdaClient, InvokeCommand } = require('@aws-sdk/client-lambda')
 
 setDefaultTimeout(15 * 60 * 1000)
@@ -11,7 +11,7 @@ if (process.env.AWSENV && process.env.AWSENV.toUpperCase() === 'LOCALSTACK') {
 const lambdaClient = new LambdaClient(lambdaClientConfig)
 
 MAFWhen('a user supplies {jsonObject} to endpoint {string}', async function (payload, functionName) {
-    functionName = filltemplate(functionName, this.results)
+    functionName = fillTemplate(functionName, this.results)
     payload = performJSONObjectTransform.call(this, payload)
     const queryParameters = {
         FunctionName: functionName,

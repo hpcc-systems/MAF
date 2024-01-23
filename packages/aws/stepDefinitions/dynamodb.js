@@ -1,12 +1,10 @@
 const { setDefaultTimeout } = require('@cucumber/cucumber')
-const { performJSONObjectTransform, MAFWhen, filltemplate } = require('@ln-maf/core')
+const { performJSONObjectTransform, MAFWhen, fillTemplate } = require('@ln-maf/core')
 const { DynamoDBClient, ListTablesCommand, QueryCommand, PutItemCommand, UpdateItemCommand, DeleteItemCommand } = require('@aws-sdk/client-dynamodb')
 
 setDefaultTimeout(15 * 60 * 1000)
 
-const DynamoDBClientConfig = {
-    maxAttempts: 3
-}
+const DynamoDBClientConfig = { maxAttempts: 3 }
 if (process.env.AWSENV && process.env.AWSENV.toUpperCase() === 'LOCALSTACK') {
     DynamoDBClientConfig.endpoint = process.env.LOCALSTACK_HOSTNAME ? `http://${process.env.LOCALSTACK_HOSTNAME}:4566` : 'http://localhost:4566'
 }
@@ -106,7 +104,7 @@ MAFWhen('{jsonObject} is converted to dynamo', function (payload) {
 })
 
 MAFWhen('table {string} exists on dynamo', async function (tableName) {
-    tableName = filltemplate(tableName, this.results)
+    tableName = fillTemplate(tableName, this.results)
     if (!await tableExists(tableName)) {
         throw new Error('The table ' + tableName + ' does not exist on dynamoDB')
     }
@@ -230,7 +228,7 @@ MAFWhen('perform dynamodb query:', async function (docString) {
     if (!this.results) {
         this.results = {}
     }
-    const payload = JSON.parse(filltemplate(docString, this.results))
+    const payload = JSON.parse(fillTemplate(docString, this.results))
     return await performDynamoDBQueryFromJSON.call(this, payload)
 })
 
@@ -325,7 +323,7 @@ MAFWhen('perform dynamodb put-item:', async function (docString) {
     if (!this.results) {
         this.results = {}
     }
-    const payload = JSON.parse(filltemplate(docString, this.results))
+    const payload = JSON.parse(fillTemplate(docString, this.results))
     return await performDynamoDBPutItemFromJSON.call(this, payload)
 })
 
@@ -430,7 +428,7 @@ MAFWhen('dynamodb update-item from {jsonObject} is performed', async function (p
  * Updates a dynamodb item based on the provided docstring and variables already defined
  */
 MAFWhen('perform dynamodb update-item:', async function (docString) {
-    const payload = JSON.parse(filltemplate(docString, this.results))
+    const payload = JSON.parse(fillTemplate(docString, this.results))
     return await performDynamoDBUpdateFromJSON.call(this, payload)
 })
 
@@ -525,7 +523,7 @@ MAFWhen('dynamodb delete-item from {jsonObject} is performed', async function (p
  * Deletes a dynamodb item based on the provided docstring and variables already defined
  */
 MAFWhen('perform dynamodb delete-item:', async function (docString) {
-    const payload = JSON.parse(filltemplate(docString, this.results))
+    const payload = JSON.parse(fillTemplate(docString, this.results))
     return await performDynamoDBDeleteFromJSON.call(this, payload)
 })
 

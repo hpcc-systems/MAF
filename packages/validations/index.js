@@ -7,7 +7,7 @@ const Given = Cucumber.Given
 const When = Cucumber.When
 const Then = Cucumber.Then
 let world = null
-const { filltemplate } = require('@ln-maf/core')
+const { fillTemplate } = require('@ln-maf/core')
 const { MAFSave, tryAttach, performJSONObjectTransform, applyJSONToString, readFile, writeFile, writeFileBuffer, readFileBuffer, getFilePath, MAFWhen } = require('@ln-maf/core')
 
 Before((scenario) => {
@@ -26,7 +26,7 @@ const setToString = function (location, value, scenario, attach = true) {
 }
 
 MAFWhen('run templateString', function (docString) {
-  return filltemplate(docString, this.results)
+  return fillTemplate(docString, this.results)
 })
 
 MAFWhen('convert csv {jsonObject} to json', async function (obj) {
@@ -247,7 +247,7 @@ MAFWhen('JSON key {string} is extracted from {jsonObject}', function (jsonpath, 
  */
 MAFWhen('JSON keys {string} are extracted from {jsonObject}', function (array, variable) {
   const obj = performJSONObjectTransform.call(this, variable)
-  array = filltemplate(array, this.results)
+  array = fillTemplate(array, this.results)
   try {
     array = JSON.parse(array)
   } catch (e) {
@@ -276,7 +276,7 @@ When('{string} is written to file {string} on JSON path {string}', function (val
 When('{string} is applied to item {string} on JSON path {string}', function (value, item, jsonPath) {
   const jp = require('jsonpath')
   const fileContents = this.results[item]
-  value = filltemplate(value, this.results)
+  value = fillTemplate(value, this.results)
   if (value.trim() !== '') {
     try {
       const tmp = JSON.parse(value)
@@ -290,14 +290,14 @@ When('{string} is applied to item {string} on JSON path {string}', function (val
 
 When('{jsonObject} is written in json line delimited format to file {string}', function (item, file) {
   let obj = performJSONObjectTransform.call(this, item)
-  file = filltemplate(file, this.results)
+  file = fillTemplate(file, this.results)
   try { obj = JSON.parse(obj) } catch (e) {}
   writeFile(file, obj.map(i => JSON.stringify(i)).join('\n'), this)
 })
 
 When('{jsonObject} is written to file {string}', function (jsonObject, file) {
   let obj = performJSONObjectTransform.call(this, jsonObject)
-  file = filltemplate(file, this.results)
+  file = fillTemplate(file, this.results)
   if (typeof (obj) === 'object') {
     obj = JSON.stringify(obj)
   }
@@ -320,7 +320,7 @@ Then('it matches the set {string}', function (set) {
 })
 
 MAFWhen('the file {string} is gzipped', function (filename) {
-  filename = filltemplate(filename, this.results)
+  filename = fillTemplate(filename, this.results)
   try {
     fs.deleteFileSync(getFilePath(filename, this))
   } catch (e) {
@@ -333,8 +333,8 @@ MAFWhen('the file {string} is gzipped', function (filename) {
 })
 
 MAFWhen('file {string} is gzip unzipped to file {string}', function (file, fileOut) {
-  file = filltemplate(file, this.results)
-  fileOut = filltemplate(fileOut, this.results)
+  file = fillTemplate(file, this.results)
+  fileOut = fillTemplate(fileOut, this.results)
   const zlib = require('zlib')
   const bf = readFileBuffer(file, this)
   const buffer = zlib.unzipSync(bf)
@@ -477,7 +477,7 @@ Then('{jsonObject} is equal to {jsonObject}', function (item1, item2) {
 })
 Then('{jsonObject} is not equal to:', function (item1, item2) {
   item1 = performJSONObjectTransform.call(this, item1)
-  let expected = filltemplate(item2, this.results)
+  let expected = fillTemplate(item2, this.results)
   try {
     expected = JSON.parse(expected)
   } catch (e) { }
@@ -490,7 +490,7 @@ Then('{jsonObject} is not equal to:', function (item1, item2) {
 
 Then('{jsonObject} is equal to:', function (item1, item2) {
   item1 = performJSONObjectTransform.call(this, item1)
-  let expected = filltemplate(item2, this.results)
+  let expected = fillTemplate(item2, this.results)
   try {
     expected = JSON.parse(expected)
   } catch (e) { }
@@ -503,12 +503,12 @@ Then('{jsonObject} is equal to:', function (item1, item2) {
 
 Then('element {string} does not exist in {jsonObject}', function (element, jsonObject) {
   const obj = performJSONObjectTransform.call(this, jsonObject)
-  element = filltemplate(element, this.results)
+  element = fillTemplate(element, this.results)
   assert.doesNotHaveAnyKeys(obj, [element])
 })
 Then('element {string} exists in {jsonObject}', function (element, jsonObject) {
   const obj = performJSONObjectTransform.call(this, jsonObject)
-  element = filltemplate(element, this.results)
+  element = fillTemplate(element, this.results)
   assert.containsAllKeys(obj, [element])
 })
 Then('elements {string} do not exist in {jsonObject}', function (element, jsonObject) {
@@ -525,7 +525,7 @@ Then('elements {string} do not exist in {jsonObject}', function (element, jsonOb
 })
 Then('elements {string} exist in {jsonObject}', function (element, jsonObject) {
   const obj = performJSONObjectTransform.call(this, jsonObject)
-  element = filltemplate(element, this.results)
+  element = fillTemplate(element, this.results)
   try {
     element = JSON.parse(element)
   } catch (e) {
@@ -543,8 +543,8 @@ const performEncrypt = function () {
   setToString('lastRun', jwt.sign(this.results.jwtPayload, this.results.privateKey, options), this)
 }
 When('sign item {string} using jwt', function (item) {
-  item = filltemplate(item, this.results)
-  item = filltemplate(this.results[item], this.results)
+  item = fillTemplate(item, this.results)
+  item = fillTemplate(this.results[item], this.results)
   setToString('jwtPayload', item, this, false)
   performEncrypt.call(this)
 })
@@ -605,7 +605,7 @@ Given('set examples', async function () {
   const keys = Object.keys(res)
   for (let key in keys) {
     key = keys[key]
-    res[key] = filltemplate(res[key], this.results)
+    res[key] = fillTemplate(res[key], this.results)
     this.results[key] = res[key]
   }
   tryAttach.call(this, res)
@@ -613,14 +613,14 @@ Given('set examples', async function () {
 
 Then('{jsonObject} contains {string}', function (jsonObject, checkString) {
   let obj = performJSONObjectTransform.call(this, jsonObject)
-  checkString = filltemplate(checkString, this.results)
+  checkString = fillTemplate(checkString, this.results)
   obj = JSON.stringify(obj)
   assert.isTrue(obj.includes(checkString), `String '${checkString}' is not in ${obj}`)
 })
 
 Then('{jsonObject} does not contain {string}', function (jsonObject, checkString) {
   let obj = performJSONObjectTransform.call(this, jsonObject)
-  checkString = filltemplate(checkString, this.results)
+  checkString = fillTemplate(checkString, this.results)
   obj = JSON.stringify(obj)
   assert.isFalse(obj.includes(checkString), `String '${checkString}' is in ${obj}`)
 })
@@ -642,20 +642,20 @@ MAFWhen('blob is read from file {string}', async function (fileName) {
 })
 
 When('blob item {string} is written to file {string}', async function (blob, fileName) {
-  blob = filltemplate(blob, this.results)
+  blob = fillTemplate(blob, this.results)
   blob = eval('this.results.' + blob)
   const b = Buffer.from(await blob.arrayBuffer())
   writeFile(`${fileName}`, b, this)
 })
 
 When('blob item {string} is attached', async function (blob) {
-  blob = filltemplate(blob, this.results)
+  blob = fillTemplate(blob, this.results)
   blob = eval('this.results.' + blob)
   const b = Buffer.from(await blob.arrayBuffer())
   return this.attach(b, 'image/png')
 })
 Then('blob item {string} is equal to file {string}', async function (blob, fileName) {
-  blob = filltemplate(blob, this.results)
+  blob = fillTemplate(blob, this.results)
   blob = eval('this.results.' + blob)
   const b = await blob.arrayBuffer()
   const actualImage = readFileBuffer(`${fileName}`, this)

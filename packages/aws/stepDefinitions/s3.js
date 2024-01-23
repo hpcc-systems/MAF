@@ -1,7 +1,7 @@
 const { setDefaultTimeout } = require('@cucumber/cucumber')
 const fs = require('fs')
 const { S3Client, ListBucketsCommand, CreateBucketCommand, ListObjectsV2Command, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3')
-const { getFilePath, MAFWhen, filltemplate, performJSONObjectTransform } = require('@ln-maf/core')
+const { getFilePath, MAFWhen, fillTemplate, performJSONObjectTransform } = require('@ln-maf/core')
 
 setDefaultTimeout(15 * 60 * 1000)
 
@@ -31,21 +31,21 @@ async function bucketExists(bucketName) {
 }
 
 MAFWhen('bucket {string} exists on S3', async function (bucketName) {
-    bucketName = filltemplate(bucketName, this.results)
+    bucketName = fillTemplate(bucketName, this.results)
     if (!await bucketExists(bucketName)) {
         throw new Error('Bucket ' + bucketName + ' does not exist on S3')
     }
 })
 
 MAFWhen('bucket {string} is not on S3', async function (bucketName) {
-    bucketName = filltemplate(bucketName, this.results)
+    bucketName = fillTemplate(bucketName, this.results)
     if (await bucketExists(bucketName)) {
         throw new Error('Bucket ' + bucketName + ' does exist on S3')
     }
 })
 
 MAFWhen('bucket {string} exists', async function (bucketName) {
-    bucketName = filltemplate(bucketName, this.results)
+    bucketName = fillTemplate(bucketName, this.results)
     if (!await bucketExists(bucketName)) {
         throw new Error('Bucket ' + bucketName + ' does not exist on S3')
     }
@@ -83,20 +83,20 @@ async function listS3Files(bucketName, path, all = false) {
 }
 
 MAFWhen('file list of bucket {string} on path {string} is retrieved', async function (bucketName, path) {
-    bucketName = filltemplate(bucketName, this.results)
-    path = filltemplate(path, this.results).replace(/\/{2,}/g, '/').replace(/([^/]{1,})$/, '$1/')
+    bucketName = fillTemplate(bucketName, this.results)
+    path = fillTemplate(path, this.results).replace(/\/{2,}/g, '/').replace(/([^/]{1,})$/, '$1/')
     return await listS3Files(bucketName, path)
 })
 
 MAFWhen('all files of bucket {string} is retrieved', async function (bucketName) {
-    bucketName = filltemplate(bucketName, this.results)
+    bucketName = fillTemplate(bucketName, this.results)
     return await listS3Files(bucketName, '', true)
 })
 
 MAFWhen('file exists with name {string} at path {string} in bucket {string}', async function (key, path, bucketName) {
-    key = filltemplate(key, this.results)
-    bucketName = filltemplate(bucketName, this.results)
-    path = filltemplate(path, this.results).replace(/\/{2,}/g, '/').replace(/([^/]{1,})$/, '$1/')
+    key = fillTemplate(key, this.results)
+    bucketName = fillTemplate(bucketName, this.results)
+    path = fillTemplate(path, this.results).replace(/\/{2,}/g, '/').replace(/([^/]{1,})$/, '$1/')
     const files = await listS3Files(bucketName, path)
     if (!files.includes(path + key)) {
         throw new Error('The file does not exist in ' + s3URL(bucketName, path))
@@ -108,8 +108,8 @@ MAFWhen('file exists with name {string} at path {string} in bucket {string}', as
  */
 MAFWhen('{jsonObject} is uploaded to bucket {string} as key {string}', async function (file, bucketName, key) {
     file = performJSONObjectTransform.call(this, file)
-    bucketName = filltemplate(bucketName, this.results)
-    key = filltemplate(key, this.results).replace(/\/{2,}/g, '/')
+    bucketName = fillTemplate(bucketName, this.results)
+    key = fillTemplate(key, this.results).replace(/\/{2,}/g, '/')
     const queryParameters = {
         Bucket: bucketName.trim(),
         Body: file,
@@ -119,9 +119,9 @@ MAFWhen('{jsonObject} is uploaded to bucket {string} as key {string}', async fun
 })
 
 MAFWhen('gz file {string} is uploaded to bucket {string} as key {string}', async function (filePath, bucketName, key) {
-    filePath = filltemplate(filePath, this.results)
-    bucketName = filltemplate(bucketName, this.results)
-    key = filltemplate(key, this.results).replace(/\/{2,}/g, '/')
+    filePath = fillTemplate(filePath, this.results)
+    bucketName = fillTemplate(bucketName, this.results)
+    key = fillTemplate(key, this.results).replace(/\/{2,}/g, '/')
     const fileBuffer = fs.readFileSync(filePath)
     const queryParameters = {
         Bucket: bucketName.trim(),
@@ -133,9 +133,9 @@ MAFWhen('gz file {string} is uploaded to bucket {string} as key {string}', async
 
 MAFWhen('gz file {string} is uploaded to bucket {string} as key {string} with sha256 check', async function (filePath, bucketName, key) {
     const crypto = require('crypto')
-    filePath = filltemplate(filePath, this.results)
-    bucketName = filltemplate(bucketName, this.results)
-    key = filltemplate(key, this.results).replace(/\/{2,}/g, '/')
+    filePath = fillTemplate(filePath, this.results)
+    bucketName = fillTemplate(bucketName, this.results)
+    key = fillTemplate(key, this.results).replace(/\/{2,}/g, '/')
     const fileBuffer = fs.readFileSync(filePath)
     const queryParameters = {
         Bucket: bucketName.trim(),
@@ -147,9 +147,9 @@ MAFWhen('gz file {string} is uploaded to bucket {string} as key {string} with sh
 })
 
 MAFWhen('file {string} is deleted from bucket {string} at path {string}', async function (key, bucketName, path) {
-    key = filltemplate(key, this.results)
-    bucketName = filltemplate(bucketName, this.results)
-    path = filltemplate(path, this.results).replace(/\/{2,}/g, '/').replace(/([^/]{1,})$/, '$1/')
+    key = fillTemplate(key, this.results)
+    bucketName = fillTemplate(bucketName, this.results)
+    path = fillTemplate(path, this.results).replace(/\/{2,}/g, '/').replace(/([^/]{1,})$/, '$1/')
     const queryParameters = {
         Bucket: bucketName.trim(),
         Key: path + key
@@ -158,9 +158,9 @@ MAFWhen('file {string} is deleted from bucket {string} at path {string}', async 
 })
 
 MAFWhen('file {string} from bucket {string} at path {string} is retrieved', async function (key, bucketName, path) {
-    key = filltemplate(key, this.results)
-    bucketName = filltemplate(bucketName, this.results)
-    path = filltemplate(path, this.results).replace(/\/{2,}/g, '/').replace(/([^/]{1,})$/, '$1/')
+    key = fillTemplate(key, this.results)
+    bucketName = fillTemplate(bucketName, this.results)
+    path = fillTemplate(path, this.results).replace(/\/{2,}/g, '/').replace(/([^/]{1,})$/, '$1/')
     const queryParameters = {
         Bucket: bucketName.trim(),
         Key: path + key
@@ -177,10 +177,10 @@ MAFWhen('file {string} from bucket {string} at path {string} is retrieved', asyn
 })
 
 MAFWhen('gz file {string} from bucket {string} at path {string} is written to file {string}', async function (key, bucketName, path, saveName) {
-    key = filltemplate(key, this.results)
-    saveName = filltemplate(saveName, this.results)
-    bucketName = filltemplate(bucketName, this.results)
-    path = filltemplate(path, this.results).replace(/\/{2,}/g, '/').replace(/([^/]{1,})$/, '$1/')
+    key = fillTemplate(key, this.results)
+    saveName = fillTemplate(saveName, this.results)
+    bucketName = fillTemplate(bucketName, this.results)
+    path = fillTemplate(path, this.results).replace(/\/{2,}/g, '/').replace(/([^/]{1,})$/, '$1/')
     const queryParameters = {
         Bucket: bucketName.trim(),
         Key: path + key
@@ -202,7 +202,7 @@ MAFWhen('gz file {string} from bucket {string} at path {string} is written to fi
  * This will create a new bucket on S3
  */
 MAFWhen('bucket {string} is created on S3', async function (bucketName) {
-    bucketName = filltemplate(bucketName, this.results)
+    bucketName = fillTemplate(bucketName, this.results)
     if (!/(?!(^xn--|-s3alias$))^[a-z0-9][a-z0-9-]{1,61}[a-z0-9]$/.test(bucketName.trim())) {
         throw new Error('Invalid bucket name. See https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html for proper bucket naming rules')
     }
@@ -213,7 +213,7 @@ MAFWhen('bucket {string} is created on S3', async function (bucketName) {
  * This will create a text test file (For localstack testing)
  */
 MAFWhen('test file {string} is created', async function (fileName) {
-    fileName = filltemplate(fileName, this.results)
+    fileName = fillTemplate(fileName, this.results)
     const filePath = getFilePath(fileName, this)
     fs.writeFileSync(filePath, 'this is a test file')
 })

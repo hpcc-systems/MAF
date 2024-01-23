@@ -1,5 +1,5 @@
 const { setDefaultTimeout } = require('@cucumber/cucumber')
-const { MAFWhen, performJSONObjectTransform, filltemplate } = require('@ln-maf/core')
+const { MAFWhen, performJSONObjectTransform, fillTemplate } = require('@ln-maf/core')
 const { SQSClient, ListQueuesCommand, GetQueueAttributesCommand, SendMessageCommand, ReceiveMessageCommand, PurgeQueueCommand } = require('@aws-sdk/client-sqs')
 
 setDefaultTimeout(15 * 60 * 1000)
@@ -73,7 +73,7 @@ async function dequeueMessagesFromQueue(queueURL, numOfMessages = 1) {
 }
 
 MAFWhen('queue {string} exists on SQS', async function (queueName) {
-    queueName = filltemplate(queueName, this.results)
+    queueName = fillTemplate(queueName, this.results)
     const queueURLs = await listQueueURLs()
     if (!queueURLs.some(queueURL => queueURL.replace(/.*\/(.*)/, '$1').includes(queueName))) {
         throw new Error("The queue '" + queueName + "' could not be found")
@@ -87,7 +87,7 @@ MAFWhen('queue {string} exists on SQS', async function (queueName) {
  * @returns all queue attributes in JSON format
  */
 MAFWhen('attributes of queue {string} are received', async function (QueueUrl) {
-    QueueUrl = filltemplate(QueueUrl, this.results)
+    QueueUrl = fillTemplate(QueueUrl, this.results)
     if (!/^https?:\/\//.test(QueueUrl)) {
         QueueUrl = await getURLfromQueueName(QueueUrl)
     }
@@ -101,7 +101,7 @@ MAFWhen('attributes of queue {string} are received', async function (QueueUrl) {
 })
 
 MAFWhen('queue {string} is purged', async function (QueueUrl) {
-    QueueUrl = filltemplate(QueueUrl, this.results)
+    QueueUrl = fillTemplate(QueueUrl, this.results)
     if (!/^https?:\/\//.test(QueueUrl)) {
         QueueUrl = await getURLfromQueueName(QueueUrl)
     }
@@ -110,35 +110,35 @@ MAFWhen('queue {string} is purged', async function (QueueUrl) {
 
 MAFWhen('{jsonObject} is sent to queue {string}', async function (message, queue) {
     message = performJSONObjectTransform.call(this, message)
-    queue = filltemplate(queue, this.results)
+    queue = fillTemplate(queue, this.results)
     return sendMessageToQueue(message, queue)
 })
 
 MAFWhen('{jsonObject} is sent to queue url {string}', async function (message, QueueUrl) {
     message = performJSONObjectTransform.call(this, message)
-    QueueUrl = filltemplate(QueueUrl, this.results)
+    QueueUrl = fillTemplate(QueueUrl, this.results)
     return await sqsClient.send(new SendMessageCommand({ MessageBody: message, QueueUrl }))
 })
 
 MAFWhen('{string} message is sent to queue {string}', async function (message, queue) {
-    message = filltemplate(message, this.results)
-    queue = filltemplate(queue, this.results)
+    message = fillTemplate(message, this.results)
+    queue = fillTemplate(queue, this.results)
     return sendMessageToQueue(message, queue)
 })
 
 MAFWhen('{string} message is sent to queue url {string}', async function (message, QueueUrl) {
-    message = filltemplate(message, this.results)
-    QueueUrl = filltemplate(QueueUrl, this.results)
+    message = fillTemplate(message, this.results)
+    QueueUrl = fillTemplate(QueueUrl, this.results)
     return await sqsClient.send(new SendMessageCommand({ MessageBody: message, QueueUrl }))
 })
 
 MAFWhen('the next message is received from queue {string}', async function (queueURL) {
-    queueURL = filltemplate(queueURL, this.results)
+    queueURL = fillTemplate(queueURL, this.results)
     const res = await dequeueMessagesFromQueue(queueURL)
     return res[0]
 })
 
 MAFWhen('{int} messages are received from queue {string}', async function (numOfMessages, queueURL) {
-    queueURL = filltemplate(queueURL, this.results)
+    queueURL = fillTemplate(queueURL, this.results)
     return await dequeueMessagesFromQueue(queueURL, numOfMessages)
 })

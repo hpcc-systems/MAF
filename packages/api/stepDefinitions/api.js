@@ -1,5 +1,5 @@
 global.fetch = require('node-fetch')
-const { MAFWhen, MAFSave, performJSONObjectTransform, filltemplate, canAttach, getFilePath } = require('@ln-maf/core')
+const { MAFWhen, MAFSave, performJSONObjectTransform, fillTemplate, canAttach, getFilePath } = require('@ln-maf/core')
 const { setDefaultTimeout, Then } = require('@cucumber/cucumber')
 
 const FormData = require('form-data')
@@ -13,7 +13,7 @@ setDefaultTimeout(15 * 1000)
  * @deprecated Set the item 'url' instead
  */
 MAFWhen('url {string}', function (url) {
-    filltemplate(url, this.results)
+    fillTemplate(url, this.results)
     // Remove trailing slash
     url = url.replace(/\/$/, '')
     MAFSave.call(this, 'url', url)
@@ -23,7 +23,7 @@ MAFWhen('url {string}', function (url) {
  * @deprecated Set the item 'api' instead
  */
 MAFWhen('api {string}', function (api) {
-    filltemplate(api, this.results)
+    fillTemplate(api, this.results)
     // Remove leading slash
     api = api.replace(/^\//, '')
     MAFSave.call(this, 'api', api)
@@ -33,7 +33,7 @@ MAFWhen('api {string}', function (api) {
  * @deprecated Set the item 'body' instead
  */
 MAFWhen('body {string}', function (body) {
-    filltemplate(body, this.results)
+    fillTemplate(body, this.results)
     MAFSave.call(this, 'body', body)
 })
 
@@ -41,7 +41,7 @@ MAFWhen('body {string}', function (body) {
  * @deprecated Set the item 'headers' instead
  */
 MAFWhen('headers {string}', function (headers) {
-    filltemplate(headers, this.results)
+    fillTemplate(headers, this.results)
     MAFSave.call(this, 'headers', headers)
 })
 
@@ -241,7 +241,7 @@ MAFWhen('api request is performed', async function () {
 })
 
 MAFWhen('perform api request:', async function (string) {
-    const request = JSON.parse(filltemplate(string, this.results))
+    const request = JSON.parse(fillTemplate(string, this.results))
     const results = await requestBuilder.call(this, request)
     MAFSave.call(this, 'response', results.response)
     return results

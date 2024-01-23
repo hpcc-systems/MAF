@@ -1,5 +1,5 @@
 const { setDefaultTimeout } = require('@cucumber/cucumber')
-const { MAFWhen, filltemplate } = require('@ln-maf/core')
+const { MAFWhen, fillTemplate } = require('@ln-maf/core')
 const { CloudWatchLogsClient, FilterLogEventsCommand } = require('@aws-sdk/client-cloudwatch-logs')
 const { SSMClient, GetParameterCommand } = require('@aws-sdk/client-ssm')
 const { DateTime } = require('luxon')
@@ -16,7 +16,7 @@ const cloudwatchLogsClient = new CloudWatchLogsClient(cloudwatchLogsClientConfig
  * Returns the value of the parameter from the parameter store
  */
 MAFWhen('parameter {string} value is retrieved from the parameter store', async function (parameterName) {
-    parameterName = filltemplate(parameterName, this.results)
+    parameterName = fillTemplate(parameterName, this.results)
     const ssmClient = new SSMClient()
     const res = await ssmClient.send(new GetParameterCommand({ Name: parameterName }))
     return res.Parameter.Value
@@ -27,7 +27,7 @@ MAFWhen('parameter {string} value is retrieved from the parameter store', async 
  */
 MAFWhen('cloudwatch logs from log group {string} from {int} minutes ago to now are retrieved', async function (logGroup, minutes) {
     const startTime = DateTime.now().minus({ minutes }).toUTC().toMillis()
-    logGroup = filltemplate(logGroup, this.results)
+    logGroup = fillTemplate(logGroup, this.results)
     let logs = []
     let res = {}
     let queries = 0
