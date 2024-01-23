@@ -83,8 +83,6 @@ When perform api request:
 """
 ```
 
-
-
 ### How to perform a multi-part request
 The request supports and additional body type of: formBody.  This supports arrays(untested) and will append it to element + [].  
 As of now the only portion of this that is tested and is not included in this CI is the file.  Hopefully this will be tested in more detail soon.
