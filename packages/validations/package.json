@@ -33,7 +33,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
-    "multiple-cucumber-html-reporter": "^3.4.0",
+    "multiple-cucumber-html-reporter": "^3.6.1",
     "nyc": "^15.1.0"
   },
   "gitHead": "9bf55a2c86fa17707fabfb4320c3d722e270f9e6",
