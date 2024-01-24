@@ -23,7 +23,7 @@
     "chai": "^4.3.4"
   },
   "devDependencies": {
-    "@ln-maf/core": "*",
+    "@ln-maf/core": "file:../core",
     "@ln-maf/validations": "file:../validations",
     "eslint": "^8.18.0",
     "eslint-config-standard": "^17.0.0",
