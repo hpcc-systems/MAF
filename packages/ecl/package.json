@@ -1,0 +1,48 @@
+{
+  "name": "@ln-maf/ecl",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "3.0.0-beta.0",
+  "description": "MAF module providing ECL cucumber steps using the ecl command line tool (https://hpccsystems.com/training/documentation/ecl-ide-and-client-tools)",
+  "main": "index.js",
+  "scripts": {
+    "test": "bash runFeature.sh"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {},
+  "peerDependencies": {
+    "@cucumber/cucumber": ">= 10.0.0",
+    "@ln-maf/core": "*",
+    "chai": "^4.3.4"
+  },
+  "devDependencies": {
+    "@ln-maf/core": "*",
+    "@ln-maf/validations": "file:../validations",
+    "eslint": "^8.18.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "multiple-cucumber-html-reporter": "^3.6.1",
+    "nyc": "^15.1.0"
+  },
+  "gitHead": "2a575448a74cfaee5ec68fa10db24cf4ccade849",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hpcc-systems/MAF.git"
+  },
+  "keywords": [
+    "cucumber-js",
+    "testing",
+    "gherkin",
+    "cucumber-steps",
+    "ecl",
+    "hpcc"
+  ],
+  "bugs": {
+    "url": "https://github.com/hpcc-systems/MAF/issues"
+  },
+  "homepage": "https://github.com/hpcc-systems/MAF#readme"
+}
