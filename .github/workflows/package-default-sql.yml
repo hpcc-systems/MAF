@@ -31,6 +31,9 @@ jobs:
       - run: npm test -w packages/defaultSQL
         env: 
           ENVIRONMENT: CI
+          USE_ENV_VARIABLES: "TRUE"
+          FAKE_SQL_USERNAME: MAF
+          FAKE_SQL_PASSWORD: MAF
       
       - name: Status Create Action
         if: ${{ always() }}
