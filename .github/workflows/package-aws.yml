@@ -41,7 +41,7 @@ jobs:
         terraform init
         terraform plan
         terraform apply -auto-approve
-    - run: npx lerna run test
+    - run: npm test -w packages/api
       env: 
        ENVIRONMENT: CI
        USE_ENV_VARIABLES: "TRUE"
