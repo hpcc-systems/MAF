@@ -9,7 +9,7 @@
   "scripts": {
     "test": "bash runFeature.sh"
   },
-  "author": "",
+  "author": "Dominick Martelly",
   "license": "Apache-2.0",
   "dependencies": {},
   "peerDependencies": {
