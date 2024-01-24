@@ -1,0 +1,45 @@
+name: Test Preprocessor Package
+
+on:
+  workflow_dispatch: 
+  push:
+    branches: [ main ]
+    paths:
+      - 'packages/preprocessor/**'
+  pull_request:
+    paths:
+      - 'packages/preprocessor/**'
+
+jobs:
+  MAF-Preprocessor:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/previous-releases
+
+    steps:
+      - uses: actions/checkout@v3.3.0
+    
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      
+      - run: npm ci
+      
+      - run: npm test -w packages/preprocessor
+        env: 
+          ENVIRONMENT: CI
+      
+      - name: Status Create Action
+        if: ${{ always() }}
+        uses: hkusu/status-create-action@v1.0.1
+        id: status-create
+        with:
+          state: ${{ job.status }} 
+          sha: ${{ github.sha }}
+    
+      - name: Show result
+        if: always()
+        run: echo '${{ steps.status-create.outputs.result }}'
