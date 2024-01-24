@@ -3,8 +3,7 @@
     "cucumberautocomplete.smartSnippets": true,
     "cucumberautocomplete.steps": [
         "packages/**/stepDefinitions/*.js",
-        "packages/**/index.js",
-        "packages/**/autoComplete.js"
+        "packages/**/index.js"
     ],
     "cucumberautocomplete.customParameters": [
         {
