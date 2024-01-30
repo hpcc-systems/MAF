@@ -25,6 +25,9 @@ MAFWhen('{jsonObject} is converted from ecl xml to json', async function (eclXML
 
 MAFWhen('set ecl config from {jsonObject}', function (eclConfiguration) {
     eclConfig = performJSONObjectTransform.call(this, eclConfiguration)
+    if (!eclConfig.codeLocation) {
+        throw Error('Please define the codeLocation in the eclConfig')
+    }
     return eclConfig
 })
 
@@ -151,7 +154,7 @@ function runECLCommand(eclCommand) {
         throw Error('Please define the ECL_PASSWORD environment variable')
     }
     if (process.env.EXTRA_ECL_ARGS) {
-        eclCommand += `${process.env.EXTRA_ECL_ARGS}`
+        eclCommand += ` ${process.env.EXTRA_ECL_ARGS} `
     }
     let results
     try {
@@ -161,7 +164,7 @@ function runECLCommand(eclCommand) {
         throw Error(err)
     }
     return {
-        command: `ecl ${eclCommand} -s ${eclConfig.environment} -u ${process.env.ECL_USERNAME} -pw **********`,
+        command: `ecl ${eclCommand} -s ${eclConfig.environment} -u ${process.env.ECL_USERNAME} -pw ****`,
         results
     }
 }
