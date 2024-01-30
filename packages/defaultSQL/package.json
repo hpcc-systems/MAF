@@ -18,12 +18,11 @@
   },
   "peerDependencies": {
     "@cucumber/cucumber": ">= 7.0.0",
-    "@ln-maf/core": "*",
+    "@ln-maf/core": "^2.0.0",
     "keytar": "7.*"
   },
   "devDependencies": {
     "@cucumber/cucumber": "^9.0.0",
-    "@ln-maf/core": "^2.0.1",
     "@ln-maf/validations": "^2.0.1",
     "eslint": "^8.18.0",
     "eslint-config-standard": "^17.0.0",

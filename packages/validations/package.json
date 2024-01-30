@@ -23,11 +23,10 @@
   },
   "peerDependencies": {
     "@cucumber/cucumber": ">= 7.0.0",
-    "@ln-maf/core": "*"
+    "@ln-maf/core": "^2.0.0"
   },
   "devDependencies": {
     "@cucumber/cucumber": "^9.0.0",
-    "@ln-maf/core": "^2.0.1",
     "eslint": "^8.18.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
