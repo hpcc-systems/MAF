@@ -18,6 +18,7 @@
     "packages/defaultSQL",
     "packages/postgresql",
     "packages/mysql",
+    "packages/sftp",
     "packages/preprocessor",
     "packages/validations"
   ],
