@@ -1,8 +1,8 @@
-const { MAFWhen, getFilePath, performJSONObjectTransform, filltemplate } = require('@ln-maf/core')
+const { MAFWhen, getFilePath, filltemplate } = require('@ln-maf/core')
 const { setDefaultTimeout } = require('@cucumber/cucumber')
-const { execSync } = require('child_process')`
+const { execSync } = require('child_process')
 const Client = require('ssh2-sftp-client')
-const fs = require('fs')`
+const fs = require('fs')
 const sftp = new Client()
 const path = require('path')
 
@@ -24,10 +24,6 @@ MAFWhen('username {string} is set', function (name) {
     name = filltemplate(name, this.results)
     conf.username = name
     return conf
-})
-
-MAFWhen('ssh into {string}', function (string) {
-    return execSync(`bash aunixlandAccess.sh ${string}`).toString().trim()
 })
 
 MAFWhen('a user send command {string} to server {string}', function (command, server) {
@@ -137,7 +133,7 @@ MAFWhen('a user {string} puts file {string} on server {string} to folder {string
     return putFileToServer.call(this, file, serverDirectory + file)
 })
 
-MAFWhen('a user {string} puts file {string} on server {string} to folder {string} from local path {string}', function (user, file, server, serverDirectory) {
+MAFWhen('a user {string} puts file {string} on server {string} to folder {string} from local path {string}', function (user, file, server, serverDirectory, localPath) {
     file = filltemplate(file, this.results)
     conf.user = filltemplate(user, this.results)
     conf.host = filltemplate(server, this.results)
@@ -248,7 +244,7 @@ async function copyLatestFileFromServer(serverDirectory, localPath) {
 }
 
 /**
- * Copies the latest file from a server's directory to the local directory
+ * Copies the latest file from a server's directory to memory
  *
  * @param {string} serverDirectory The linux path on the remote containing the latest file
  * @returns {string} The file contents
@@ -264,7 +260,6 @@ async function readLatestFileFromServer(serverDirectory) {
     }
     remoteFiles.sort((a, b) => a.modifyTime - b.modifyTime)
     const latestRemoteFile = remoteFiles.at(-1).name
-    const localPath = getFilePath('', this)
     const remoteFileContents = await sftp.get(serverDirectory + latestRemoteFile)
     await sftp.end()
     return remoteFileContents.toString()
