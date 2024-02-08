@@ -48,9 +48,9 @@ MAFWhen('apply parameters', function () {
     tryAttach.call(this, this.parameters)
 })
 
-When('set {string} to {jsonObject}', function (location, jsonObject) {
+When('set {string} to {jsonObject}', function (itemName, jsonObject) {
     const obj = performJSONObjectTransform.call(this, jsonObject)
-    MAFSave.call(this, location, obj)
+    MAFSave.call(this, itemName, obj)
 })
 When('set {string} to:', function (location, value) {
     setToString(location, value, this)

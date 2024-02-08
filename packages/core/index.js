@@ -16,7 +16,7 @@ const canAttach = function () {
     return this.results.attach !== 'false'
 }
 
-const applyJSONToString = function (string, scenario, ft = true) {
+const applyJSONToString = function (string, scenario, fillTemplateValues = true) {
     if (!scenario.results) {
         scenario.results = {}
     }
@@ -24,7 +24,7 @@ const applyJSONToString = function (string, scenario, ft = true) {
         scenario.results.DateTime = require('luxon').DateTime
         // scenario.results.moment = require('moment')
     }
-    if (ft) { string = fillTemplate(string, scenario.results) }
+    if (fillTemplateValues) { string = fillTemplate(string, scenario.results) }
     try {
         if (string.trim() !== '') {
             const obj = JSON.parse(string)
@@ -40,12 +40,60 @@ const applyJSONToString = function (string, scenario, ft = true) {
     return string
 }
 
-const performJSONObjectTransform = function (items, ft = true) {
+/**
+ * Retrieves the value of an item from a nested object using dot notation.
+ *
+ * @param {string} item - The item to retrieve the value for.
+ * @param {object} itemsList - The nested object containing the items.
+ * @returns {*} - The value of the item.
+ */
+function getItemValue(item, itemsList) {
+    let value = itemsList
+    for (const key of item.split('.')) {
+        value = value[key]
+    }
+    return value
+}
+
+/**
+ * Saves an item for MAF following dot notation.
+ * this.results contains the list of all items that have been saved for MAF.
+ *
+ * @param {string} item - The name of the item to be saved.
+ * @param {any} itemValue - The value of the item to be saved.
+ */
+function MAFSave(item, itemValue) {
+    let resultKey // The key to be used in the attachment
+    if (!this.results) {
+        this.results = {}
+        this.results[item] = itemValue
+        resultKey = item
+    } else {
+        const keys = item.split('.')
+        item = this.results
+        if (keys.length === 1) {
+            item[keys] = itemValue
+            resultKey = keys
+        } else {
+            for (let i = 0; i < keys.length - 1; i++) {
+                if (!item[keys[i]]) {
+                    item[keys[i]] = {}
+                }
+                item = item[keys[i]]
+            }
+            item[keys[keys.length - 1]] = itemValue
+            resultKey = keys[0]
+        }
+    }
+    tryAttach.call(this, { [resultKey]: this.results[resultKey] })
+}
+
+function performJSONObjectTransform(items, fillTemplateValues = true) {
     if (!this.results) {
         this.results = {}
     }
     if (this.results.skipFillTemplate && this.results.skipFillTemplate.toUpperCase() === 'TRUE') {
-        ft = false
+        fillTemplateValues = false
     }
     if (items.value) {
         items.value = items.value.slice(1, items.value.length - 1)
@@ -62,20 +110,19 @@ const performJSONObjectTransform = function (items, ft = true) {
     case 'it':
         return this.results.lastRun
     case 'item':
-        if (ft) { items.value = fillTemplate(items.value, this.results) }
-        return eval('this.results.' + items.value)
+        if (fillTemplateValues) { items.value = fillTemplate(items.value, this.results) }
+        return getItemValue(items.value, this.results)
     case 'file':
-        items.value = fillTemplate(items.value, this.results)
-        return applyJSONToString(readFile(items.value, this), this, ft)
+        return applyJSONToString(readFile(items.value, this), this, fillTemplateValues)
     case '':
     case 'string':
-        return applyJSONToString(items.value, this, ft)
+        return applyJSONToString(items.value, this, fillTemplateValues)
     default:
         return parseInt(items.type)
     }
 }
 
-const getFilePath = (filename, scenario) => {
+function getFilePath(filename, scenario) {
     let dir = ''
     if (!scenario.results) {
         scenario.results = {}
@@ -106,7 +153,7 @@ const readFile = (filename, scenario, dataType = 'utf-8') => {
     return fs.readFileSync(getFilePath(filename, scenario), dataType)
 }
 
-const MAFWhen = function (name, func) {
+function MAFWhen(name, func) {
     const params = []
     for (let i = 0; i < func.length; i++) {
         params.push('var' + i)
@@ -122,21 +169,9 @@ const MAFWhen = function (name, func) {
       this.results.lastRun=await func.call(this, ...([].slice.call(arguments)))
       if(canAttach.call(this))
         this.attach(JSON.stringify({ lastRun: this.results.lastRun }, null, 2))
-    }
+        }
   `)
     When(name, tmpFunc)
-}
-
-const MAFSave = function (location, obj) {
-    if (!this.results) {
-        this.results = {}
-    }
-    const loc = 'this.results.' + location
-    const set = loc + '=obj'
-    eval(set)
-    const res = {}
-    res[location] = eval(loc)
-    tryAttach.call(this, res)
 }
 
 const fillTemplate = function (templateString, templateVars) {
