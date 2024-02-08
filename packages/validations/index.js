@@ -266,12 +266,18 @@ MAFWhen('JSON key {string} is removed from {jsonObject}', function (jsonpath, js
  * Returns the JSON key from a variable to lastRun
  */
 MAFWhen('JSON key {string} is extracted from {jsonObject}', function (jsonPath, jsonObject) {
-    jsonObject = performJSONObjectTransform.call(this, jsonObject)
     jsonPath = fillTemplate(jsonPath, this.results)
-    if (typeof jsonObject === 'string') {
-        jsonObject = eval(`this.results.${jsonObject}`)
+    jsonObject = performJSONObjectTransform.call(this, jsonObject)
+    let value = jsonObject
+    for (const key of jsonPath.split('.')) {
+        if (key.includes('[') && key.includes(']')) {
+            const index = key.match(/\[(.*?)\]/)[1]
+            value = value[key.split('[')[0]][index]
+        } else {
+            value = value[key]
+        }
     }
-    return eval(`jsonObject.${jsonPath}`)
+    return value
 })
 
 /**
