@@ -1,11 +1,8 @@
 const { Before } = require('@cucumber/cucumber')
-const Cucumber = require('@cucumber/cucumber')
+const { Given, When, Then } = require('@cucumber/cucumber')
 const fs = require('fs')
 const chai = require('chai')
 const assert = chai.assert
-const Given = Cucumber.Given
-const When = Cucumber.When
-const Then = Cucumber.Then
 let world = null
 const { fillTemplate } = require('@ln-maf/core')
 const { MAFSave, tryAttach, performJSONObjectTransform, applyJSONToString, readFile, writeFile, writeFileBuffer, readFileBuffer, getFilePath, MAFWhen } = require('@ln-maf/core')
@@ -21,7 +18,7 @@ const toISO = d => {
     const date = new Date(val).toISOString()
     return date
 }
-const setToString = function (location, value, scenario, attach = true) {
+function setToString(location, value, scenario) {
     MAFSave.call(scenario, location, applyJSONToString(value, scenario))
 }
 
@@ -60,12 +57,36 @@ When('set {string} to', function (location, value) {
 })
 
 Then('{jsonObject} {validationsEquivalence} {jsonObject}', function (obj1, equiv, obj2) {
-    if (equiv === '=') {
-        equiv = '=='
-    }
-    const obj = Number(performJSONObjectTransform.call(this, obj1))
+    obj1 = Number(performJSONObjectTransform.call(this, obj1))
     obj2 = Number(performJSONObjectTransform.call(this, obj2))
-    assert(eval('obj' + equiv + 'obj2'), JSON.stringify(obj) + ' was not ' + equiv + ' ' + JSON.stringify(obj2))
+    let result
+    switch (equiv) {
+    case '=':
+    case '==':
+    case '===':
+        result = obj1 === obj2
+        break
+    case '!=':
+        result = obj1 !== obj2
+        break
+    case '>':
+        result = obj1 > obj2
+        break
+    case '>=':
+        result = obj1 >= obj2
+        break
+    case '<':
+        result = obj1 < obj2
+        break
+    case '<=':
+        result = obj1 <= obj2
+        break
+    default:
+        throw new Error('Invalid equivalence operator: ' + equiv)
+    }
+    if (!result) {
+        throw new Error(JSON.stringify(obj1) + ' was not ' + equiv + ' to ' + JSON.stringify(obj2))
+    }
 })
 
 Then('{jsonObject} is {timeQualifier} now', function (jsonObject, isBefore) {
@@ -388,18 +409,20 @@ MAFWhen('{jsonObject} is base64 encoded', function (item) {
 
 MAFWhen('{jsonObject} is base64 decoded', function (item) {
     item = performJSONObjectTransform.call(this, item)
-    assert(typeof item === 'string', 'Item type needs to be a string for base64 decoding, but it was a ' + typeof item)
-    const decode = (Buffer.from(item, 'base64').toString('ascii'))
-    return decode
+    if (typeof item !== 'string') {
+        throw new Error('Item type needs to be a string for base64 decoding, but it was a ' + typeof item)
+    }
+    return (Buffer.from(item, 'base64').toString('ascii'))
 })
 
-Then('the value {string} is base64 decoded and resaved', function (item) {
-    const unencrypt = (Buffer.from(this.results[item], 'base64').toString('ascii'))
-    this.results[item] = unencrypt
-    tryAttach.call(this, 'Decoded value: ' + unencrypt)
+MAFWhen('the value {string} is base64 decoded and resaved', function (item) {
+    item = fillTemplate(item, this.results)
+    const unencrypted = (Buffer.from(this.results[item], 'base64').toString('ascii'))
+    this.results[item] = unencrypted
+    tryAttach.call(this, 'Decoded value: ' + unencrypted)
 })
 
-const lowerCaseItemKeys = function (item) {
+function lowerCaseItemKeys(item) {
     Object.keys(item).forEach(i => {
         if (i.toLowerCase() !== i) {
             item[i.toLowerCase()] = item[i]
@@ -412,11 +435,12 @@ const lowerCaseItemKeys = function (item) {
 }
 
 When('make json keys for item {string} lower case', function (item) {
+    item = fillTemplate(item, this.results)
     lowerCaseItemKeys(this.results[item])
     tryAttach.call(this, this.results[item])
 })
 
-const flatten = function (item, res) {
+function flatten(item, res) {
     Object.keys(item).forEach(i => {
         if (typeof item[i] === 'object') { flatten(item[i], res) } else { res[i] = item[i] }
     })
@@ -429,7 +453,7 @@ When('json item {string} is flattened', function (item) {
     tryAttach.call(this, this.results[item])
 })
 
-const numberify = function (item) {
+function numberify(item) {
     Object.keys(item).forEach(i => {
         if (typeof item[i] === 'object') { numberify(item[i]) } else if (typeof item[i] === 'string') {
             const intVal = Number(item[i])
@@ -565,12 +589,12 @@ When('wait {int} milliseconds', function (milliseconds) {
 Given('set examples', async function () {
     // Write code here that turns the phrase above into concrete actions
     const a = world
-    const flatten = (acc, cumulator) => {
-        if (typeof cumulator === 'undefined') {
+    const flatten = (acc, cumulation) => {
+        if (typeof cumulation === 'undefined') {
             return acc
         }
-        if (Array.isArray(cumulator)) { return [...acc, ...cumulator] } else {
-            acc.push(cumulator)
+        if (Array.isArray(cumulation)) { return [...acc, ...cumulation] } else {
+            acc.push(cumulation)
             return acc
         }
     }
@@ -643,20 +667,20 @@ MAFWhen('blob is read from file {string}', async function (fileName) {
 
 When('blob item {string} is written to file {string}', async function (blob, fileName) {
     blob = fillTemplate(blob, this.results)
-    blob = eval('this.results.' + blob)
+    blob = this.results[blob] // Replace eval with bracket notation
     const b = Buffer.from(await blob.arrayBuffer())
     writeFile(`${fileName}`, b, this)
 })
 
 When('blob item {string} is attached', async function (blob) {
     blob = fillTemplate(blob, this.results)
-    blob = eval('this.results.' + blob)
+    blob = this.results[blob] // Replace eval with bracket notation
     const b = Buffer.from(await blob.arrayBuffer())
     return this.attach(b, 'image/png')
 })
 Then('blob item {string} is equal to file {string}', async function (blob, fileName) {
     blob = fillTemplate(blob, this.results)
-    blob = eval('this.results.' + blob)
+    blob = this.results[blob] // Replace eval with bracket notation
     const b = await blob.arrayBuffer()
     const actualImage = readFileBuffer(`${fileName}`, this)
     assert.isTrue(Buffer.compare(actualImage, Buffer.from(b)) === 0)
