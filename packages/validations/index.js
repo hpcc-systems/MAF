@@ -171,7 +171,7 @@ MAFWhen('run xPath {string} on item {string}', function (xPath, element) {
     }
     const xpath = require('xpath')
     const Dom = require('@xmldom/xmldom').DOMParser
-    const doc = new Dom().parseFromString(eval('this.results.' + element))
+    const doc = new Dom().parseFromString(this.results[element])
     const sel = xpath.useNamespaces(this.results.namespace)
     return sel(xPath, doc).map(i => i.toString()).join('\n')
 })
@@ -207,8 +207,18 @@ const setFileMatch = function (set, file) {
  */
 function jsonDeleteKey(jsonKey, object) {
     const original = JSON.parse(JSON.stringify(object))
-    eval(`delete object.${jsonKey}`)
-    require('chai').assert.notDeepEqual(`${object}`, original)
+    const keys = jsonKey.split('.')
+    let currentItem = object
+
+    for (let i = 0; i < keys.length - 1; i++) {
+        if (!currentItem[keys[i]]) {
+            currentItem[keys[i]] = {}
+        }
+        currentItem = currentItem[keys[i]]
+    }
+    delete currentItem[keys[keys.length - 1]]
+    delete object[jsonKey]
+    assert.notDeepEqual(object, original)
     return true
 }
 
@@ -255,12 +265,13 @@ MAFWhen('JSON key {string} is removed from {jsonObject}', function (jsonpath, js
 /**
  * Returns the JSON key from a variable to lastRun
  */
-MAFWhen('JSON key {string} is extracted from {jsonObject}', function (jsonpath, jsonObject) {
-    let obj = performJSONObjectTransform.call(this, jsonObject)
-    if (typeof obj === 'string') {
-        obj = eval(`this.results.${obj}`)
+MAFWhen('JSON key {string} is extracted from {jsonObject}', function (jsonPath, jsonObject) {
+    jsonObject = performJSONObjectTransform.call(this, jsonObject)
+    jsonPath = fillTemplate(jsonPath, this.results)
+    if (typeof jsonObject === 'string') {
+        jsonObject = eval(`this.results.${jsonObject}`)
     }
-    return eval(`obj.${jsonpath}`)
+    return eval(`jsonObject.${jsonPath}`)
 })
 
 /**

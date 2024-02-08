@@ -63,28 +63,20 @@ function getItemValue(item, itemsList) {
  * @param {any} itemValue - The value of the item to be saved.
  */
 function MAFSave(item, itemValue) {
-    let resultKey // The key to be used in the attachment
     if (!this.results) {
         this.results = {}
-        this.results[item] = itemValue
-        resultKey = item
-    } else {
-        const keys = item.split('.')
-        item = this.results
-        if (keys.length === 1) {
-            item[keys] = itemValue
-            resultKey = keys
-        } else {
-            for (let i = 0; i < keys.length - 1; i++) {
-                if (!item[keys[i]]) {
-                    item[keys[i]] = {}
-                }
-                item = item[keys[i]]
-            }
-            item[keys[keys.length - 1]] = itemValue
-            resultKey = keys[0]
-        }
     }
+    const resultKey = item
+    const keys = item.split('.')
+    let currentItem = this.results
+
+    for (let i = 0; i < keys.length - 1; i++) {
+        if (!currentItem[keys[i]]) {
+            currentItem[keys[i]] = {}
+        }
+        currentItem = currentItem[keys[i]]
+    }
+    currentItem[keys[keys.length - 1]] = itemValue
     tryAttach.call(this, { [resultKey]: this.results[resultKey] })
 }
 
