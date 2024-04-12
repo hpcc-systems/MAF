@@ -18,7 +18,7 @@
     "@ln-maf/default-sql": "^2.0.1",
     "@ln-maf/core": "^2.0.0",
     "keytar": "^7.9.0",
-    "mysql2": "^2.3.3"
+    "mysql2": "^3.9.4"
   },
   "peerDependencies": {
     "@cucumber/cucumber": ">= 7.0.0"
