@@ -6,21 +6,11 @@ This module provides scenarios where Gherkins/Cucumber is implemented for AWS.
 [![GitHub Actions](https://github.com/hpcc-systems/MAF/workflows/Build/badge.svg)](https://github.com/hpcc-systems/MAF/actions)
 [![Dependencies][dep-image]][dep-url]
 
-# Prerequisites
-
-1. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html) - The amazon command line client
-
-- [Windows](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-windows.html)
-- [Mac](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-mac.html)
-- [Linux](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-linux.html)
-
 # Set up
 
-1. Install [AWS-CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
+1. Install by running `npm i @ln-maf/aws`.
 
-2. Install by running `npm i @ln-maf/aws`.
-
-3. Add a step file with the following code in the features folder of the project:
+2. Add a step file with the following code in the features folder of the project:
 
 ```
 require('@ln-maf/aws')
