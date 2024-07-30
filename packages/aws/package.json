@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "AWS steps for MAF. This contains S3, DynamoDB, SQS, ECS, Cloudwatch, and Lambda stepDefinitions",
   "main": "index.js",
   "scripts": {
@@ -12,13 +12,13 @@
   "author": "Dominick Martelly",
   "license": "Apache-2.0",
   "dependencies": {
-    "@aws-sdk/client-cloudwatch-logs": "^3.430.0",
-    "@aws-sdk/client-dynamodb": "^3.430.0",
-    "@aws-sdk/client-ecs": "^3.430.0",
-    "@aws-sdk/client-lambda": "^3.430.0",
-    "@aws-sdk/client-s3": "^3.430.0",
-    "@aws-sdk/client-sqs": "^3.430.0",
-    "@aws-sdk/client-ssm": "^3.430.0",
+    "@aws-sdk/client-cloudwatch-logs": "^3.529.0",
+    "@aws-sdk/client-dynamodb": "^3.529.0",
+    "@aws-sdk/client-ecs": "^3.529.0",
+    "@aws-sdk/client-lambda": "^3.529.0",
+    "@aws-sdk/client-s3": "^3.529.0",
+    "@aws-sdk/client-sqs": "^3.529.0",
+    "@aws-sdk/client-ssm": "^3.529.0",
     "@ln-maf/core": "^2.0.0",
     "chai": "^4.0.0",
     "luxon": "^2.4.0"
