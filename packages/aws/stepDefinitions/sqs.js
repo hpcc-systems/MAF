@@ -18,7 +18,6 @@ const sqsClient = new SQSClient(sqsClientConfig)
 async function getURLfromQueueName (queueName) {
   const queues = await listQueueURLs()
   const foundQueueURL = queues.find(queueURL => queueURL.replace(/.*\/(.*)/, '$1').includes(queueName))
-  console.log('using queue ' + foundQueueURL)
   return foundQueueURL
 }
 
