@@ -20,6 +20,15 @@ const b64toBuffer = (b64Data, contentType = '', sliceSize = 512) => {
 }
 
 async function performRequestFromJSON (request) {
+  // fail if request is not an object
+  if (typeof request !== 'object') {
+    try {
+      request = JSON.parse(request)
+    } catch (err) {
+      throw new Error(`Error parsing JSON. Check that JSON format is valid for string: ${request}.\n Error: ${err}`)
+    }
+  }
+
   if (request.url) { build.call(this, request.url.replace(/\/$/, ''), 'url') }
   if (request.body) {
     build.call(this, request.body, 'body')

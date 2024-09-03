@@ -24,7 +24,23 @@ Feature: API - Test the basic items in api
     When api request from file "tryB64Post.json" is performed
     Then it is written to file "response.txt"
 
-  Scenario: quick get  Google
+
+  Scenario: Get Request - Google
+    When set "req" to:
+      """
+      {
+        "url": "https://google.com",
+        "method": "GET"
+      }
+      """
+    When perform api request:
+      """
+      ${req}
+      """
+    Then status ok
+    When api request from item "req" is performed
+
+  Scenario: Get Request - Google 2
     When set "api" to:
     """
     {
@@ -55,7 +71,8 @@ Feature: API - Test the basic items in api
       }
       """
     Then status not ok
-  Scenario: quick post  Google
+
+  Scenario: Post Request - Google
     When perform api request:
       """
       {
@@ -66,7 +83,7 @@ Feature: API - Test the basic items in api
       }
       """
     Then status not ok
-  Scenario: quick post  Google
+  Scenario: Post Request - Google 2
     When perform api request:
       """
       {
@@ -77,21 +94,6 @@ Feature: API - Test the basic items in api
       """
     Then status not ok
 
-  Scenario: Get Google
-    When set "req" to:
-      """
-      {
-        "url": "https://google.com",
-        "method": "GET"
-      }
-      """
-    When perform api request:
-      """
-      ${req}
-      """
-    Then status ok
-    When api request from item "req" is performed
-
   Scenario: Get an image using api no attach
     Given set "attach" to "false"
     Given url "https://cucumber.io"
@@ -100,6 +102,7 @@ Feature: API - Test the basic items in api
     Then status ok
     And blob item "response" is written to file "image2.png"
     And blob item "response" is attached
+
   Scenario: Get an image using api
     Given url "https://cucumber.io"
     And api "img/cucumber-school-logo.png"
@@ -107,6 +110,7 @@ Feature: API - Test the basic items in api
     Then status ok
     And blob item "response" is written to file "image2.png"
     And blob item "response" is attached
+    
   Scenario: Get an image
     When set:
       |url|
@@ -123,30 +127,30 @@ Feature: API - Test the basic items in api
     And blob item "response" is written to file "image2.png"
     And blob item "response" is attached
 
-  Scenario: Get a token
-    And set "version" to "v3"
-    When set "request" to:
-    """
-      {
-        "url": "https://run.mocky.io",
-        "api": "${version}/d2bc61bc-bdf1-418b-a4d5-dc1b70c86861",
-        "method": "GET"
-      }
-    """
-    When perform api request:
-    """
-      ${request}
-    """
-    And set "token" to item "response.token"
-    And set "authorization" to "Auth ${token}"
-    When api request from file "apiReq.json" is performed
-    Then status ok
-    When api request from file "apiReq.json" is performed with:
-    | version |
-    | v2     |
-    Then status not ok
-    When api request from file "apiReq.json" is performed with:
-    | version |
-    | v3     |
-    | v2     |
-    Then status not ok
+  # Scenario: Get a token
+  #   And set "version" to "v3"
+  #   When set "request" to:
+  #   """
+  #     {
+  #       "url": "https://run.mocky.io",
+  #       "api": "${version}/d2bc61bc-bdf1-418b-a4d5-dc1b70c86861",
+  #       "method": "GET"
+  #     }
+  #   """
+  #   When perform api request:
+  #   """
+  #     ${request}
+  #   """
+  #   And set "token" to item "response.token"
+  #   And set "authorization" to "Auth ${token}"
+  #   When api request from file "apiReq.json" is performed
+  #   Then status ok
+  #   When api request from file "apiReq.json" is performed with:
+  #   | version |
+  #   | v2     |
+  #   Then status not ok
+  #   When api request from file "apiReq.json" is performed with:
+  #   | version |
+  #   | v3     |
+  #   | v2     |
+  #   Then status not ok

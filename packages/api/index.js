@@ -26,7 +26,12 @@ Given('headers {string}', function (headers) {
 })
 
 const performRequestFromJSONString = async function (string) {
-  const request = JSON.parse(filltemplate(string, this.results))
+  let request
+  try {
+    request = JSON.parse(filltemplate(string, this.results))
+  } catch (e) {
+    throw new Error(`Error parsing JSON. Check that JSON format is valid for string: ${string}.\n Error: ${e}`)
+  }
   return await performRequestFromJSONMAF.call(this, request)
 }
 
