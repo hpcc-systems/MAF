@@ -1,8 +1,7 @@
 provider "aws" {
-  profile                     = "default"
   region                      = "us-east-1"
-  access_key                  = "1234"
-  secret_key                  = "xyz"
+  access_key                  = "test"
+  secret_key                  = "test"
   skip_credentials_validation = true
   skip_requesting_account_id  = true
   skip_metadata_api_check     = true
@@ -31,10 +30,10 @@ resource "aws_dynamodb_table" "test-table" {
   }
 }
 
-resource "aws_sqs_queue" "testQueue1" {
-  name = "testQueue"
+resource "aws_sqs_queue" "testQueueAlpha" {
+  name = "testQueueAlpha"
 }
 
-resource "aws_sqs_queue" "testQueue2" {
-  name = "testQueue2"
+resource "aws_sqs_queue" "testQueueBeta" {
+  name = "testQueueBeta"
 }

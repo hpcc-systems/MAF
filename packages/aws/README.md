@@ -18,10 +18,12 @@ require('@ln-maf/aws')
 
 ## Dev Testing Steps
 
-- Run `docker run --rm -it -p 4566:4566 -p 4510-4559:4510-4559 localstack/localstack:0.14.4` to spin up a localstack environment.
-- Run `terraform apply -auto-approve` to prepare the localstack environment.
+- Run `docker run --rm -it -p 4566:4566 -p 4510-4559:4510-4559 localstack/localstack:3.7.2` to spin up a localstack environment.
+- Run `terraform init` to initialize the terraform environment. Last tested with hashicorp/aws v5.66.0
+- Run `terraform apply -auto-approve` to apply the terraform script to the localstack environment.
 - Be sure environment variable `AWSENV` is set to `LOCALSTACK`
-- Run individual tests, or run all tests using `npm t`
+- Run `npm i` to install the dependencies
+- Run individual tests, or run all tests using `npm run test -w packages/aws`
 
 ## Configurations
 
@@ -37,21 +39,21 @@ This library implements some step definitions for aws and adheres to the global 
 
 Note [_{jsonObject}_](../validations/JSONObject.md) includes the steps `item {string}`, `it`, `{string}`, and `file {string}` to complete the step function
 
-## AWS S3 Step Definitions
+### S3 Step Definitions
 
-### `Given bucket {string} exists on S3`
+- `Given bucket {string} exists on S3`
 
 Fails if a bucket with name {string} can not be found on the s3 server
 
-### `Given bucket {string} is not on S3`
+- `Given bucket {string} is not on S3`
 
 Fails if a bucket with name {string} can be found on the s3 server
 
-### `Then bucket {string} exists`
+- `Then bucket {string} exists`
 
 Fails if a bucket with name {string} can not be found on the s3 server
 
-### `When file list of bucket {string} on path {string} is retrieved`
+- `When file list of bucket {string} on path {string} is retrieved`
 
 Gets the list of files in the s3 bucket (s3://[bucket]/[path]). The file content list is stored to `${lastRun}`.
 Note: the order of the files returned may not follow a particular order.
@@ -63,15 +65,15 @@ When file list of bucket "testbucket" on path "folder1/folder2/" is retrieved
 Then it is equal to "[test1.txt,test2.txt]"
 ```
 
-### `When all files of bucket {string} is retrieved`
+- `When all files of bucket {string} is retrieved`
 
 Gets a list of all files on the bucket as an array.
 
-### `Then file exists with name {string} at path {string} in bucket {string}`
+- `Then file exists with name {string} at path {string} in bucket {string}`
 
 Checks to see if a file exists at the provided path in the bucket . Fails if it does not exist
 
-### `When {jsonObject} is uploaded to bucket {string} as key {string}`
+- `When {jsonObject} is uploaded to bucket {string} as key {string}`
 
 Uploads a local file to the bucket. The file is placed at the path provided within the bucket.
 
@@ -81,14 +83,14 @@ Example:
 
 The file hello.txt and its contents now exist at s3://myBucket/foo/bar/hello
 
-### `When gz file {string} is uploaded to bucket {string} as key {string}`
+- `When gz file {string} is uploaded to bucket {string} as key {string}`
 
-### `When gz file {string} is uploaded to bucket {string} as key {string} with sha256 check`
+- `When gz file {string} is uploaded to bucket {string} as key {string} with sha256 check`
 
 Uploads gz files to the s3 bucket. This is necessary for gz / compressed files as there is an encoding issue when using jsonObject with gzips.
 The gzip must be a local file and should not be in memory. the stepDefinition with sha256 will fail if the file uploaded is not matching the original gzip file.
 
-### `When file {string} is deleted from bucket {string} at path {string}`
+- `When file {string} is deleted from bucket {string} at path {string}`
 
 Deletes a file from an s3 bucket.
 This **will** still pass if the file did not already exist in the bucket.
@@ -115,19 +117,19 @@ Then it is equal to:
 """
 ```
 
-### `When file {string} from bucket {string} at path {string} is retrieved`
+- `When file {string} from bucket {string} at path {string} is retrieved`
 
 Gets the contents of the file s3://[bucket]/[path]/[file] and sends it content value to `${lastRun}`
 
-## Lambda Step Definitions (NOT TESTED)
+### Lambda Step Definitions (NOT TESTED)
 
-### `When a user supplies {jsonObject} to function {string}`
+- `When a user supplies {jsonObject} to function {string}`
 
 Invokes a lambda function On AWS. {jsonObject} is the payload and {string} is the function name
 
-## AWS DynamoDB Step Definitions
+### DynamoDB Step Definitions
 
-### `Given table {string} exists on dynamo`
+- `Given table {string} exists on dynamo`
 
 Checks that the table exists in dynamodb. Fails if it does not exist in AWS
 
@@ -145,11 +147,11 @@ When perform dynamodb query:
 
 This will add `--page-size 123` to the following dynamodb querys that take a jsonObject, but not all options are tested
 
-### `When perform dynamodb query: {docString}`
+- `When perform dynamodb query: {docString}`
 
-### `When dynamodb query from {jsonObject} is performed`
+- `When dynamodb query from {jsonObject} is performed`
 
-### `When dynamodb query is performed`
+- `When dynamodb query is performed`
 
 Receives an Array of JSON items from dynamodb using defined variables, and stores the query results to `${lastRun}`. This is similar to [Query](https://docs.aws.amazon.com/cli/latest/reference/dynamodb/query.html) in AWS CLI
 
@@ -198,11 +200,11 @@ Then it is equal to
 """
 ```
 
-### `When perform dynamodb put-item: {docString}`
+- `When perform dynamodb put-item: {docString}`
 
-### `When dynamodb put-item from {jsonObject} is performed`
+- `When dynamodb put-item from {jsonObject} is performed`
 
-### `When dynamodb put-item is performed`
+- `When dynamodb put-item is performed`
 
 Places an item to the dynamodb table. The {jsonObject} should contain the item key information and attributes in DynamoDB JSON format as used by the aws cli. This is similar to [Put-Item](https://docs.aws.amazon.com/cli/latest/reference/dynamodb/put-item.html) in AWS CLI
 
@@ -232,11 +234,11 @@ And set "tableName" to "testTable"
 When dynamodb put-item is performed
 ```
 
-### `When perform dynamodb update-item: {docString}`
+- `When perform dynamodb update-item: {docString}`
 
-### `When dynamodb update-item from {jsonObject} is performed`
+- `When dynamodb update-item from {jsonObject} is performed`
 
-### `When dynamodb update-item is performed`
+- `When dynamodb update-item is performed`
 
 Updates an item on a dynamodb table. It will also set `lastRun` as the item updated, only containing its new attributes. The {jsonObject} should contain the item key information in DynamoDB JSON format as used by the aws cli. This is similar to [Update-Item](https://docs.aws.amazon.com/cli/latest/reference/dynamodb/update-item.html) in AWS CLI
 
@@ -271,11 +273,11 @@ And set "itemToUpdate" to:
 And dynamodb updates item "itemToUpdate" on table "testtable"
 ```
 
-### `When perform dynamodb delete-item: {docString}`
+- `When perform dynamodb delete-item: {docString}`
 
-### `When dynamodb delete-item from {jsonObject} is performed`
+- `When dynamodb delete-item from {jsonObject} is performed`
 
-### `When dynamodb delete-item is performed`
+- `When dynamodb delete-item is performed`
 
 Deletes an item on a dynamodb table. The {jsonObject} should contain the item key information in DynamoDB JSON format as used by the aws cli. Fails if the item can't be removed, or is not found. This is similar to [Delete-Item](https://docs.aws.amazon.com/cli/latest/reference/dynamodb/delete-item.html) in AWS CLI
 
@@ -317,7 +319,7 @@ Examples:
   |{"label":"_Alpha"}|
 ```
 
-### `When {jsonObject} is cleaned`
+- `When {jsonObject} is cleaned`
 
 This cleans the JSON object that came from a dynamoDB query. It will extract "S", "N", "B" and other dynamodb keys to its parent key. The cleaned JSON will be set to `lastRun`
 
@@ -349,7 +351,7 @@ Then it is equal to:
 """
 ```
 
-### `When {jsonObject} is converted to dynamo`
+- `When {jsonObject} is converted to dynamo`
 
 This converts a JSON object into a dynamoDB JSON item, ready for a dynamoDB query / update. The conversion will be stored in `lastRun`
 Please note that this will not work with JSON values that have arrays, and base64 strings will be stored as binary in AWS.
@@ -386,14 +388,18 @@ Then it is equal to
 """
 ```
 
-## AWS SQS Step Definitions
+### SQS Step Definitions
 
-### `Given queue {string} exists on SQS`
+- `Given queue {string} exists on SQS`
 
 Is true if the queue can be found on AWS. The string can be the url, or the queue name.
 If a queue name is used, a regex search will be done to find the queue.
 
-### `When attributes of queue {string} are received`
+- `Then queue {string} is empty within {int} seconds`
+
+Checks if the queue is empty within the specified time. The string can be the url, or the queue name.
+
+- `When attributes of queue {string} are received`
 
 Gets all attributes for a SQS queue to `lastRun`. The string can be the url, or the queue name.
 If a queue name is used, a regex search will be done to find the queue.
@@ -417,19 +423,15 @@ When attributes of queue "testQueue" are received
 Then item "lastRun.ApproximateNumberOfMessages" is equal to "0"
 ```
 
-### `When {jsonObject} is sent to queue {string}`
+- `When {jsonObject} is sent to queue {string}`
 
-Sends a new message to the SQS queue name provided. The first queue that matches the provided name will be used. `lastRun` will contain the message id and message
+Sends a new message to the SQS queue name provided. If the queue name does not begin with https://, This will search for the first queue that matches the provided name. `lastRun` will contain the message id and message
 
-### `When {jsonObject} is sent to queue url {string}`
-
-Sends a new message to the SQS queue URL provided. `lastRun` will contain the message id and message
-
-### `When the next message is received from queue {string}`
+- `When the next message is received from queue {string}`
 
 Receives / Dequeues the message in the SQS queue and stores the value in `lastRun`
 
-### `When {int} messages are received from queue {string}`
+- `When {int} messages are received from queue {string}`
 
 Receives the next {int} messages in the SQS queue and stores the values in an array in `lastRun`
 
@@ -450,38 +452,38 @@ Then it is equal to:`
 """
 ```
 
-### `When queue {string} is purged`
+- `When queue {string} is purged`
 
 Removes all messages from the sqs queue. The string can be the url, or the queue name.
 If a queue name is used, a regex search will be done to find the queue.
 
-## AWS ECS Step Definitions
+### ECS Step Definitions
 
-### `When at least one task is running for service {string} in cluster {string}`
+- `When at least one task is running for service {string} in cluster {string}`
 
 Checks if the service in an AWS cluster has at least one task running on ECS. Returns the number of running tasks to `lastRun`
 
-### `When image name for service {string} in cluster {string} is retrieved`
+- `When image name for service {string} in cluster {string} is retrieved`
 
 Retrieves the task definition image name / version of the running service in the cluster and set it to `lastRun`. Fails if the service is not running, or if there are no tasks running
 
-### `When ecs taskDefinition {string} exists`
+- `When ecs taskDefinition {string} exists`
 
-### `When ecs taskDefinition {string} does not exist`
+- `When ecs taskDefinition {string} does not exist`
 
 Checks if the task definition exists on ecs
 
-### `When ecs cluster {string} exists`
+- `When ecs cluster {string} exists`
 
-### `When ecs cluster {string} does not exist`
+- `When ecs cluster {string} does not exist`
 
 Checks if the cluster exists on ecs
 
-### `When ecs run-task from {jsonObject} is performed`
+- `When ecs run-task from {jsonObject} is performed`
 
-### `When perform ecs run-task:`
+- `When perform ecs run-task:`
 
-### `When ecs run-task is performed`
+- `When ecs run-task is performed`
 
 Runs a task on ecs
 
@@ -513,9 +515,9 @@ When perform ecs run-task:
 """
 ```
 
-## AWS Cloudwatch Logs Step Definitions
+### Cloudwatch Step Definitions
 
-### `When cloudwatch logs from log group {string} from {int} minutes ago to now are retrieved
+- `When cloudwatch logs from log group {string} from {int} minutes ago to now are retrieved
 
 Gets the cloudwatch logs from a specific log group and time frame
 
