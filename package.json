@@ -41,7 +41,7 @@
   "devDependencies": {
     "@cucumber/cucumber": "^9.0.0",
     "lerna": "^8.0.0",
-    "multiple-cucumber-html-reporter": "^3.4.0",
+    "multiple-cucumber-html-reporter": "3.5.0",
     "nyc": "^15.1.0"
   }
 }
