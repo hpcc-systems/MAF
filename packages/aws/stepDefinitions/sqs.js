@@ -11,31 +11,20 @@ if (process.env.AWSENV && process.env.AWSENV.toUpperCase() === 'LOCALSTACK') {
 const sqsClient = new SQSClient(sqsClientConfig)
 
 /**
- * Gets the proper queue url from AWS from a provided queue name
+ * Gets the proper queue url from AWS from a provided queue name, if the queueName is not a URL
  * @param {String} queueName The name of the queue
  * @returns The queue url found from AWS. Undefined if the queue could not be found.
  */
 async function getURLfromQueueName (queueName) {
+  if (/^https?:\/\//.test(queueName)) {
+    return queueName
+  }
   const queues = await listQueueURLs()
   const foundQueueURL = queues.find(queueURL => queueURL.replace(/.*\/(.*)/, '$1').includes(queueName))
-  return foundQueueURL
-}
-
-/**
- * Sends a message to a queue using only the queue name
- * @param {JSON|String} message The message to send
- * @param {String} QueueName  The name of the queue to send the message to
- * @returns {JSON} SendMessageCommandOutput (https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-sqs/interfaces/sendmessagecommandoutput.html)
- */
-async function sendMessageToQueue (message, QueueName) {
-  let QueueUrl
-  if (!/^https?:\/\//.test(QueueName)) {
-    QueueUrl = await getURLfromQueueName(QueueName)
-  } else {
-    QueueUrl = QueueName
+  if (!foundQueueURL) {
+    throw new Error("The queue '" + queueName + "' could not be found")
   }
-  const queryParameters = { MessageBody: message, QueueUrl }
-  return await sqsClient.send(new SendMessageCommand(queryParameters))
+  return foundQueueURL
 }
 
 /**
@@ -62,21 +51,49 @@ async function listQueueURLs () {
  * @param {string} queueURL The name of the queue
  * @returns an array of messages from the queue
  */
-async function dequeueMessagesFromQueue (queueURL, numOfMessages = 1) {
-  const queryParameters = {
-    MaxNumberOfMessages: numOfMessages,
-    QueueUrl: queueURL
-  }
-  const res = await sqsClient.send(new ReceiveMessageCommand(queryParameters))
+async function dequeueMessagesFromQueue (QueueUrl, MaxNumberOfMessages = 1) {
+  const res = await sqsClient.send(new ReceiveMessageCommand({ MaxNumberOfMessages, QueueUrl }))
   return res.Messages ? res.Messages.map(message => message.Body) : []
+}
+
+/**
+ * Gets the attributes of a queue
+ * @param {String} queueName The name of the queue
+ * @returns The attributes of the queue
+ * @throws An error if the queue could not be found
+ */
+async function attributesOfQueue (queueName) {
+  const QueueUrl = await getURLfromQueueName(queueName)
+  const queryParameters = {
+    AttributeNames: ['All'],
+    QueueUrl
+  }
+  const res = await sqsClient.send(new GetQueueAttributesCommand(queryParameters))
+  return res.Attributes
 }
 
 MAFWhen('queue {string} exists on SQS', async function (queueName) {
   queueName = filltemplate(queueName, this.results)
-  const queueURLs = await listQueueURLs()
-  if (!queueURLs.some(queueURL => queueURL.replace(/.*\/(.*)/, '$1').includes(queueName))) {
-    throw new Error("The queue '" + queueName + "' could not be found")
-  }
+  return await getURLfromQueueName(queueName)
+})
+
+/**
+ * Waits for a queue to be empty by checking the ApproximateNumberOfMessages attribute
+ * @param {String} queueName The name of the queue
+ * @param {int} timeout The maximum time to wait for the queue to be empty
+ * @returns true if the queue is empty within the timeout, otherwise throws an error
+ */
+MAFWhen('queue {string} is empty within {int} seconds', async function (queueName, timeout) {
+  queueName = filltemplate(queueName, this.results)
+  const startTime = Date.now()
+  let queueAttributes
+  do {
+    queueAttributes = await attributesOfQueue(queueName)
+    if (queueAttributes.ApproximateNumberOfMessages === '0') {
+      return true
+    }
+  } while (Date.now() - startTime < timeout * 1000)
+  throw new Error('Queue is not empty within ' + timeout + ' seconds')
 })
 
 /**
@@ -87,57 +104,54 @@ MAFWhen('queue {string} exists on SQS', async function (queueName) {
  */
 MAFWhen('attributes of queue {string} are received', async function (QueueUrl) {
   QueueUrl = filltemplate(QueueUrl, this.results)
-  if (!/^https?:\/\//.test(QueueUrl)) {
-    QueueUrl = await getURLfromQueueName(QueueUrl)
-  }
-  const queryParameters = {
-    AttributeNames: ['All'],
-    QueueUrl
-
-  }
-  const res = await sqsClient.send(new GetQueueAttributesCommand(queryParameters))
+  QueueUrl = await getURLfromQueueName(QueueUrl)
+  const res = await sqsClient.send(new GetQueueAttributesCommand({ AttributeNames: ['All'], QueueUrl }))
   return res.Attributes
 })
 
 MAFWhen('queue {string} is purged', async function (QueueUrl) {
   QueueUrl = filltemplate(QueueUrl, this.results)
-  if (!/^https?:\/\//.test(QueueUrl)) {
-    QueueUrl = await getURLfromQueueName(QueueUrl)
-  }
+  QueueUrl = await getURLfromQueueName(QueueUrl)
   return await sqsClient.send(new PurgeQueueCommand({ QueueUrl }))
 })
 
-MAFWhen('{jsonObject} is sent to queue {string}', async function (message, queue) {
+MAFWhen('{jsonObject} is sent to queue {string}', async function (message, QueueUrl) {
   message = performJSONObjectTransform.call(this, message)
-  queue = filltemplate(queue, this.results)
-  return sendMessageToQueue(message, queue)
+  QueueUrl = filltemplate(QueueUrl, this.results)
+  return await sqsClient.send(new SendMessageCommand({ MessageBody: message, QueueUrl }))
 })
 
+// Duplicate step definition - Will Deprecate
 MAFWhen('{jsonObject} is sent to queue url {string}', async function (message, QueueUrl) {
   message = performJSONObjectTransform.call(this, message)
   QueueUrl = filltemplate(QueueUrl, this.results)
   return await sqsClient.send(new SendMessageCommand({ MessageBody: message, QueueUrl }))
 })
 
-MAFWhen('{string} message is sent to queue {string}', async function (message, queue) {
+MAFWhen('{string} message is sent to queue {string}', async function (message, QueueUrl) {
   message = filltemplate(message, this.results)
-  queue = filltemplate(queue, this.results)
-  return sendMessageToQueue(message, queue)
+  QueueUrl = filltemplate(QueueUrl, this.results)
+  QueueUrl = await getURLfromQueueName(QueueUrl)
+  return await sqsClient.send(new SendMessageCommand({ MessageBody: message, QueueUrl }))
 })
 
+// Duplicate step definition - Will Deprecate
 MAFWhen('{string} message is sent to queue url {string}', async function (message, QueueUrl) {
   message = filltemplate(message, this.results)
   QueueUrl = filltemplate(QueueUrl, this.results)
+  QueueUrl = await getURLfromQueueName(QueueUrl)
   return await sqsClient.send(new SendMessageCommand({ MessageBody: message, QueueUrl }))
 })
 
 MAFWhen('the next message is received from queue {string}', async function (queueURL) {
   queueURL = filltemplate(queueURL, this.results)
+  queueURL = await getURLfromQueueName(queueURL)
   const res = await dequeueMessagesFromQueue(queueURL)
   return res[0]
 })
 
 MAFWhen('{int} messages are received from queue {string}', async function (numOfMessages, queueURL) {
   queueURL = filltemplate(queueURL, this.results)
+  queueURL = await getURLfromQueueName(queueURL)
   return await dequeueMessagesFromQueue(queueURL, numOfMessages)
 })

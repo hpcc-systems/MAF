@@ -15,24 +15,20 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [20.x, 22.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/previous-releases
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Start LocalStack
-      run: |
-        pip install localstack==2.3.2
-        localstack start -d
-        echo "Waiting for LocalStack startup..."
-        localstack wait -t 30
-        echo "LocalStack startup complete"
+    - uses: actions/checkout@v4.1.7
+    - uses: LocalStack/setup-localstack@v0.2.3
+      with:
+        image-tag: '3.7.2'
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
     - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v2.0.3
+      uses: hashicorp/setup-terraform@v3.1.2
     - run: mkdir ~/.aws/
     - run: echo -e "[default]\noutput = json\nregion = us-east-1\naws_access_key_id = foo\naws_secret_access_key = bar" > ~/.aws/credentials
     - run: npm ci
