@@ -19,10 +19,10 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/previous-releases
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4.1.7
     - name: Start LocalStack
       run: |
-        pip install localstack==3.7.2
+        pip install localstack==3.7.1
         localstack start -d
         echo "Waiting for LocalStack startup..."
         localstack wait -t 30
