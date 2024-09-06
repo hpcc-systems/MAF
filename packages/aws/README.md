@@ -6,23 +6,24 @@ This module provides scenarios where Gherkins/Cucumber is implemented for AWS.
 [![GitHub Actions](https://github.com/hpcc-systems/MAF/workflows/Build/badge.svg)](https://github.com/hpcc-systems/MAF/actions)
 [![Dependencies][dep-image]][dep-url]
 
-# Set up
+## Set up
 
 1. Install by running `npm i @ln-maf/aws`.
 
 2. Add a step file with the following code in the features folder of the project:
 
-```
+```JavaScript
 require('@ln-maf/aws')
 ```
-# Dev Testing Steps
+
+## Dev Testing Steps
 
 - Run `docker run --rm -it -p 4566:4566 -p 4510-4559:4510-4559 localstack/localstack:0.14.4` to spin up a localstack environment.
 - Run `terraform apply -auto-approve` to prepare the localstack environment.
 - Be sure environment variable `AWSENV` is set to `LOCALSTACK`
 - Run individual tests, or run all tests using `npm t`
 
-# Configurations
+## Configurations
 
 The AWS SDK V3 is used for communication to AWS / Localstack.
 You need to provide credentials to AWS so that only your account and its resources are accessed by the SDK. For more information about obtaining your account credentials, see [Loading credentials in Node.js from the shared credentials file from AWS Documentation.](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/loading-node-credentials-shared.html)
@@ -30,7 +31,7 @@ This can be point to a remote aws location, or point to a localstack configurati
 
 To run the example feature files, start the localstack and run the terraform script by running `terraform apply -auto-approve` to run initLocalstack.tf, then run `npm t` to start testing. `initLocalstack.tf` is needed for running the feature files in the features directory as this will set up the localstack environment for dev testing.
 
-# Step Definitions
+## Step Definitions
 
 This library implements some step definitions for aws and adheres to the global cucumber implementation for various internals.
 
@@ -57,7 +58,7 @@ Note: the order of the files returned may not follow a particular order.
 
 Example:
 
-```
+```Feature
 When file list of bucket "testbucket" on path "folder1/folder2/" is retrieved
 Then it is equal to "[test1.txt,test2.txt]"
 ```
@@ -81,7 +82,9 @@ Example:
 The file hello.txt and its contents now exist at s3://myBucket/foo/bar/hello
 
 ### `When gz file {string} is uploaded to bucket {string} as key {string}`
+
 ### `When gz file {string} is uploaded to bucket {string} as key {string} with sha256 check`
+
 Uploads gz files to the s3 bucket. This is necessary for gz / compressed files as there is an encoding issue when using jsonObject with gzips.
 The gzip must be a local file and should not be in memory. the stepDefinition with sha256 will fail if the file uploaded is not matching the original gzip file.
 
@@ -92,7 +95,7 @@ This **will** still pass if the file did not already exist in the bucket.
 
 Example:
 
-```
+```Feature
 When file list of bucket "testbucket" on path "folder1/folder2/" is retrieved
 Then it is equal to:
 """
@@ -131,7 +134,7 @@ Checks that the table exists in dynamodb. Fails if it does not exist in AWS
 **Warning**: You can add your own custom options to dynamo query / put-item / update-item / delete-item stepDefinitions, but they are not supported. You may add them at your own risk
 For example:
 
-```
+```Feature
 When perform dynamodb query:
 """
 {
@@ -165,7 +168,7 @@ For Example:
 The following item is on the dynamoDB table:
 {"label":"\_Alpha","some_number":86,"some_word":"Apple"}
 
-```
+ ```Feature
 When set "keyConditionExpression" to "label = :a"
 And set "tableName" to "testTable"
 And set "expressionAttributeValues" to:
@@ -210,7 +213,7 @@ This stepFunction looks at the following items to see if they exist, and pre-app
 
 Example:
 
-```
+```Feature
 When set "item" to:
 """
 {
@@ -247,7 +250,7 @@ This stepFunction looks at the following items to see if they exist, and pre-app
 
 Example:
 
-```
+```Feature
 And set "updateExpression" to "SET some_word = :a"
 And set "expressionAttributeValues" to:
 """
@@ -283,7 +286,7 @@ This stepFunction looks at the following items to see if they exist, and pre-app
 
 Example:
 
-```
+```Feature
 Given table "testtable" exists on dynamo
 When set "myItem" to:
 """
@@ -320,7 +323,7 @@ This cleans the JSON object that came from a dynamoDB query. It will extract "S"
 
 Example:
 
-```
+```Feature
 When set "itemToClean" to:
 """
 {
@@ -353,7 +356,7 @@ Please note that this will not work with JSON values that have arrays, and base6
 
 Example:
 
-```
+```Feature
 When set "data" to
 """
 {
@@ -387,11 +390,13 @@ Then it is equal to
 
 ### `Given queue {string} exists on SQS`
 
-Checks that the named queue exists on AWS. Fails if it does not exist
+Is true if the queue can be found on AWS. The string can be the url, or the queue name.
+If a queue name is used, a regex search will be done to find the queue.
 
 ### `When attributes of queue {string} are received`
 
-Gets the attributes of the queue provided and stores the attributes to `lastRun`
+Gets all attributes for a SQS queue to `lastRun`. The string can be the url, or the queue name.
+If a queue name is used, a regex search will be done to find the queue.
 
 The following attributes are received from the queue:
 
@@ -407,20 +412,10 @@ The following attributes are received from the queue:
 
 For example, on an SQS queue named "testQueue" that has one message in its queue:
 
-```
+```Feature
 When attributes of queue "testQueue" are received
 Then item "lastRun.ApproximateNumberOfMessages" is equal to "0"
 ```
-
-### `Given queue {string} exists on SQS`
-
-Is true if the queue can be found on AWS. The string can be the url, or the queue name.
-If a queue name is used, a regex search will be done to find the queue.
-
-### `When attributes of queue {string} are received`
-
-Gets all attributes for a SQS queue to `lastRun`. The string can be the url, or the queue name.
-If a queue name is used, a regex search will be done to find the queue.
 
 ### `When {jsonObject} is sent to queue {string}`
 
@@ -440,7 +435,7 @@ Receives the next {int} messages in the SQS queue and stores the values in an ar
 
 Example:
 
-```
+```Feature
 When message "Alpha" is sent to queue "testQueue2"
 And message "Beta" is sent to queue "testQueue2"
 And message "Charlie" is sent to queue "testQueue2"
@@ -467,14 +462,17 @@ If a queue name is used, a regex search will be done to find the queue.
 Checks if the service in an AWS cluster has at least one task running on ECS. Returns the number of running tasks to `lastRun`
 
 ### `When image name for service {string} in cluster {string} is retrieved`
+
 Retrieves the task definition image name / version of the running service in the cluster and set it to `lastRun`. Fails if the service is not running, or if there are no tasks running
 
 ### `When ecs taskDefinition {string} exists`
+
 ### `When ecs taskDefinition {string} does not exist`
 
 Checks if the task definition exists on ecs
 
 ### `When ecs cluster {string} exists`
+
 ### `When ecs cluster {string} does not exist`
 
 Checks if the cluster exists on ecs
@@ -495,12 +493,12 @@ This stepFunction looks at the following items to see if they exist, and pre-app
   - subnets - required if using networkConfiguration
   - securityGroups - required if using networkConfiguration
   - assignPublicIp - optional. 'DISABLED' by default
-- enableECSManagedTags - optional. set as true or false. 
+- enableECSManagedTags - optional. set as true or false.
 - launchType - optional. 'FARGATE' by default
 
 Example:
 
-```
+```Feature
 When perform ecs run-task:
 """
 {
@@ -518,6 +516,7 @@ When perform ecs run-task:
 ## AWS Cloudwatch Logs Step Definitions
 
 ### `When cloudwatch logs from log group {string} from {int} minutes ago to now are retrieved
+
 Gets the cloudwatch logs from a specific log group and time frame
 
 [npm-image]:https://img.shields.io/npm/v/@ln-maf/aws.svg
