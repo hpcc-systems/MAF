@@ -20,13 +20,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4.1.7
-    - name: Start LocalStack
-      run: |
-        pip install 'localstack==3.7.1'
-        localstack start -d
-        echo "Waiting for LocalStack startup..."
-        localstack wait -t 30
-        echo "LocalStack startup complete"
+    - uses: LocalStack/setup-localstack@v0.2.3
+      with:
+        image-tag: '3.7.2'
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
