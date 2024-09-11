@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "AWS steps for MAF. This contains S3, DynamoDB, SQS, ECS, Cloudwatch, and Lambda stepDefinitions",
   "main": "index.js",
   "scripts": {
@@ -36,6 +36,5 @@
     "eslint-plugin-promise": "^6.0.0",
     "multiple-cucumber-html-reporter": "3.5.0",
     "nyc": "^15.1.0"
-  },
-  "gitHead": "c1cb2220ce18a8e3ceee4b375950a0beec4f3a6f"
+  }
 }

@@ -78,22 +78,39 @@ MAFWhen('queue {string} exists on SQS', async function (queueName) {
 })
 
 /**
- * Waits for a queue to be empty by checking the ApproximateNumberOfMessages attribute
+ * Waits for a queue to have a specific number of messages by checking the ApproximateNumberOfMessages attribute. Checks every 5 seconds.
  * @param {String} queueName The name of the queue
- * @param {int} timeout The maximum time to wait for the queue to be empty
- * @returns true if the queue is empty within the timeout, otherwise throws an error
+ * @param {int} messageCount The number of messages to wait for
+ * @param {int} timeout The maximum time to wait for the queue to have the specified number of messages in seconds
+ * @throws An error if the queue is not empty within the timeout
  */
-MAFWhen('queue {string} is empty within {int} seconds', async function (queueName, timeout) {
-  queueName = filltemplate(queueName, this.results)
+async function waitUntilQueueHasCount (queueName, messageCount, timeout) {
+  if (messageCount < 0) {
+    throw new Error('Message count must be greater than or equal to 0')
+  }
+  if (timeout < 0) {
+    throw new Error('Timeout must be greater than or equal to 0')
+  }
   const startTime = Date.now()
   let queueAttributes
   do {
     queueAttributes = await attributesOfQueue(queueName)
-    if (queueAttributes.ApproximateNumberOfMessages === '0') {
+    if (queueAttributes.ApproximateNumberOfMessages === messageCount.toString()) {
       return true
     }
+    await new Promise(resolve => setTimeout(resolve, 5000))
   } while (Date.now() - startTime < timeout * 1000)
-  throw new Error('Queue is not empty within ' + timeout + ' seconds')
+  throw new Error('Queue ' + queueName + ' did not have ' + messageCount + ' messages within ' + timeout + ' seconds. Current message count: ' + queueAttributes.ApproximateNumberOfMessages)
+}
+
+MAFWhen('queue {string} is empty within {int} second(s)', async function (queueName, timeout) {
+  queueName = filltemplate(queueName, this.results)
+  await waitUntilQueueHasCount(queueName, 0, timeout)
+})
+
+MAFWhen('queue {string} has {int} message(s) within {int} second(s)', async function (queueName, messageCount, timeout) {
+  queueName = filltemplate(queueName, this.results)
+  await waitUntilQueueHasCount(queueName, messageCount, timeout)
 })
 
 /**
