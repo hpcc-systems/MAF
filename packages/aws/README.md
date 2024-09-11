@@ -399,6 +399,10 @@ If a queue name is used, a regex search will be done to find the queue.
 
 Checks if the queue is empty within the specified time. The string can be the url, or the queue name.
 
+- `Then queue {string} has {int} messages within {int} seconds`
+
+Checks if the queue has the specified number of messages within the specified time. The string can be the url, or the queue name.
+
 - `When attributes of queue {string} are received`
 
 Gets all attributes for a SQS queue to `lastRun`. The string can be the url, or the queue name.
