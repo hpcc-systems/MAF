@@ -95,12 +95,12 @@ async function waitUntilQueueHasCount (queueName, messageCount, timeout) {
   let queueAttributes
   do {
     queueAttributes = await attributesOfQueue(queueName)
-    if (queueAttributes.ApproximateNumberOfMessages === '0') {
+    if (queueAttributes.ApproximateNumberOfMessages === messageCount.toString()) {
       return true
     }
     await new Promise(resolve => setTimeout(resolve, 5000))
   } while (Date.now() - startTime < timeout * 1000)
-  throw new Error('Queue is not empty within ' + timeout + ' seconds')
+  throw new Error('Queue ' + queueName + ' did not have ' + messageCount + ' messages within ' + timeout + ' seconds. Current message count: ' + queueAttributes.ApproximateNumberOfMessages)
 }
 
 MAFWhen('queue {string} is empty within {int} second(s)', async function (queueName, timeout) {
