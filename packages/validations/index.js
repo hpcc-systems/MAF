@@ -280,7 +280,9 @@ When('{string} is applied to item {string} on JSON path {string}', function (val
   if (value.trim() !== '') {
     try {
       const tmp = JSON.parse(value)
-      value = tmp
+      if (typeof tmp === 'object') {
+        value = tmp
+      }
     } catch (e) { }
   }
   jp.apply(fileContents, jsonPath, function () { return value })
