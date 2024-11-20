@@ -11,8 +11,8 @@ const check = async function (environment, skipIfNotRequired = false) {
     properties: {
       username: {
         description: `Please enter your username for the ${environment} environment`,
-        pattern: /^[a-zA-Z\d_]+$/,
-        message: 'Name must be only letters, underscore and digits',
+        pattern: /^[a-zA-Z\d_-]+$/,
+        message: 'Name should be only letters, digits, underscore and hyphens',
         required
       },
       password: {
