@@ -1,7 +1,15 @@
 Feature: Validations: Setting variables
   Background:
     When set "directory" to "./test"
+  Background:
+    When set "directory" to "./test"
 
+  Scenario: Check that we can identify a null or undefined element
+    When set result to "15"
+    Then it is equal to "15"
+    When set "a" to 3
+    Then item "a" is not null
+    And item "b" is null
   Scenario: Check that we can identify a null or undefined element
     When set result to "15"
     Then it is equal to "15"
@@ -12,7 +20,13 @@ Feature: Validations: Setting variables
   Scenario:  Set config as the first step
     When set config from json file "newConfig2.json"
     And set "hello" to "${environment}"
+  Scenario:  Set config as the first step
+    When set config from json file "newConfig2.json"
+    And set "hello" to "${environment}"
 
+  Scenario: Set an empty string
+    When set "hi" to ""
+    Then "${hi}" is equal to ""
   Scenario: Set an empty string
     When set "hi" to ""
     Then "${hi}" is equal to ""
@@ -101,7 +115,43 @@ Feature: Validations: Setting variables
         "a": "\"hi\""
       }
       """
+  Scenario: Check two json objects
+    When set "a" to "3"
+    And set "item" to:
+      """
+      {
+      "a": ${a}
+      }
+      """
+    Then item "item" is equal to:
+      """
+      {
+        "a": 3
+      }
+      """
+    And set "a" to '"hi"'
+    And set "item" to:
+      """
+      {
+        "a": "${a}"
+      }
+      """
+    Then item "item" is equal to:
+      """
+      {
+        "a": "\"hi\""
+      }
+      """
 
+  Scenario Outline: Set the examples
+    Given parameters are:
+      """
+      {
+        "hello": "world"
+      }
+      """
+    When apply parameters
+    Then 5 = 5
   Scenario Outline: Set the examples
     Given parameters are:
       """

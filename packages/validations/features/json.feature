@@ -288,3 +288,51 @@ Feature: Validations: JSON manipulation
         Then item "expected" is equal to item "meh"
         When "" is applied to item "meh" on JSON path "$.url"
 
+    Scenario: JSON Array Inline Map Example
+        Given set "myJSON" to:
+            """
+            [
+                {
+                    "abc": "string",
+                    "def": 123,
+                    "convertToBoolean": 1,
+                    "jkl": null,
+                    "mno": {
+                        "pqr": "string",
+                        "convertToString": 123,
+                        "vwx": 0,
+                        "yza": null
+                    }
+                },
+                {
+                    "abc": "string",
+                    "def": 123,
+                    "convertToBoolean": 0,
+                    "jkl": null,
+                    "mno": {
+                        "pqr": "string",
+                        "convertToString": 456,
+                        "vwx": 0,
+                        "yza": null
+                    }
+                }
+            ]
+            """
+        When set "myJSON" to "${myJSON.map(item => ({ ...item, convertToBoolean: item.convertToBoolean === 1 }))}"
+        Then "${myJSON[0].convertToBoolean}" is equal to "true"
+        And "${myJSON[1].convertToBoolean}" is equal to "false"
+        When set "myJSON" to "${myJSON.map(item => ({ ...item, mno: { ...item.mno, convertToString: item.mno.convertToString.toString() } }))}"
+        Then "${myJSON[0].mno.convertToString}" is equal to "123"
+        And "${myJSON[1].mno.convertToString}" is equal to "456"
+
+    Scenario: JSON Apply Example
+        Given set "body" to:
+            """
+            {
+                "alpha": "string",
+                "beta": "1234567"
+            }
+            """
+        And "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111115467" is applied to item "body" on JSON path "$.beta"
+        Then "${body.alpha}" is equal to "string"
+        And "${body.beta}" is equal to "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111115467"

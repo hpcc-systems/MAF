@@ -11,15 +11,20 @@ if (process.env.AWSENV && process.env.AWSENV.toUpperCase() === 'LOCALSTACK') {
 const sqsClient = new SQSClient(sqsClientConfig)
 
 /**
- * Gets the proper queue url from AWS from a provided queue name
+ * Gets the proper queue url from AWS from a provided queue name, if the queueName is not a URL
  * @param {String} queueName The name of the queue
  * @returns The queue url found from AWS. Undefined if the queue could not be found.
  */
-async function getURLfromQueueName(queueName) {
-    const queues = await listQueueURLs()
-    const foundQueueURL = queues.find(queueURL => queueURL.replace(/.*\/(.*)/, '$1').includes(queueName))
-    console.log('using queue ' + foundQueueURL)
-    return foundQueueURL
+async function getURLfromQueueName (queueName) {
+  if (/^https?:\/\//.test(queueName)) {
+    return queueName
+  }
+  const queues = await listQueueURLs()
+  const foundQueueURL = queues.find(queueURL => queueURL.replace(/.*\/(.*)/, '$1').includes(queueName))
+  if (!foundQueueURL) {
+    throw new Error("The queue '" + queueName + "' could not be found")
+  }
+  return foundQueueURL
 }
 
 /**
@@ -63,21 +68,66 @@ async function listQueueURLs() {
  * @param {string} queueURL The name of the queue
  * @returns an array of messages from the queue
  */
-async function dequeueMessagesFromQueue(queueURL, numOfMessages = 1) {
-    const queryParameters = {
-        MaxNumberOfMessages: numOfMessages,
-        QueueUrl: queueURL
-    }
-    const res = await sqsClient.send(new ReceiveMessageCommand(queryParameters))
-    return res.Messages ? res.Messages.map(message => message.Body) : []
+async function dequeueMessagesFromQueue (QueueUrl, MaxNumberOfMessages = 1) {
+  const res = await sqsClient.send(new ReceiveMessageCommand({ MaxNumberOfMessages, QueueUrl }))
+  return res.Messages ? res.Messages.map(message => message.Body) : []
+}
+
+/**
+ * Gets the attributes of a queue
+ * @param {String} queueName The name of the queue
+ * @returns The attributes of the queue
+ * @throws An error if the queue could not be found
+ */
+async function attributesOfQueue (queueName) {
+  const QueueUrl = await getURLfromQueueName(queueName)
+  const queryParameters = {
+    AttributeNames: ['All'],
+    QueueUrl
+  }
+  const res = await sqsClient.send(new GetQueueAttributesCommand(queryParameters))
+  return res.Attributes
 }
 
 MAFWhen('queue {string} exists on SQS', async function (queueName) {
-    queueName = fillTemplate(queueName, this.results)
-    const queueURLs = await listQueueURLs()
-    if (!queueURLs.some(queueURL => queueURL.replace(/.*\/(.*)/, '$1').includes(queueName))) {
-        throw new Error("The queue '" + queueName + "' could not be found")
+  queueName = fillTemplate(queueName, this.results)
+  return await getURLfromQueueName(queueName)
+})
+
+/**
+ * Waits for a queue to have a specific number of messages by checking the ApproximateNumberOfMessages attribute. Checks every 5 seconds.
+ * @param {String} queueName The name of the queue
+ * @param {int} messageCount The number of messages to wait for
+ * @param {int} timeout The maximum time to wait for the queue to have the specified number of messages in seconds
+ * @throws An error if the queue is not empty within the timeout
+ */
+async function waitUntilQueueHasCount (queueName, messageCount, timeout) {
+  if (messageCount < 0) {
+    throw new Error('Message count must be greater than or equal to 0')
+  }
+  if (timeout < 0) {
+    throw new Error('Timeout must be greater than or equal to 0')
+  }
+  const startTime = Date.now()
+  let queueAttributes
+  do {
+    queueAttributes = await attributesOfQueue(queueName)
+    if (queueAttributes.ApproximateNumberOfMessages === messageCount.toString()) {
+      return true
     }
+    await new Promise(resolve => setTimeout(resolve, 5000))
+  } while (Date.now() - startTime < timeout * 1000)
+  throw new Error('Queue ' + queueName + ' did not have ' + messageCount + ' messages within ' + timeout + ' seconds. Current message count: ' + queueAttributes.ApproximateNumberOfMessages)
+}
+
+MAFWhen('queue {string} is empty within {int} second(s)', async function (queueName, timeout) {
+  queueName = filltemplate(queueName, this.results)
+  await waitUntilQueueHasCount(queueName, 0, timeout)
+})
+
+MAFWhen('queue {string} has {int} message(s) within {int} second(s)', async function (queueName, messageCount, timeout) {
+  queueName = fillTemplate(queueName, this.results)
+  await waitUntilQueueHasCount(queueName, messageCount, timeout)
 })
 
 /**
@@ -114,31 +164,37 @@ MAFWhen('{jsonObject} is sent to queue {string}', async function (message, queue
     return sendMessageToQueue(message, queue)
 })
 
+// Duplicate step definition - Will Deprecate
 MAFWhen('{jsonObject} is sent to queue url {string}', async function (message, QueueUrl) {
     message = performJSONObjectTransform.call(this, message)
     QueueUrl = fillTemplate(QueueUrl, this.results)
     return await sqsClient.send(new SendMessageCommand({ MessageBody: message, QueueUrl }))
 })
 
-MAFWhen('{string} message is sent to queue {string}', async function (message, queue) {
+MAFWhen('{string} message is sent to queue {string}', async function (message, QueueUrl) {
     message = fillTemplate(message, this.results)
-    queue = fillTemplate(queue, this.results)
-    return sendMessageToQueue(message, queue)
+    QueueUrl = fillTemplate(QueueUrl, this.results)
+    QueueUrl = await getURLfromQueueName(QueueUrl)
+    return await sqsClient.send(new SendMessageCommand({ MessageBody: message, QueueUrl }))
 })
 
+// Duplicate step definition - Will Deprecate
 MAFWhen('{string} message is sent to queue url {string}', async function (message, QueueUrl) {
     message = fillTemplate(message, this.results)
     QueueUrl = fillTemplate(QueueUrl, this.results)
+    QueueUrl = await getURLfromQueueName(QueueUrl)
     return await sqsClient.send(new SendMessageCommand({ MessageBody: message, QueueUrl }))
 })
 
 MAFWhen('the next message is received from queue {string}', async function (queueURL) {
     queueURL = fillTemplate(queueURL, this.results)
+    queueURL = await getURLfromQueueName(queueURL)
     const res = await dequeueMessagesFromQueue(queueURL)
     return res[0]
 })
 
 MAFWhen('{int} messages are received from queue {string}', async function (numOfMessages, queueURL) {
     queueURL = fillTemplate(queueURL, this.results)
+    queueURL = await getURLfromQueueName(queueURL)
     return await dequeueMessagesFromQueue(queueURL, numOfMessages)
 })
