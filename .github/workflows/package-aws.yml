@@ -24,7 +24,7 @@ jobs:
       with:
         image-tag: '3.7.2'
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4.0.3
+      uses: actions/setup-node@v4.2.0
       with:
         node-version: ${{ matrix.node-version }}
     - name: Setup Terraform
