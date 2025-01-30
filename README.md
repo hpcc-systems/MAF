@@ -52,31 +52,38 @@ Please also create a directory to store your test results in the root of your pr
 mkdir -p test/report
 ```
 
-Now, when you run `npm t` it will run the tests and you can run `npx report` to get an html report of your test cases. 
+Now, when you run `npm t` it will run the tests and you can run `npx report` to get an html report of your test cases.
 
-# Important Concepts
+## Important Concepts
 
-## Items
+### Items
 
 MAF stores information as items. Items are stored in a global object called `results`. This allows for easy access to information across steps.
 For Example:
-```
+
+```feature
 When set "name" to "John"
 ```
+
 Now there is an item called "name" that has the string value of "John" and can be accessed in other steps. We can validate that the name is "John" by doing the following:
-```
+
+```feature
 Then item "name" is equal to "John"
 ```
+
 Or
-```
+
+```feature
 Then "${name} Doe" is equal to "John Doe"
 ```
+
 The first example uses a [{jsonObject}](packages/validations/JSONObject.md) to infer the item. The second example is using a template literal to access the global `results` variable to access the value of the item. Both of these stepdefiniotions are provided by the [validations](packages/validations/README.md) module, and would pass testing.
 
-## JavaScript Injection
+### JavaScript Injection
 
 It is possible to quickly inline JavaScript code in the feature files. This removes the need to create full step definitions for common functions scripts
-```
+
+```feature
 # If today was January 16, 2024
 When set "currentDate" to "${moment().format('YYYY-MM-DD')}"
 Then item "currentDate" is equal to "2024-01-16"
@@ -84,8 +91,7 @@ Then item "currentDate" is equal to "2024-01-16"
 
 Not all JavaScript should be inlined. Only simple functions that do not require any external dependencies should be considered. Luxon will also be available in the core module (moment is deprecated), so it is possible to use Luxon functions in the feature files.
 
-
-## Hello World API Example
+### Hello World API Example
 
 `./features/HelloWorldAPI.feature`
 
@@ -124,7 +130,7 @@ Feature: View the text "Hello World"
 
 ![ApiResult](./APIResult.png)
 
-## Hello World MYSQL Example
+### Hello World MYSQL Example
 
 This requires the setup of your sql environment.  To utilize this, please run `npx mysql-configure` after installing `npm i @ln-maf/mysql`  and it will prompt you for needed credentials, etc. for SQL to run properly.    It will store the config in a `sqlConfig.json` file and it will store your credentials using `node-keytar` which uses your OS's secure password storage:
 
@@ -210,33 +216,38 @@ Feature: View the text "Hello World"
 }
 ```
 
-# Developer Notes
+## Developer Notes
 
-## Adding a module
+### Adding a module
+
 Please view [AddModule](./AddModule.md) for information on how to add a module.  This will allow the creation of new steps that can be used in your project.
 
 [npm-image]:https://img.shields.io/npm/v/@ln-maf/core.svg
 [npm-url]:https://www.npmjs.com/search?q=ln-maf
 
-## Testing the modules
+### Testing the modules
 
 Running the tests for the modules is done using the `npm test -w packages/PACKAGE_NAME` command. Set PACKAGE_NAME to the name of the package you want to test. eg. `npm test -w packages/api`.
 
-## Running localstack
+### Running localstack
 
 All the modules can be tested locally without any dependencies, except for the AWS module. To test AWS locally, you can use a [localstack](https://github.com/localstack/localstack) docker container. The version used as of now is 3.0.2.
 
 To run localstack locally in a docker container, you can use the following command:
-```
+
+```bash
 docker run --rm -it -p 4566:4566 localstack/localstack:3.0.2
 ```
+
 Command explanation:
+
 - --rm: remove the container after it stops
 - -it: interactive mode, so the container logs are shown in the terminal
 - -p 4566:4566: expose the port 4566 of the container to the port 4566 of the host
 - localstack/localstack:3.0.2: the image to use and version
 
 Then you can initialize the services using the `initLocalstack.tf` file:
-```
+
+```bash
 terraform apply -auto-approve
 ```
