@@ -318,9 +318,9 @@ When('{string} is applied to item {string} on JSON path {string}', function (val
     if (value.trim() !== '') {
         try {
             const tmp = JSON.parse(value)
-      if (typeof tmp === 'object') {
-              value = tmp
-      }
+            if (typeof tmp === 'object') {
+                value = tmp
+            }
         } catch (e) { }
     }
     jp.apply(fileContents, jsonPath, function () { return value })
@@ -686,20 +686,20 @@ MAFWhen('blob is read from file {string}', async function (fileName) {
 
 When('blob item {string} is written to file {string}', async function (blob, fileName) {
     blob = fillTemplate(blob, this.results)
-    blob = this.results[blob] // Replace eval with bracket notation
+    blob = this.results[blob]
     const b = Buffer.from(await blob.arrayBuffer())
     writeFile(`${fileName}`, b, this)
 })
 
 When('blob item {string} is attached', async function (blob) {
     blob = fillTemplate(blob, this.results)
-    blob = this.results[blob] // Replace eval with bracket notation
+    blob = this.results[blob]
     const b = Buffer.from(await blob.arrayBuffer())
     return this.attach(b, 'image/png')
 })
 Then('blob item {string} is equal to file {string}', async function (blob, fileName) {
     blob = fillTemplate(blob, this.results)
-    blob = this.results[blob] // Replace eval with bracket notation
+    blob = this.results[blob]
     const b = await blob.arrayBuffer()
     const actualImage = readFileBuffer(`${fileName}`, this)
     assert.isTrue(Buffer.compare(actualImage, Buffer.from(b)) === 0)

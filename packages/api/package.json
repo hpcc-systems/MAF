@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "3.0.0-beta.0",
+  "version": "3.0.0-beta.1",
   "description": "MAF module providing API steps",
   "main": "index.js",
   "scripts": {
@@ -14,13 +14,12 @@
   "dependencies": {
     "fetch-blob": "^3.1.5",
     "form-data": "^4.0.0",
-    "node-fetch": "^2.0.0",
+    "node-fetch": "^2.7.0",
     "fetch-to-curl": "^0.6.0"
   },
   "peerDependencies": {
-    "@cucumber/cucumber": ">= 10.0.0",
-    "@ln-maf/core": "*",
-    "chai": "^4.3.4"
+    "@cucumber/cucumber": ">= 11.0.0",
+    "@ln-maf/core": ">= 3.0.0-beta.0"
   },
   "devDependencies": {
     "@ln-maf/core": "file:../core",
@@ -30,7 +29,6 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
-    "multiple-cucumber-html-reporter": "^3.6.1",
     "nyc": "^15.1.0"
   },
   "gitHead": "2a575448a74cfaee5ec68fa10db24cf4ccade849",
