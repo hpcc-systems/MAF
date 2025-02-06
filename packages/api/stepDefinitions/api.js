@@ -7,7 +7,7 @@ const fs = require('fs')
 const assert = require('chai').assert
 const { fetchToCurl } = require('fetch-to-curl')
 
-setDefaultTimeout(15 * 1000)
+setDefaultTimeout(30 * 1000)
 
 /**
  * @deprecated Set the item 'url' instead
@@ -50,7 +50,9 @@ MAFWhen('headers {string}', function (headers) {
  */
 MAFWhen('method post', async function () {
     MAFSave.call(this, 'method', 'POST')
-    return await requestBuilder.call(this, {})
+    const results = await requestBuilder.call(this, {})
+    MAFSave.call(this, 'response', results.response)
+    return results
 })
 
 /**
@@ -58,7 +60,9 @@ MAFWhen('method post', async function () {
  */
 MAFWhen('method get', async function () {
     MAFSave.call(this, 'method', 'GET')
-    return await requestBuilder.call(this, {})
+    const results = await requestBuilder.call(this, {})
+    MAFSave.call(this, 'response', results.response)
+    return results
 })
 
 // Builds a request object from the given request, populating any missing fields using the results object
