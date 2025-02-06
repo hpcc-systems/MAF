@@ -63,6 +63,9 @@ function getItemValue(item, itemsList) {
  * @param {any} itemValue - The value of the item to be saved.
  */
 function MAFSave(item, itemValue) {
+    if (item.includes('__proto__') || item.includes('constructor') || item.includes('prototype')) {
+        throw new Error('Invalid item key');
+    }
     if (!this.results) {
         this.results = {}
     }
