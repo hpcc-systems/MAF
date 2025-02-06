@@ -1,8 +1,6 @@
 Feature: Validations: Setting variables
   Background:
     When set "directory" to "./test"
-  Background:
-    When set "directory" to "./test"
 
   Scenario: Check that we can identify a null or undefined element
     When set result to "15"
