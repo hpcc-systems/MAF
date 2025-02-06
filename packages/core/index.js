@@ -22,7 +22,7 @@ const applyJSONToString = function (string, scenario, fillTemplateValues = true)
     }
     if (!scenario.results.DateTime) {
         scenario.results.DateTime = require('luxon').DateTime
-        // scenario.results.moment = require('moment')
+        scenario.results.moment = require('moment')
     }
     if (fillTemplateValues) { string = fillTemplate(string, scenario.results) }
     try {
@@ -108,6 +108,7 @@ function performJSONObjectTransform(items, fillTemplateValues = true) {
         if (fillTemplateValues) { items.value = fillTemplate(items.value, this.results) }
         return getItemValue(items.value, this.results)
     case 'file':
+        if (fillTemplateValues) { items.value = fillTemplate(items.value, this.results) }
         return applyJSONToString(readFile(items.value, this), this, fillTemplateValues)
     case '':
     case 'string':
