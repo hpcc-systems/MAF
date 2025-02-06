@@ -2,14 +2,21 @@
     "cucumberautocomplete.stepsInvariants": true,
     "cucumberautocomplete.smartSnippets": true,
     "cucumberautocomplete.steps": [
-        "packages/**/autoComplete.js"
+        "packages/**/stepDefinitions/*.js",
+        "packages/**/index.js"
     ],
     "cucumberautocomplete.customParameters": [
         {
             "parameter": "{jsonObject}",
-            "value": "(it|item {string}|file {string}|{string})"
+            "value": "\\S+\\s?\\S+"
+        },
+        {
+            "parameter": "{validationsEquivalence}",
+            "value": "(<|<=|>|>=|=)"
         }
     ],
-    "cucumberautocomplete.syncfeatures": "features/**feature",
-    "cucumberautocomplete.strictGherkinCompletion": true
+    "cucumberautocomplete.syncfeatures": "packages/**/features/**feature",
+    "cucumberautocomplete.strictGherkinCompletion": false,
+    "cucumberautocomplete.strictGherkinValidation": false,
+    "cucumberautocomplete.gherkinDefinitionPart": "(Given|When|Then|MAFWhen)"
 }

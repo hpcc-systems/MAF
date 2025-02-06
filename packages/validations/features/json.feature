@@ -1,5 +1,5 @@
 Feature: Validations: JSON manipulation
-    Testing JSON object key deletion, extraction and general manipulation
+    Testing JSON object key deletion and extraction
     Background:
         When set "directory" to "./test"
 
@@ -18,8 +18,13 @@ Feature: Validations: JSON manipulation
                 "doesnotexist": null
             }
             """
-        When JSON key "subErrorCodes" is extracted from "response.error"
-        When JSON key "doesnotexist" is extracted from "response.error"
+        When JSON key "subErrorCodes[0].subErrorCode" is extracted from item "response.error"
+        And it is equal to "1101"
+        When JSON key "subErrorCodes[0].subErrorMessage" is extracted from item "response.error"
+        And it is equal to "Phone Number is required"
+        When JSON key "doesnotexist" is extracted from item "response"
+        And it is equal to "null"
+
         When set "Data" to
             """
             {
@@ -28,7 +33,7 @@ Feature: Validations: JSON manipulation
             }
             """
         Then element "a" exists in item "Data"
-        When JSON key "a" is extracted from "Data"
+        When JSON key "a" is extracted from item "Data"
         Then it is equal to "apple"
 
     Scenario: Readme simple removal Example

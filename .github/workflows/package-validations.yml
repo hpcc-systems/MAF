@@ -1,0 +1,45 @@
+name: Test Validations Package
+
+on:
+  workflow_dispatch: 
+  push:
+    branches: [ main ]
+    paths:
+      - 'packages/validations/**'
+  pull_request:
+    paths:
+      - 'packages/validations/**'
+
+jobs:
+  MAF-Validations:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20.x, 22.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/previous-releases
+
+    steps:
+      - uses: actions/checkout@v4.1.7
+    
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4.2.0
+        with:
+          node-version: ${{ matrix.node-version }}
+      
+      - run: npm ci
+      
+      - run: npm test -w packages/validations
+        env: 
+          ENVIRONMENT: CI
+      
+      - name: Status Create Action
+        if: ${{ always() }}
+        uses: hkusu/status-create-action@v1.0.1
+        id: status-create
+        with:
+          state: ${{ job.status }} 
+          sha: ${{ github.sha }}
+    
+      - name: Show result
+        if: always()
+        run: echo '${{ steps.status-create.outputs.result }}'

@@ -1,35 +1,29 @@
 Feature: API - Test the basic items in api
   Background:
-    When set "directory" to "./test"
+    Given set "directory" to "./test"
 
   Scenario: Use individual methods
-    Given set "url" to "https://google.com"
-    Given url "${url}"
-    And headers '{"User-Agent" : "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36" }'
-    When method get
+    And set "url" to "https://www.example.com"
+    And set "method" to "GET"
+    And api request is performed
     Then status ok
-    Then the status is ok
+    And the status is ok
     And set "attach" to "false"
     And set "apiRetrieveType" to "text"
     When method get
-    And the status is 200
+    Then the status is 200
     And set "attach" to "true"
     And status 200
-    Given body "Hello Google"
+    And body "Hello Example"
     When method post
     Then status not ok
-    Then the status is not ok
+    And the status is not ok
 
-  Scenario: Test Blobber
-    When api request from file "tryB64Post.json" is performed
-    Then it is written to file "response.txt"
-
-
-  Scenario: Get Request - Google
+  Scenario: Get Request - Example
     When set "req" to:
       """
       {
-        "url": "https://google.com",
+        "url": "https://www.example.com",
         "method": "GET"
       }
       """
@@ -40,54 +34,26 @@ Feature: API - Test the basic items in api
     Then status ok
     When api request from item "req" is performed
 
-  Scenario: Get Request - Google 2
-    When set "api" to:
-    """
-    {
-      "additionalParams": { 
-         "redirect: "manual"
-      }
-    }
-    """
-    And set "bla" to item "api.additionalParams"
+  Scenario: Post Request - Example
     When perform api request:
       """
       {
-        "headers": { "a": "header" },
-        "url": "https://google.com",
-        "apiParams": { "hello":"THERE" },
-        "method": "GET"
-      }
-      """
-    Then status ok
-    When perform api request:
-      """
-      {
-        "headers": { "a": "header" },
-        "url": "https://google.com",
-        "api": "hello",
-        "apiParams": { "hello":"THERE" },
-        "method": "GET"
-      }
-      """
-    Then status not ok
-
-  Scenario: Post Request - Google
-    When perform api request:
-      """
-      {
-        "headers": { "a": "header" },
-        "url": "https://google.com",
-        "urlEncodedBody": { "hello":"THERE" },
+        "headers": {
+          "a": "header"
+        },
+        "url": "https://www.example.com",
+        "urlEncodedBody": {
+          "hello": "THERE"
+        },
         "method": "POST"
       }
       """
     Then status not ok
-  Scenario: Post Request - Google 2
+  Scenario: Post Request - Example 2
     When perform api request:
       """
       {
-        "url": "https://google.com",
+        "url": "https://www.example.com",
         "body": "NOPE",
         "method": "POST"
       }
@@ -95,62 +61,34 @@ Feature: API - Test the basic items in api
     Then status not ok
 
   Scenario: Get an image using api no attach
-    Given set "attach" to "false"
-    Given url "https://cucumber.io"
-    And api "img/cucumber-school-logo.png"
+    And set "attach" to "false"
+    And url "https://www.cucumber.io"
+    And api "img/logo.svg"
     When method get
     Then status ok
     And blob item "response" is written to file "image2.png"
     And blob item "response" is attached
 
   Scenario: Get an image using api
-    Given url "https://cucumber.io"
-    And api "img/cucumber-school-logo.png"
+    Given url "https://www.cucumber.io"
+    And api "img/logo.svg"
     When method get
     Then status ok
     And blob item "response" is written to file "image2.png"
     And blob item "response" is attached
-    
+
   Scenario: Get an image
     When set:
-      |url|
-      |cucumber.io|
+      | url         |
+      | cucumber.io |
     When set "req" to:
       """
       {
-        "url": "https://${url}",
-        "api": "img/cucumber-school-logo.png",
+        "url": "https://www.${url}",
+        "api": "img/logo.svg",
         "method": "GET"
       }
       """
     When api request from item "req" is performed
     And blob item "response" is written to file "image2.png"
     And blob item "response" is attached
-
-  # Scenario: Get a token
-  #   And set "version" to "v3"
-  #   When set "request" to:
-  #   """
-  #     {
-  #       "url": "https://run.mocky.io",
-  #       "api": "${version}/d2bc61bc-bdf1-418b-a4d5-dc1b70c86861",
-  #       "method": "GET"
-  #     }
-  #   """
-  #   When perform api request:
-  #   """
-  #     ${request}
-  #   """
-  #   And set "token" to item "response.token"
-  #   And set "authorization" to "Auth ${token}"
-  #   When api request from file "apiReq.json" is performed
-  #   Then status ok
-  #   When api request from file "apiReq.json" is performed with:
-  #   | version |
-  #   | v2     |
-  #   Then status not ok
-  #   When api request from file "apiReq.json" is performed with:
-  #   | version |
-  #   | v3     |
-  #   | v2     |
-  #   Then status not ok

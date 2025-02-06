@@ -1,15 +1,15 @@
 {
   "name": "ln-maf",
   "private": true,
-  "version": "2.0.1",
+  "version": "3.0.0",
   "description": "Modular Automation Framework",
   "main": "index.js",
-  "prepare": "cd packages && node createAutoComplete.js",
+  "prepare": "cd packages",
   "scripts": {
     "codecov": "nyc --reporter=lcov --reporter=text cucumber-js test",
-    "test": "lerna run test",
-    "postinstall": "sh postinstall.sh"
+    "test": "lerna run test"
   },
+  "postpublish" : "PACKAGE_VERSION=$(cat package.json | grep \\\"version\\\" | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]') && git tag v$PACKAGE_VERSION && git push --tags",
   "workspaces": [
     "packages/api",
     "packages/aws",
@@ -17,10 +17,18 @@
     "packages/defaultSQL",
     "packages/postgresql",
     "packages/mysql",
+    "packages/sftp",
     "packages/preprocessor",
     "packages/validations"
   ],
-  "author": "",
+  "contributors": [
+    {
+      "name": "Edward Jezisek"
+    },
+    {
+      "name": "Dominick Martelly"
+    }
+  ],
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
@@ -36,12 +44,16 @@
     "url": "https://github.com/hpcc-systems/MAF/issues"
   },
   "homepage": "https://github.com/hpcc-systems/MAF#readme",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@cucumber/cucumber": "^9.0.0",
-    "lerna": "^8.0.0",
-    "multiple-cucumber-html-reporter": "3.5.0",
+    "@cucumber/cucumber": "^11.0.0",
+    "lerna": "^8.1.9",
+    "multiple-cucumber-html-reporter": "3.8.0",
+    "eslint": "^8.32.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.6.1",
+    "eslint-plugin-promise": "^6.1.1",
     "nyc": "^15.1.0"
   }
 }

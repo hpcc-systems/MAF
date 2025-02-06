@@ -1,10 +1,10 @@
 {
-  "name": "@ln-maf/api",
+  "name": "@ln-maf/sftp",
   "publishConfig": {
     "access": "public"
   },
   "version": "3.0.0",
-  "description": "MAF module providing API steps",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "bash runFeature.sh"
@@ -12,26 +12,23 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "fetch-blob": "^3.1.5",
-    "form-data": "^4.0.0",
-    "node-fetch": "^2.7.0",
-    "fetch-to-curl": "^0.6.0"
+    "@ln-maf/core": "file:../core",
+    "ssh2-sftp-client": "^10.0.0"
   },
   "peerDependencies": {
     "@cucumber/cucumber": ">= 11.0.0",
-    "@ln-maf/core": ">= 3.0.0"
+    "@ln-maf/core": "*"
   },
   "devDependencies": {
-    "@ln-maf/core": "file:../core",
-    "@ln-maf/validations": "file:../validations",
+    "@cucumber/cucumber": "^11.0.0",
     "eslint": "^8.18.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
-    "nyc": "^15.1.0"
+    "multiple-cucumber-html-reporter": "3.8.0"
   },
-  "gitHead": "2a575448a74cfaee5ec68fa10db24cf4ccade849",
+  "gitHead": "9bf55a2c86fa17707fabfb4320c3d722e270f9e6",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hpcc-systems/MAF.git"
@@ -39,8 +36,7 @@
   "keywords": [
     "cucumber-js",
     "testing",
-    "gherkin",
-    "cucumber-steps"
+    "sftp"
   ],
   "bugs": {
     "url": "https://github.com/hpcc-systems/MAF/issues"

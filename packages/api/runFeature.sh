@@ -1,9 +1,16 @@
+# Create the report directory if it doesn't exist
 mkdir -p test/report
-if [[ "$ENVIRONMENT" == "COVERAGE" ]]; then
-    npx nyc --reporter=lcov --reporter=text cucumber-js $EXTRAS -f json:test/report/api.json --require "stepDefinitions/*.js" features/$*
-else
-    npx cucumber-js $EXTRAS -f json:test/report/api.json --require "stepDefinitions/*.js" features/$*
-fi
+
+# Run Cucumber.js with the specified options and save the result
+npx cucumber-js $EXTRAS -f json:test/report/api.json --require "stepDefinitions/*.js" features/$*
 result=$?
+
+# Generate the report
 npx multiReport
+
+# Copy the report to the parent MAF directory
+mkdir -p ../../test/report
+cp -r test/report/* ../../test/report
+
+# Exit with the result of the Cucumber.js command
 exit $result

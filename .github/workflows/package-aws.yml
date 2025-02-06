@@ -1,17 +1,17 @@
-# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node.
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
-name: Build / Test
+name: Test AWS Package
 
 on:
+  workflow_dispatch: 
   push:
     branches: [ main ]
+    paths:
+      - 'packages/aws/**'
   pull_request:
-    branches: [ main ]
+    paths:
+      - 'packages/aws/**'
 
 jobs:
-  build:
-
+  MAF-AWS:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -24,7 +24,7 @@ jobs:
       with:
         image-tag: '3.7.2'
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4.0.3
+      uses: actions/setup-node@v4.2.0
       with:
         node-version: ${{ matrix.node-version }}
     - name: Setup Terraform
@@ -37,12 +37,10 @@ jobs:
         terraform init
         terraform plan
         terraform apply -auto-approve
-    - run: npx lerna run test
+    - run: npm test -w packages/aws
       env: 
        ENVIRONMENT: CI
        USE_ENV_VARIABLES: "TRUE"
-       FAKE_SQL_USERNAME: MAF
-       FAKE_SQL_PASSWORD: MAF
        LOCALSTACK_HOSTNAME: localhost
        AWSENV: LOCALSTACK
      

@@ -40,13 +40,13 @@ Feature: Core: Test Fill Template
 
       </root>
       """
-    And set "bob" to:
+    And set "foo" to:
       """
       {
-        "what": "${a}"
+        "bar": "${a}"
       }
       """
-    Then item "bob.what" is equal to item "a"
+    Then item "foo.bar" is equal to item "a"
   Scenario: Test fill template
     Given set "numVal" to 5
     When run templateString
