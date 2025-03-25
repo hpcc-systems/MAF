@@ -118,6 +118,7 @@ Then('{jsonObject} is null', function (jsonObject) {
 })
 
 MAFWhen('run json path {string} on {jsonObject}', function (jPath, jsonObject) {
+    fillTemplate(jPath, this.results)
     const jp = require('jsonpath')
     const obj = performJSONObjectTransform.call(this, jsonObject)
     return jp.query(obj, jPath)
@@ -254,6 +255,7 @@ function whitelistJson(sourceJSON, whitelist, separator) {
  * Removes the JSON key/value from the JSON Object provided
  */
 MAFWhen('JSON key {string} is removed from {jsonObject}', function (jsonpath, jsonObject) {
+    jsonpath = fillTemplate(jsonpath, this.results)
     let obj = performJSONObjectTransform.call(this, jsonObject)
     if (typeof obj === 'string') {
         obj = this.results[obj]
@@ -301,6 +303,9 @@ MAFWhen('JSON keys {string} are extracted from {jsonObject}', function (array, v
  * Replaces the value of all found JSON keys in a file, using the JSON path to identify the keys
  */
 When('{string} is written to file {string} on JSON path {string}', function (value, fileName, jsonPath) {
+    value = fillTemplate(value, this.results)
+    fileName = fillTemplate(fileName, this.results)
+    jsonPath = fillTemplate(jsonPath, this.results)
     const jp = require('jsonpath')
     const fileContents = JSON.parse(readFile(fileName, this))
     jp.apply(fileContents, jsonPath, function () { return value })
@@ -312,6 +317,9 @@ When('{string} is written to file {string} on JSON path {string}', function (val
  * Replaces the value of all found JSON keys in an item, using the JSON path to identify the keys
  */
 When('{string} is applied to item {string} on JSON path {string}', function (value, item, jsonPath) {
+    value = fillTemplate(value, this.results)
+    item = fillTemplate(item, this.results)
+    jsonPath = fillTemplate(jsonPath, this.results)
     const jp = require('jsonpath')
     const fileContents = this.results[item]
     value = fillTemplate(value, this.results)
