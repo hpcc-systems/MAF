@@ -21,15 +21,15 @@ Feature: API - Image and File Handling
         And blob item "response" is attached
 
     Scenario: GET image using request object with variable substitution
-        When set:
-            | url            |
-            | localhost:3001 |
-        When set "req" to:
+        Given set:
+            | url            | api          | method |
+            | localhost:3001 | test-image   | GET    |
+        And set "req" to:
             """
             {
                 "url": "http://${url}",
-                "api": "test-image",
-                "method": "GET"
+                "api": "${api}",
+                "method": "${method}"
             }
             """
         When api request from item "req" is performed

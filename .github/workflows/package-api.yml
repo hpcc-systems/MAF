@@ -28,7 +28,7 @@ jobs:
       
       - run: npm ci
       
-      - run: npm test -w packages/api
+      - run: npm test:coverage -w packages/api
         env: 
           ENVIRONMENT: CI
       

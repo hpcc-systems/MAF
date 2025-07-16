@@ -7,6 +7,7 @@ Feature: API - Error Handling
         And set "method" to "GET"
         When api request is performed
         Then the status is 404
+        And the status is not ok
         And "${response.error}" is equal to "Custom Not Found"
         And "${response.code}" is equal to 404
 
@@ -29,3 +30,10 @@ Feature: API - Error Handling
         And set "method" to "GET"
         When api request is performed
         Then status 500
+
+    Scenario: Use apiRetrieveType to retrieve response as text
+        Given set "url" to "http://localhost:3001"
+        And set "method" to "GET"
+        And set "apiRetrieveType" to "text"
+        When api request is performed
+        Then "${response}" contains ""

@@ -152,6 +152,10 @@ async function requestBuilder(request) {
             return item
         }
     }
+    if (!request.formBody && this.results && this.results.formBody) {
+        request.formBody = this.results.formBody
+    }
+
     if (request.formBody) {
         const data = new FormData()
         const details = request.formBody
