@@ -37,7 +37,7 @@ jobs:
         terraform init
         terraform plan
         terraform apply -auto-approve
-    - run: npm test -w packages/aws
+    - run: npm run test:coverage -w packages/aws
       env: 
        ENVIRONMENT: CI
        USE_ENV_VARIABLES: "TRUE"

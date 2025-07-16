@@ -1,6 +1,6 @@
 const { setDefaultTimeout } = require('@cucumber/cucumber')
 const fs = require('fs')
-const { S3Client, ListBucketsCommand, CreateBucketCommand, ListObjectsV2Command, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3')
+const { S3Client, ListBucketsCommand, ListObjectsV2Command, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3')
 const { getFilePath, MAFWhen, fillTemplate, performJSONObjectTransform } = require('@ln-maf/core')
 
 setDefaultTimeout(15 * 60 * 1000)
@@ -10,7 +10,6 @@ if (process.env.AWSENV && process.env.AWSENV.toUpperCase() === 'LOCALSTACK') {
     S3ClientConfig.endpoint = process.env.LOCALSTACK_HOSTNAME ? `http://${process.env.LOCALSTACK_HOSTNAME}:4566` : 'http://localhost:4566'
 }
 const s3Client = new S3Client(S3ClientConfig)
-
 /**
  * Creates an S3 URL
  * @param {string} bucket the name of the bucket
@@ -19,7 +18,6 @@ const s3Client = new S3Client(S3ClientConfig)
 function s3URL(bucket, path) {
     return 's3://' + bucket + '/' + path
 }
-
 /**
  * Returns true if the bucket exists on AWS S3. User must have s3:ListAllMyBuckets permission on AWS
  * @param {string} bucketName The name of the bucket
@@ -50,7 +48,7 @@ MAFWhen('bucket {string} exists', async function (bucketName) {
         throw new Error('Bucket ' + bucketName + ' does not exist on S3')
     }
 })
-
+/**
 /**
  * Gets the file names in the bucket and path. User must have READ access to the bucket
  * @param {String} bucketName The name of the bucket to search
@@ -196,17 +194,6 @@ MAFWhen('gz file {string} from bucket {string} at path {string} is written to fi
             Body.on('error', reject)
         })
     return await streamToFile(saveName)
-})
-
-/**
- * This will create a new bucket on S3
- */
-MAFWhen('bucket {string} is created on S3', async function (bucketName) {
-    bucketName = fillTemplate(bucketName, this.results)
-    if (!/(?!(^xn--|-s3alias$))^[a-z0-9][a-z0-9-]{1,61}[a-z0-9]$/.test(bucketName.trim())) {
-        throw new Error('Invalid bucket name. See https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html for proper bucket naming rules')
-    }
-    return await s3Client.send(new CreateBucketCommand({ Bucket: bucketName.trim() }))
 })
 
 /**

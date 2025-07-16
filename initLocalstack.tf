@@ -14,8 +14,19 @@ provider "aws" {
   }
 }
 
-resource "aws_s3_bucket" "testBucket" {
-  bucket = "test-bucket"
+resource "aws_s3_bucket" "testBucket1" {
+  bucket        = "test-bucket1"
+  force_destroy = true
+}
+
+resource "aws_s3_bucket" "testBucket2" {
+  bucket        = "test-bucket2"
+  force_destroy = true
+}
+
+resource "aws_s3_bucket" "testBucket3" {
+  bucket        = "test-bucket3"
+  force_destroy = true
 }
 
 resource "aws_dynamodb_table" "test-table" {

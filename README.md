@@ -231,12 +231,12 @@ Running the tests for the modules is done using the `npm test -w packages/PACKAG
 
 ### Running localstack
 
-All the modules can be tested locally without any dependencies, except for the AWS module. To test AWS locally, you can use a [localstack](https://github.com/localstack/localstack) docker container. The version used as of now is 3.0.2.
+All the modules can be tested locally without any external dependencies, except for the AWS module. To test AWS locally, you can use a [localstack](https://github.com/localstack/localstack) docker container. The version used as of now is 4.6.0.
 
 To run localstack locally in a docker container, you can use the following command:
 
 ```bash
-docker run --rm -it -p 4566:4566 localstack/localstack:3.0.2
+docker run --rm -it -p 4566:4566 localstack/localstack:4.6.0
 ```
 
 Command explanation:
@@ -246,8 +246,8 @@ Command explanation:
 - -p 4566:4566: expose the port 4566 of the container to the port 4566 of the host
 - localstack/localstack:3.0.2: the image to use and version
 
-Then you can initialize the services using the `initLocalstack.tf` file:
+Then you can initialize, or reinitialize the services in localstack using the `initLocalstack.tf` file when testing:
 
 ```bash
-terraform apply -auto-approve
+terraform destroy -auto-approve && terraform apply -auto-approve  
 ```
