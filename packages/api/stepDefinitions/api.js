@@ -117,12 +117,21 @@ async function requestBuilder(request) {
         request.api = request.api + '?' + urlEncodedBody.join('&')
     }
     const formBodyMap = function (item) {
-        switch (item.type) {
-        case 'file':
-            return fs.createReadStream(getFilePath(item.fileName, this))
-        case 'base64blob':
+        if (item && item.type === 'file') {
+            // Support both relative and absolute paths for test file
+            let filePath = item.fileName
+            if (!filePath.startsWith('/')) {
+                // Try to resolve relative to the test directory
+                filePath = require('path').join(__dirname, '../test', filePath)
+                if (!fs.existsSync(filePath)) {
+                    // Fallback to local directory if not found in test
+                    filePath = require('path').join(__dirname, filePath)
+                }
+            }
+            return fs.createReadStream(filePath)
+        } else if (item && item.type === 'base64blob') {
             return Buffer.from(item.base64blob, 'base64')
-        default:
+        } else {
             return item
         }
     }

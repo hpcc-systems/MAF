@@ -7,7 +7,8 @@
   "description": "MAF module providing API steps",
   "main": "index.js",
   "scripts": {
-    "test": "bash runFeature.sh"
+    "start:test-server": "node ./test/testApiServer.js",
+    "test": "concurrently -k -s first -n server,test \"npm run start:test-server\" \"wait-on tcp:3001 && bash runFeature.sh\""
   },
   "author": "",
   "license": "Apache-2.0",
@@ -30,7 +31,9 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
     "multiple-cucumber-html-reporter": "3.9.3",
-    "nyc": "^15.1.0"
+    "nyc": "^15.1.0",
+    "concurrently": "^8.0.0",
+    "wait-on": "^7.0.1"
   },
   "gitHead": "2a575448a74cfaee5ec68fa10db24cf4ccade849",
   "repository": {

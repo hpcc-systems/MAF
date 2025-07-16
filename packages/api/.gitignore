@@ -1,5 +1,8 @@
 node_modules
 test/report
 .vscode
-image2.png
+*.png
+*.jpg
+*.jpeg
+*.gif
 test/response.txt
