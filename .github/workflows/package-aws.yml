@@ -15,16 +15,16 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [20.x, 22.x]
+        node-version: [22.x, 24.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/previous-releases
 
     steps:
-    - uses: actions/checkout@v4.1.7
+    - uses: actions/checkout@v4.2.2
     - uses: LocalStack/setup-localstack@v0.2.3
       with:
         image-tag: '3.7.2'
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4.2.0
+      uses: actions/setup-node@v4.4.0
       with:
         node-version: ${{ matrix.node-version }}
     - name: Setup Terraform
