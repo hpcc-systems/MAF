@@ -20,11 +20,11 @@
     "pg": "^8.0.0"
   },
   "peerDependencies": {
-    "@cucumber/cucumber": ">= 11.0.0",
+    "@cucumber/cucumber": ">= 12.0.0",
     "@ln-maf/core": "*"
   },
   "devDependencies": {
-    "@cucumber/cucumber": "^11.0.0",
+    "@cucumber/cucumber": "^12.0.0",
     "@ln-maf/core": "file:../core",
     "@ln-maf/validations": "file:../validations",
     "eslint": "^8.0.0",

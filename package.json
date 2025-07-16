@@ -46,7 +46,7 @@
   "homepage": "https://github.com/hpcc-systems/MAF#readme",
   "dependencies": {},
   "devDependencies": {
-    "@cucumber/cucumber": "^11.0.0",
+    "@cucumber/cucumber": "^12.0.0",
     "lerna": "^8.1.9",
     "multiple-cucumber-html-reporter": "3.8.0",
     "eslint": "^8.32.0",
