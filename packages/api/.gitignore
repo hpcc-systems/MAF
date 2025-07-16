@@ -5,4 +5,5 @@ test/report
 *.jpg
 *.jpeg
 *.gif
+!pickle.jpeg
 test/response.txt
