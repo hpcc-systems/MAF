@@ -12,11 +12,12 @@
         },
         {
             "parameter": "{validationsEquivalence}",
-            "value": "(<|<=|>|>=|=)"
+            "value": "(<|<=|>|>=|=|!=)"
         }
     ],
     "cucumberautocomplete.syncfeatures": "packages/**/features/**feature",
     "cucumberautocomplete.strictGherkinCompletion": false,
     "cucumberautocomplete.strictGherkinValidation": false,
-    "cucumberautocomplete.gherkinDefinitionPart": "(Given|When|Then|MAFWhen)"
+    "cucumberautocomplete.gherkinDefinitionPart": "(Given|When|Then|MAFWhen)",
+    "cucumberautocomplete.stepRegExSymbol": "'"
 }
