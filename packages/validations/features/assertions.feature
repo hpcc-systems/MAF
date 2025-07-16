@@ -1,6 +1,6 @@
 Feature: Validations: Assertions and Comparisons
   Background:
-    When set "directory" to "./test"
+    Given set "directory" to "./test"
 
   Scenario: Numeric equivalence operations
     Given set "lastRun" to "5"
@@ -10,6 +10,7 @@ Feature: Validations: Assertions and Comparisons
     And "4" < "5"
     And "5" <= "5"
     And "5" = "5"
+    And "2" != "5"
 
   Scenario: Null and not null checks
     Given set "bob" to "6"
@@ -17,10 +18,10 @@ Feature: Validations: Assertions and Comparisons
     And item "undefinedItem" is null
 
   Scenario: String and object equality
-    Then "5" is not equal to "7"
     Given set "bob" to "6"
     And set "sally" to "7"
-    Then "${sally}" is not equal to "${bob}"
+    Then "5" is not equal to "7"
+    And "${sally}" is not equal to "${bob}"
 
   Scenario: JSON object equality
     Given set "a" to:
@@ -57,7 +58,7 @@ Feature: Validations: Assertions and Comparisons
     Then item "newItem" is equal to:
       """
       {
-          "str": "I am a string\"\nwith new lines"
+        "str": "I am a string\"\nwith new lines"
       }
       """
     And item "doubleStr" is equal to:
@@ -69,18 +70,15 @@ Feature: Validations: Assertions and Comparisons
 
   Scenario: Contains operations
     Given set "test1" to "the quick brown fox jumped over the lazy dog"
-    Then item "test1" contains "quick brown"
-    Given set "test2" to:
+    And set "test2" to:
       """
       {
-        "firstname" : "Robert",
-        "lastname" : "Paulson"
+        "firstname": "Robert",
+        "lastname": "Paulson"
       }
       """
-    Then item "test2" contains "Robert"
-    And item "test2" contains "lastname"
-    When set "myItem" to "Banan"
-    Given set "test3" to:
+    And set "myItem" to "Banan"
+    And set "test3" to:
       """
       [
         "Apple",
@@ -88,7 +86,10 @@ Feature: Validations: Assertions and Comparisons
         "Orange"
       ]
       """
-    Then item "test3" contains "Ora"
+    Then item "test1" contains "quick brown"
+    And item "test2" contains "Robert"
+    And item "test2" contains "lastname"
+    And item "test3" contains "Ora"
     And item "test3" contains "${myItem}"
     And item "test3" does not contain "Kiwi"
 
@@ -101,7 +102,7 @@ Feature: Validations: Assertions and Comparisons
 
   Scenario: Date validation - timestamp comparison
     Given set "created_date" to "${new Date().getTime()-1}"
-    Given set "created_date2" to "${new Date().getTime()}"
+    And set "created_date2" to "${new Date().getTime()}"
     Then item "created_date" is before item "created_date2"
 
   Scenario: Date validation - before now with timestamp
@@ -121,52 +122,104 @@ Feature: Validations: Assertions and Comparisons
       | 11/13/2019   | after  | 11/12/2019   |
 
   Scenario: Error response validation
-    When set "response" to:
+    Given set "response" to:
       """
       {
-            "referenceNumber": null,
-            "results": null,
-            "status": 400,
-            "error": {
-              "errorCode": -2,
-              "errorMessage": "Invalid Request",
-              "subErrorCodes": [
-                {
-                  "subErrorCode": "0019",
-                  "subErrorMessage": "Zip code is required"
-                }
-              ]
+        "referenceNumber": null,
+        "results": null,
+        "status": 400,
+        "error": {
+          "errorCode": -2,
+          "errorMessage": "Invalid Request",
+          "subErrorCodes": [
+            {
+              "subErrorCode": "0019",
+              "subErrorMessage": "Zip code is required"
             }
+          ]
+        }
       }
       """
     Then item "response.error" is equal to:
       """
-            {
-              "errorCode": -2,
-              "errorMessage": "Invalid Request",
-              "subErrorCodes": [
-                {
-                  "subErrorCode": "0019",
-                  "subErrorMessage": "Zip code is required"
-                }
-              ]
-            }
+      {
+        "errorCode": -2,
+        "errorMessage": "Invalid Request",
+        "subErrorCodes": [
+          {
+            "subErrorCode": "0019",
+            "subErrorMessage": "Zip code is required"
+          }
+        ]
+      }
       """
     And item "response.error" is not equal to:
       """
-            {
-              "errorCode": -3,
-              "errorMessage": "Invalid Request",
-              "subErrorCodes": [
-                {
-                  "subErrorCode": "0019",
-                  "subErrorMessage": "Zip code is required"
-                }
-              ]
-            }
+      {
+        "errorCode": -3,
+        "errorMessage": "Invalid Request",
+        "subErrorCodes": [
+          {
+            "subErrorCode": "0019",
+            "subErrorMessage": "Zip code is required"
+          }
+        ]
+      }
       """
 
   Scenario: Luxon date library integration
     Given set "currentDate" to '${DateTime.now().toFormat("yyyy-MM-dd")}'
     Then item "currentDate" is equal to '${new Date().toISOString().slice(0,10)}'
     And item "currentDate" is not equal to '${DateTime.now().plus({days: 1}).toFormat("yyyy-MM-dd")}'
+
+  Scenario: Comprehensive numeric comparisons
+    Given set "num1" to "10"
+    And set "num2" to "20"
+    And set "num3" to "10"
+    Then "${num2}" > "${num1}"
+    And "${num2}" >= "${num1}"
+    And "${num1}" < "${num2}"
+    And "${num1}" <= "${num2}"
+    And "${num1}" = "${num3}"
+    And "${num1}" is not equal to "${num2}"
+
+  Scenario: Boolean and edge case comparisons
+    Given set "trueVal" to "true"
+    And set "falseVal" to "false"
+    And set "zeroVal" to "0"
+    And set "oneVal" to "1"
+    Then "${trueVal}" is not equal to "${falseVal}"
+    And "${oneVal}" > "${zeroVal}"
+    And "${zeroVal}" < "${oneVal}"
+
+  Scenario: Does not deep equal assertion
+    Given set "fruitList1" to:
+      """
+      [
+        "Apple",
+        "Banana",
+        "Orange"
+      ]
+      """
+    And set "fruitList2" to:
+      """
+      [
+        "Kiwi",
+        "Mango"
+      ]
+      """
+    Then item "fruitList1" is not equal to item "fruitList2"
+
+  Scenario: Does not deep equal assertion
+    Given set "fruitList1" to:
+      """
+      [
+        "Apple",
+        "Banana",
+        "Orange"
+      ]
+      """
+    Then item "fruitList1" is not equal to:
+      """
+      "Banana"
+      """

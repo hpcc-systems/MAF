@@ -169,3 +169,64 @@ Feature: Validations: JSON Manipulation and Processing
       }
       """
     When JSON keys '["name", "age"]' are extracted from "TestJSON"
+
+  Scenario: JSON key extraction with array handling
+    When set "arrayData" to:
+      """
+      {
+        "items": [
+          {"id": 1, "name": "first"},
+          {"id": 2, "name": "second"}
+        ]
+      }
+      """
+    When JSON key "items[0].id" is extracted from item "arrayData"
+    And it is equal to "1"
+    When JSON key "items[1].name" is extracted from item "arrayData"
+    And it is equal to "second"
+
+  Scenario: JSON path extraction with nested objects
+    When set "nestedData" to:
+      """
+      {
+        "level1": {
+          "level2": {
+            "level3": "deep value"
+          }
+        }
+      }
+      """
+    When JSON key "level1.level2.level3" is extracted from item "nestedData"
+    And it is equal to "deep value"
+
+  Scenario: JSON key removal operations
+    When set "testData" to:
+      """
+      {
+        "name": "John",
+        "age": 30,
+        "email": "john@example.com"
+      }
+      """
+    When JSON key "age" is removed from item "testData"
+    Then element "age" does not exist in item "testData"
+    And element "name" exists in item "testData"
+
+  Scenario: JSON manipulation operations
+    When set "jsonData" to:
+      """
+      {
+        "Name": "ALICE",
+        "AGE": "25",
+        "Address": {
+          "CITY": "Boston",
+          "ZIP": "02101"
+        }
+      }
+      """
+    When make json keys for item "jsonData" lower case
+    Then element "name" exists in item "jsonData"
+    And element "age" exists in item "jsonData"
+    When json item "jsonData" is flattened
+    When json item "jsonData" is numberifyed
+    When json item "jsonData" is trimmed

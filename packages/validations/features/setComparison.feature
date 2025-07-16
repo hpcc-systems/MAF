@@ -1,17 +1,17 @@
 Feature: Validations: Set Comparison Operations
   Background:
-    When set "directory" to "./test"
+    Given set "directory" to "./test"
 
   Scenario: Array set matching
-    When set "item" to file "file.json"
-    When set "expected" to '["joe", "jeff"]'
-    And run json path '$..name' on item 'item'
-    Then set "item" to it
+    Given set "item" to file "file.json"
+    And set "expected" to '["joe", "jeff"]'
+    When run json path '$..name' on item 'item'
+    And set "item" to it
     Then the set "lastRun" matches the set "expected"
-    Then the set "lastRun" matches the set from file "expected.json"
-    Then it matches the set from file "expected.json"
-    Then it matches the set "expected"
-    Then item "item" is equal to:
+    And the set "lastRun" matches the set from file "expected.json"
+    And it matches the set from file "expected.json"
+    And it matches the set "expected"
+    And item "item" is equal to:
       """
       [
         "jeff",

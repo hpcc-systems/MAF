@@ -1,6 +1,6 @@
 Feature: Validations: Encoding and Cryptographic Operations
   Background:
-    When set "directory" to "./test"
+    Given set "directory" to "./test"
 
   Scenario: Base64 encoding and decoding
     Given set "bla" to '{ "json": "object" }'
@@ -16,7 +16,7 @@ Feature: Validations: Encoding and Cryptographic Operations
     Then "${i}" is equal to "feawraewrew"
 
   Scenario: JWT signing with header
-    When generate rsa key
+    Given generate rsa key
     And set "privateKey" to it
     And set "header" to:
       """
@@ -26,12 +26,12 @@ Feature: Validations: Encoding and Cryptographic Operations
         "keyId": 1
       }
       """
-    Then "${header.alg}" is equal to "RS256"
     When wait 5 milliseconds
     And sign item "header" using jwt
+    Then "${header.alg}" is equal to "RS256"
 
   Scenario: JWT signing with payload
-    When generate rsa key
+    Given generate rsa key
     And set "privateKey" to it
     And set "header" to:
       """
@@ -41,7 +41,7 @@ Feature: Validations: Encoding and Cryptographic Operations
         "keyId": 1
       }
       """
-    And sign using jwt:
+    When sign using jwt:
       """
       {
         "number": null,

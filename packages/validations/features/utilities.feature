@@ -1,15 +1,12 @@
 Feature: Validations: Utility Functions and Helpers
   Background:
-    When set "directory" to "./test"
+    Given set "directory" to "./test"
 
   Scenario: Wait functionality
     When wait 5 milliseconds
 
   Scenario: Set examples from scenario outline
-    When set examples
-
-  Scenario Outline: Example setting with single table
-    When set "directory" to "./test"
+    Given set "directory" to "./test"
     When set examples
     Then item "<Expected>" is equal to "<ExpectedResult>"
     Examples:
@@ -27,13 +24,16 @@ Feature: Validations: Utility Functions and Helpers
       | 3    | Next     | 3              | 6   |
 
   Scenario Outline: Example setting with variable initialization
-    When set "a" to 5
+    Given set "a" to 5
     When set examples
     Then item "<Expected>" is equal to "<ExpectedResult>"
     Examples:
       | Phone | Expected | ExpectedResult |
       | 1     | Phone    | 1              |
 
+  Scenario: Set examples without any scenario outline
+    When set examples
+
   Scenario: Examples with background steps
-    When set "a" to 5
+    Given set "a" to 5
     When set examples

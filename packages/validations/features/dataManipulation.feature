@@ -1,6 +1,6 @@
 Feature: Validations: Data Manipulation and Variable Setting
   Background:
-    When set "directory" to "./test"
+    Given set "directory" to "./test"
 
   Scenario: Basic variable setting
     When set "item" to "hello"
@@ -57,8 +57,8 @@ Feature: Validations: Data Manipulation and Variable Setting
       | User     | Pass  |
       | User2    | 2Pass |
     Then "${username[0]}" is equal to "User"
-    Then "${username[1]}" is equal to "User2"
-    And set:
+    And "${username[1]}" is equal to "User2"
+    When set:
       | username | pass |
       | User     | Pass |
     Then "${username}" is equal to "User"
@@ -77,11 +77,11 @@ Feature: Validations: Data Manipulation and Variable Setting
     And set "hello" to "${environment}"
 
   Scenario: Setting configuration from JSON item
-    When set "param" to "meh"
+    Given set "param" to "meh"
     When set config from json file "config.json"
-    When set config from json item "deepMeh2"
+    And set config from json item "deepMeh2"
     Then "${deep3}" is equal to "Testing3"
-    Then "${meh}" is equal to "Test"
+    And "${meh}" is equal to "Test"
 
   Scenario: Setting result values
     When set result to "15"
@@ -91,7 +91,19 @@ Feature: Validations: Data Manipulation and Variable Setting
     When set result to "17"
     And set "bla" to it
     Then it is equal to "17"
-    Then item "bla" is equal to 17
+    And item "bla" is equal to 17
+
+  Scenario: Set string alternative
+    When set "str" to
+      """
+      hello
+      """
+    And set "str2" to:
+      """
+      world
+      """
+    Then item "str" is equal to "hello"
+    And item "str2" is equal to "world"
 
   Scenario: Setting with JSON number variables
     When set "num" to "5"
@@ -103,15 +115,15 @@ Feature: Validations: Data Manipulation and Variable Setting
       """
 
   Scenario: Template filling
-    When set "versionNum" to 3
+    Given set "versionNum" to 3
     And set "vNum" to "$100.00"
-    When set "version" to "v3"
+    And set "version" to "v3"
     When set "request" to:
       """
       {
-        "version": "${version}",
-        "versionNumber": ${versionNum},
-        "price": "${vNum}"
+      "version": "${version}",
+      "versionNumber": ${versionNum},
+      "price": "${vNum}"
       }
       """
 
@@ -125,7 +137,30 @@ Feature: Validations: Data Manipulation and Variable Setting
       """
 
   Scenario: CSV to JSON conversion (requires test.csv file)
-    # When convert csv file "test.csv" to json
+    Given set "csvString" to:
+      """
+      name,age,city,boolTest
+      Alice,30,London,true
+      Bob,25,Paris,false
+      """
+    When convert csv "${csvString}" to json
+    Then it is equal to:
+      """
+      [
+        {
+          "name": "Alice",
+          "age": "30",
+          "city": "London",
+          "boolTest": "true"
+        },
+        {
+          "name": "Bob",
+          "age": "25",
+          "city": "Paris",
+          "boolTest": "false"
+        }
+      ]
+      """
 
   Scenario: Setting examples from scenario outline
     When set examples

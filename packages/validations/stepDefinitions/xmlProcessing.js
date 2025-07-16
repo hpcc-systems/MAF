@@ -1,6 +1,5 @@
 require('@ln-maf/core/parameter_types')
 
-const { Given } = require('@cucumber/cucumber')
 const { MAFWhen } = require('@ln-maf/core')
 
 const setNamespace = (namespace, scenario) => {
@@ -13,15 +12,15 @@ const setNamespace = (namespace, scenario) => {
     scenario.results.namespace = JSON.parse(namespace)
 }
 
-Given('xPath namespace is {string}', function (namespace) {
+MAFWhen('xPath namespace is {string}', function (namespace) {
     setNamespace(namespace, this)
 })
 
-Given('xPath namespace is', function (namespace) {
+MAFWhen('xPath namespace is', function (namespace) {
     setNamespace(namespace, this)
 })
 
-Given('add xPath namespace {string} = {string}', function (namespace, url) {
+MAFWhen('add xPath namespace {string} = {string}', function (namespace, url) {
     if (!this.results) {
         this.results = {}
     }
