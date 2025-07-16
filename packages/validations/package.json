@@ -3,23 +3,24 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "3.0.1",
+  "version": "3.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "bash runFeature.sh"
+    "test": "bash runFeature.sh",
+    "test:coverage": "TEST_COVERAGE=1 bash runFeature.sh"
   },
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@xmldom/xmldom": "^0.8.3",
-    "chai": "^4.3.6",
+    "@xmldom/xmldom": "^0.9.0",
+    "chai": "^4.0.0",
     "jsonpath": "^1.1.1",
     "jsonwebtoken": "^9.0.0",
     "moment": "^2.29.2",
     "papaparse": "^5.3.2",
     "validator": "^13.7.0",
-    "xpath": "0.0.32"
+    "xpath": "0.0.34"
   },
   "peerDependencies": {
     "@cucumber/cucumber": ">= 12.0.0",
@@ -34,7 +35,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
     "multiple-cucumber-html-reporter": "3.9.3",
-    "nyc": "^15.1.0"
+    "nyc": "^17.0.0"
   },
   "gitHead": "9bf55a2c86fa17707fabfb4320c3d722e270f9e6",
   "repository": {
