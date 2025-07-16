@@ -24,11 +24,12 @@
   "devDependencies": {
     "@ln-maf/core": "file:../core",
     "@ln-maf/validations": "file:../validations",
-    "eslint": "^8.18.0",
+    "eslint": "^8.0.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
+    "multiple-cucumber-html-reporter": "3.9.3",
     "nyc": "^15.1.0"
   },
   "gitHead": "2a575448a74cfaee5ec68fa10db24cf4ccade849",
