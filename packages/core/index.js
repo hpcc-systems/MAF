@@ -1,7 +1,9 @@
 const Cucumber = require('@cucumber/cucumber')
+const fs = require('fs')
+const path = require('path')
+
 const When = Cucumber.When
 
-const fs = require('fs')
 const tryAttach = function (attach, type = 'text') {
     if (canAttach.call(this)) {
         if (typeof attach === 'object') {
@@ -64,7 +66,7 @@ function getItemValue(item, itemsList) {
  */
 function MAFSave(item, itemValue) {
     if (item.includes('__proto__') || item.includes('constructor') || item.includes('prototype')) {
-        throw new Error('Invalid item key');
+        throw new Error('Invalid item key')
     }
     if (!this.results) {
         this.results = {}
@@ -119,6 +121,8 @@ function performJSONObjectTransform(items, fillTemplateValues = true) {
 }
 
 function getFilePath(filename, scenario) {
+    if (!filename) throw new Error('getFilePath: filename is required')
+    if (!scenario) throw new Error('getFilePath: scenario is required')
     let dir = ''
     if (!scenario.results) {
         scenario.results = {}
@@ -126,13 +130,16 @@ function getFilePath(filename, scenario) {
     if (scenario.results.directory) {
         dir = scenario.results.directory
     }
-    if (!dir.endsWith('/') && dir.trim() !== '') {
-        dir += '/'
+    if (dir.trim() !== '') {
+        return path.join(dir, filename)
     }
-    return dir + filename
+    return filename
 }
 
 const writeFile = (filename, data, scenario) => {
+    if (!filename || !scenario) {
+        throw new Error('writeFile: filename and scenario are required')
+    }
     let toWrite = data
     if (typeof data === 'number') {
         toWrite = JSON.stringify(data)
@@ -140,12 +147,21 @@ const writeFile = (filename, data, scenario) => {
     return fs.writeFileSync(getFilePath(filename, scenario), toWrite, 'utf-8')
 }
 const writeFileBuffer = (filename, data, scenario) => {
+    if (!filename || !scenario) {
+        throw new Error('writeFileBuffer: filename and scenario are required')
+    }
     return fs.writeFileSync(getFilePath(filename, scenario), data)
 }
 const readFileBuffer = (filename, scenario) => {
+    if (!filename || !scenario) {
+        throw new Error('readFileBuffer: filename and scenario are required')
+    }
     return fs.readFileSync(getFilePath(filename, scenario))
 }
 const readFile = (filename, scenario, dataType = 'utf-8') => {
+    if (!filename || !scenario) {
+        throw new Error('readFile: filename and scenario are required')
+    }
     return fs.readFileSync(getFilePath(filename, scenario), dataType)
 }
 
@@ -158,7 +174,6 @@ function MAFWhen(name, func) {
     let tmpFunc
     eval(`
     tmpFunc=async function(${params.join(',')}) {
-      
       if(!this.results) {
         this.results={}
       }
@@ -170,6 +185,12 @@ function MAFWhen(name, func) {
     When(name, tmpFunc)
 }
 
+/**
+ * Fills a template string with variables from templateVars.
+ * @param {string|object} templateString - The template string or object.
+ * @param {object} templateVars - Variables to fill into the template.
+ * @returns {string} - The filled template string.
+ */
 const fillTemplate = function (templateString, templateVars) {
     // Check if the template string is a json object
     let isJSON = true
