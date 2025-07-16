@@ -8,6 +8,7 @@ node_modules
 passwords.txt
 /image2.png
 .terraform.*
+/packages/*/report/
 
 # Local .terraform directories
 **/.terraform/*

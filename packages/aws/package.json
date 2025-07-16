@@ -3,11 +3,12 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "AWS steps for MAF. This contains S3, DynamoDB, SQS, ECS, Cloudwatch, and Lambda stepDefinitions",
   "main": "index.js",
   "scripts": {
-    "test": "bash runFeature.sh"
+    "test": "bash runFeature.sh",
+    "test:coverage": "TEST_COVERAGE=1 bash runFeature.sh"
   },
   "author": "Dominick Martelly",
   "license": "Apache-2.0",
@@ -35,7 +36,7 @@
     "eslint-plugin-import": "^2.28.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
-    "multiple-cucumber-html-reporter": "3.9.3",
+    "multiple-cucumber-html-reporter": "3.7.0",
     "nyc": "^15.1.0"
   }
 }

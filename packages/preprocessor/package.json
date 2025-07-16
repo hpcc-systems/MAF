@@ -11,6 +11,7 @@
   },
   "scripts": {
     "test": "bash runFeature.sh",
+    "test:coverage": "TEST_COVERAGE=1 bash runFeature.sh",
     "postinstall": "tsc",
     "tsc": "tsc"
   },
@@ -38,7 +39,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
-    "multiple-cucumber-html-reporter": "3.9.3",
+    "multiple-cucumber-html-reporter": "3.7.0",
     "nyc": "^15.1.0"
   },
   "repository": {

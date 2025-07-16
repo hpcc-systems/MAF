@@ -7,7 +7,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "bash runFeature.sh"
+    "test": "bash runFeature.sh",
+    "test:coverage": "TEST_COVERAGE=1 bash runFeature.sh"
   },
   "author": "",
   "license": "Apache-2.0",
@@ -26,7 +27,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
-    "multiple-cucumber-html-reporter": "3.9.3"
+    "multiple-cucumber-html-reporter": "3.7.0"
   },
   "gitHead": "9bf55a2c86fa17707fabfb4320c3d722e270f9e6",
   "repository": {
