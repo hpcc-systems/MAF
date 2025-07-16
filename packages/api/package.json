@@ -8,7 +8,8 @@
   "main": "index.js",
   "scripts": {
     "start:test-server": "node ./test/testApiServer.js",
-    "test": "concurrently -k -s first -n server,test \"npm run start:test-server\" \"wait-on tcp:3001 && bash runFeature.sh\""
+    "test": "concurrently -k -s first -n server,test \"npm run start:test-server\" \"wait-on tcp:3001 && bash runFeature.sh\"",
+    "test:coverage": "concurrently -k -s first -n server,test \"npm run start:test-server\" \"wait-on tcp:3001 && TEST_COVERAGE=1 bash runFeature.sh\""
   },
   "author": "",
   "license": "Apache-2.0",

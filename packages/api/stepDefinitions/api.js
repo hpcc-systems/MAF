@@ -1,5 +1,5 @@
 global.fetch = require('node-fetch')
-const { MAFWhen, MAFSave, performJSONObjectTransform, fillTemplate, canAttach, getFilePath } = require('@ln-maf/core')
+const { MAFWhen, MAFSave, performJSONObjectTransform, fillTemplate, canAttach } = require('@ln-maf/core')
 const { setDefaultTimeout, Then } = require('@cucumber/cucumber')
 
 const FormData = require('form-data')
@@ -118,19 +118,36 @@ async function requestBuilder(request) {
     }
     const formBodyMap = function (item) {
         if (item && item.type === 'file') {
-            // Support both relative and absolute paths for test file
             let filePath = item.fileName
+            const path = require('path')
             if (!filePath.startsWith('/')) {
                 // Try to resolve relative to the test directory
-                filePath = require('path').join(__dirname, '../test', filePath)
-                if (!fs.existsSync(filePath)) {
+                const testPath = path.join(__dirname, '../test', filePath)
+                if (fs.existsSync(testPath)) {
+                    filePath = testPath
+                } else {
                     // Fallback to local directory if not found in test
-                    filePath = require('path').join(__dirname, filePath)
+                    const localPath = path.join(__dirname, filePath)
+                    if (fs.existsSync(localPath)) {
+                        filePath = localPath
+                    } else {
+                        throw new Error(`File for upload not found: ${item.fileName}`)
+                    }
                 }
+            } else if (!fs.existsSync(filePath)) {
+                throw new Error(`File for upload not found: ${filePath}`)
             }
-            return fs.createReadStream(filePath)
+            try {
+                return fs.createReadStream(filePath)
+            } catch (err) {
+                throw new Error(`Failed to create read stream for file: ${filePath}. Error: ${err.message}`)
+            }
         } else if (item && item.type === 'base64blob') {
-            return Buffer.from(item.base64blob, 'base64')
+            try {
+                return Buffer.from(item.base64blob, 'base64')
+            } catch (err) {
+                throw new Error('Invalid base64blob provided in formBody')
+            }
         } else {
             return item
         }

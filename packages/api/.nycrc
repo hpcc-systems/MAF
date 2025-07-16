@@ -1,0 +1,18 @@
+{
+    "all": true,
+    "reporter": [
+        "lcov",
+        "text"
+    ],
+    "report-dir": "../../coverage",
+    "include": [
+        "index.js",
+        "stepDefinitions/**/*.js"
+    ],
+    "exclude": [
+        "test/testApiServer.js",
+        "test/report/*",
+        "features/*",
+        "**/*.feature"
+    ]
+}

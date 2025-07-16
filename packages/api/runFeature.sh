@@ -1,9 +1,15 @@
 # Create the report directory if it doesn't exist
 mkdir -p test/report
 
-# Run Cucumber.js with the specified options and save the result
-npx cucumber-js $EXTRAS -f json:test/report/api.json --require "stepDefinitions/*.js" features/$*
-result=$?
+
+# Run Cucumber.js, optionally with nyc for code coverage if TEST_COVERAGE is set
+if [ "$TEST_COVERAGE" = "1" ]; then
+  npx nyc --reporter=lcov --reporter=text --report-dir=../../coverage npx cucumber-js $EXTRAS -f json:test/report/api.json --require "stepDefinitions/*.js" features/$*
+  result=$?
+else
+  npx cucumber-js $EXTRAS -f json:test/report/api.json --require "stepDefinitions/*.js" features/$*
+  result=$?
+fi
 
 # Generate the report
 npx multiReport
