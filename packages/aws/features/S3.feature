@@ -1,9 +1,7 @@
-# ! These scenario will create a bucket on S3. Only use this for testing localstack !
 Feature: AWS: S3 Testing
 
   Scenario Outline: File Upload
     Given bucket "test-bucket1" exists on S3
-    And test file "<file>" is created
     And file "./test/<file>" is uploaded to bucket "test-bucket1" as key "<s3FilePath><key>"
     Then file exists with name "<key>" at path "<s3FilePath>" in bucket "test-bucket1"
 
@@ -44,7 +42,7 @@ Feature: AWS: S3 Testing
     Then item "lastRun" contains "test2"
     Then item "lastRun" contains "test1"
 
-  Scenario Outline: File Upload and Download
+  Scenario Outline: Text File Upload and Download to Memory
     Given "<text>" is written to file "./test/<file>"
     And file "./test/<file>" is uploaded to bucket "test-bucket2" as key "<s3FilePath><key>"
     And file "<key>" from bucket "test-bucket2" at path "<s3FilePath>" is retrieved
@@ -88,3 +86,22 @@ Feature: AWS: S3 Testing
         "foobar/test2"
       ]
       """
+
+  Scenario: Text File Upload and Download To Storage
+    Given bucket "test-bucket4" exists on S3
+    And "Sample text content for testing" is written to file "./test/sample.txt"
+    When file "./test/sample.txt" is uploaded to bucket "test-bucket4" as key "text-files/sample.txt"
+    Then file exists with name "sample.txt" at path "text-files/" in bucket "test-bucket4"
+    When file "sample.txt" from bucket "test-bucket4" at path "text-files/" is written to "./test/sample_download.txt"
+    Then file "./test/sample_download.txt" is equal to "Sample text content for testing"
+
+  Scenario: Gzip File Upload And Download To Storage
+    Given bucket "test-bucket4" exists on S3
+    And "Content to be uploaded as gzip" is written to file "./test/gzip-sample.txt"
+    And the file "./test/gzip-sample.txt" is gzipped
+    When file "./test/gzip-sample.txt.gz" is uploaded to bucket "test-bucket4" as key "gzip-files/sample.txt.gz"
+    Then file exists with name "sample.txt.gz" at path "gzip-files/" in bucket "test-bucket4"
+    When file "sample.txt.gz" from bucket "test-bucket4" at path "gzip-files/" is written to "./test/sample_download.txt.gz"
+    Then file "./test/sample_download.txt.gz" is gzip unzipped to file "./test/sample_download.txt"
+    And file "./test/sample_download.txt" is equal to "Content to be uploaded as gzip"
+

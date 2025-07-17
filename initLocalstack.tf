@@ -29,6 +29,11 @@ resource "aws_s3_bucket" "testBucket3" {
   force_destroy = true
 }
 
+resource "aws_s3_bucket" "testBucket4" {
+  bucket        = "test-bucket4"
+  force_destroy = true
+}
+
 resource "aws_dynamodb_table" "test-table" {
   name           = "testtable"
   billing_mode   = "PROVISIONED"
