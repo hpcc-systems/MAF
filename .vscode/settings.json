@@ -2,7 +2,7 @@
     "cucumberautocomplete.stepsInvariants": true,
     "cucumberautocomplete.smartSnippets": true,
     "cucumberautocomplete.steps": [
-        "packages/**/stepDefinitions/*.js",
+        "packages/*/stepDefinitions/*.js",
         "packages/**/index.js"
     ],
     "cucumberautocomplete.customParameters": [
@@ -15,7 +15,7 @@
             "value": "(<|<=|>|>=|=|!=)"
         }
     ],
-    "cucumberautocomplete.syncfeatures": "packages/**/features/**feature",
+    "cucumberautocomplete.syncfeatures": "packages/**/features/*.feature",
     "cucumberautocomplete.strictGherkinCompletion": false,
     "cucumberautocomplete.strictGherkinValidation": false,
     "cucumberautocomplete.gherkinDefinitionPart": "(Given|When|Then|MAFWhen)",
