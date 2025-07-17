@@ -1,13 +1,31 @@
 const { setDefaultTimeout } = require('@cucumber/cucumber')
 const { performJSONObjectTransform, MAFWhen, fillTemplate } = require('@ln-maf/core')
-const { DynamoDBClient, ListTablesCommand, QueryCommand, PutItemCommand, UpdateItemCommand, DeleteItemCommand } = require('@aws-sdk/client-dynamodb')
+const {
+    DynamoDBClient,
+    ListTablesCommand,
+    QueryCommand,
+    PutItemCommand,
+    UpdateItemCommand,
+    DeleteItemCommand
+} = require('@aws-sdk/client-dynamodb')
 
+// Set timeout to 15 minutes for long-running operations
 setDefaultTimeout(15 * 60 * 1000)
 
 const DynamoDBClientConfig = { maxAttempts: 3 }
+
+// Configure LocalStack endpoint if running in LocalStack environment
 if (process.env.AWSENV && process.env.AWSENV.toUpperCase() === 'LOCALSTACK') {
-    DynamoDBClientConfig.endpoint = process.env.LOCALSTACK_HOSTNAME ? `http://${process.env.LOCALSTACK_HOSTNAME}:4566` : 'http://localhost:4566'
+    DynamoDBClientConfig.endpoint = process.env.LOCALSTACK_HOSTNAME
+        ? `http://${process.env.LOCALSTACK_HOSTNAME}:4566`
+        : 'http://localhost:4566'
+    DynamoDBClientConfig.region = 'us-east-1'
+    DynamoDBClientConfig.credentials = {
+        accessKeyId: 'test',
+        secretAccessKey: 'test'
+    }
 }
+
 const dbClient = new DynamoDBClient(DynamoDBClientConfig)
 
 /**
@@ -123,7 +141,7 @@ MAFWhen('table {string} exists on dynamo', async function (tableName) {
  * AWS Documentation: https://docs.aws.amazon.com/cli/latest/reference/dynamodb/query.html
  * @param {JSON} activeArgs supported arguments for the AWS QueryCommand
  * @param {JSON} additionalArgs unsupported pairs of other attributes for AWS QueryCommand
- * @return {String[]} Items from AWS
+ * @return {Array} Items from AWS
  */
 async function dynamoQuery(activeArgs, additionalArgs) {
     const dynamoQueryArgs = {}
@@ -157,7 +175,7 @@ async function dynamoQuery(activeArgs, additionalArgs) {
             queryParameters.IndexName = dynamoQueryArgs.indexName
         }
         if (dynamoQueryArgs.expressionAttributeValues) {
-            if (dynamoQueryArgs.expressionAttributeValues === 'string') {
+            if (typeof dynamoQueryArgs.expressionAttributeValues === 'string') {
                 dynamoQueryArgs.expressionAttributeValues = JSON.parse(
                     dynamoQueryArgs.expressionAttributeValues
                 )
@@ -183,7 +201,7 @@ async function dynamoQuery(activeArgs, additionalArgs) {
 }
 
 /**
- * Extracts variables for dynamodb query and preforms the aws command
+ * Extracts variables for dynamodb query and performs the aws command
  * @param {JSON} payload an object containing keys / values for the query
  */
 async function performDynamoDBQueryFromJSON(payload) {
@@ -243,7 +261,7 @@ MAFWhen('dynamodb query is performed', async function () {
  * Places an item on a dynamoDB table
  * @param {JSON} activeArgs supported arguments for the AWS PutItemCommand
  * @param {JSON} additionalArgs unsupported pairs of other attributes for AWS PutItemCommand
- * @return {String[]} PutItemCommandOutput (https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/interfaces/putitemcommandoutput.html)
+ * @return {Object} PutItemCommandOutput (https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/interfaces/putitemcommandoutput.html)
  */
 async function putItem(activeArgs, additionalArgs) {
     const dynamoPutItemArgs = {}
@@ -252,20 +270,20 @@ async function putItem(activeArgs, additionalArgs) {
 
     let queryParameters = {}
     if (!dynamoPutItemArgs.tableName) {
-        throw new Error("The 'tableName' for dynamodb query is required")
+        throw new Error("The 'tableName' for dynamodb put-item is required")
     }
     queryParameters.TableName = dynamoPutItemArgs.tableName
 
     if (!dynamoPutItemArgs.item) {
         throw new Error("The 'item' for dynamodb put-item is required")
     }
-    if (dynamoPutItemArgs.item === 'string') {
+    if (typeof dynamoPutItemArgs.item === 'string') {
         dynamoPutItemArgs.item = JSON.parse(dynamoPutItemArgs.item)
     }
     queryParameters.Item = dynamoPutItemArgs.item
 
     if (dynamoPutItemArgs.expressionAttributeValues) {
-        if (dynamoPutItemArgs.expressionAttributeValues === 'string') {
+        if (typeof dynamoPutItemArgs.expressionAttributeValues === 'string') {
             dynamoPutItemArgs.expressionAttributeValues = JSON.parse(
                 dynamoPutItemArgs.expressionAttributeValues
             )
@@ -284,7 +302,7 @@ async function putItem(activeArgs, additionalArgs) {
 }
 
 /**
- * Extracts variables for dynamodb put-item and preforms the aws command
+ * Extracts variables for dynamodb put-item and performs the aws command
  * @param {JSON} payload an object containing keys / values for the put-item
  */
 async function performDynamoDBPutItemFromJSON(payload) {
@@ -309,7 +327,7 @@ async function performDynamoDBPutItemFromJSON(payload) {
 }
 
 /**
- * Gets a query / item from a dynamoDB table
+ * Puts an item from a dynamoDB table
  */
 MAFWhen('dynamodb put-item from {jsonObject} is performed', async function (payload) {
     payload = performJSONObjectTransform.call(this, payload)
@@ -317,7 +335,7 @@ MAFWhen('dynamodb put-item from {jsonObject} is performed', async function (payl
 })
 
 /**
- * Performs a dynamodb query based on the provided docstring and variables already defined
+ * Performs a dynamodb put-item based on the provided docstring and variables already defined
  */
 MAFWhen('perform dynamodb put-item:', async function (docString) {
     if (!this.results) {
@@ -328,7 +346,7 @@ MAFWhen('perform dynamodb put-item:', async function (docString) {
 })
 
 /**
- * Gets a query / item from a dynamoDB table
+ * Puts an item from a dynamoDB table
  */
 MAFWhen('dynamodb put-item is performed', async function () {
     return await putItem.call(this)
@@ -345,7 +363,7 @@ MAFWhen('dynamodb put-item is performed', async function () {
  *
  * @param {JSON} activeArgs supported arguments for the AWS UpdateItemCommand
  * @param {JSON} additionalArgs unsupported pairs of other attributes for AWS UpdateItemCommand
- * @return {String[]} UpdateItemCommandOutput (https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/interfaces/updateitemcommandoutput.html)
+ * @return {Object} UpdateItemCommandOutput (https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/interfaces/updateitemcommandoutput.html)
  */
 async function updateItem(activeArgs, additionalArgs) {
     const dynamoUpdateItemArgs = {}
@@ -354,20 +372,20 @@ async function updateItem(activeArgs, additionalArgs) {
 
     let queryParameters = {}
     if (!dynamoUpdateItemArgs.tableName) {
-        throw new Error("The 'tableName' for dynamodb query is required")
+        throw new Error("The 'tableName' for dynamodb update-item is required")
     }
     queryParameters.TableName = dynamoUpdateItemArgs.tableName
 
     if (!dynamoUpdateItemArgs.key) {
-        throw new Error("The 'item' for dynamodb put-item is required")
+        throw new Error("The 'key' for dynamodb update-item is required")
     }
-    if (dynamoUpdateItemArgs.key === 'string') {
+    if (typeof dynamoUpdateItemArgs.key === 'string') {
         dynamoUpdateItemArgs.key = JSON.parse(dynamoUpdateItemArgs.key)
     }
     queryParameters.Key = dynamoUpdateItemArgs.key
 
     if (dynamoUpdateItemArgs.expressionAttributeValues) {
-        if (dynamoUpdateItemArgs.expressionAttributeValues === 'string') {
+        if (typeof dynamoUpdateItemArgs.expressionAttributeValues === 'string') {
             dynamoUpdateItemArgs.expressionAttributeValues = JSON.parse(
                 dynamoUpdateItemArgs.expressionAttributeValues
             )
@@ -389,7 +407,7 @@ async function updateItem(activeArgs, additionalArgs) {
 }
 
 /**
- * Extracts variables for dynamodb query and preforms the aws command
+ * Extracts variables for dynamodb update-item and performs the aws command
  * @param {JSON} payload an object containing keys / values for the query
  */
 async function performDynamoDBUpdateFromJSON(payload) {
@@ -443,7 +461,7 @@ MAFWhen('dynamodb update-item is performed', async function () {
  * Deletes item on a dynamoDB table
  * @param {JSON} activeArgs supported arguments for the AWS DeleteItemCommand
  * @param {JSON} additionalArgs unsupported pairs of other attributes for AWS DeleteItemCommand
- * @return {String[]} DeleteItemCommandOutput (https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/interfaces/deleteitemcommandoutput.html)
+ * @return {Object} DeleteItemCommandOutput (https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/interfaces/deleteitemcommandoutput.html)
  */
 async function deleteItem(activeArgs, additionalArgs) {
     const dynamoDeleteItemArgs = {}
@@ -452,20 +470,20 @@ async function deleteItem(activeArgs, additionalArgs) {
 
     let queryParameters = {}
     if (!dynamoDeleteItemArgs.tableName) {
-        throw new Error("The 'tableName' for dynamodb query is required")
+        throw new Error("The 'tableName' for dynamodb delete-item is required")
     }
     queryParameters.TableName = dynamoDeleteItemArgs.tableName
 
     if (!dynamoDeleteItemArgs.key) {
-        throw new Error("The 'item' for dynamodb put-item is required")
+        throw new Error("The 'key' for dynamodb delete-item is required")
     }
-    if (dynamoDeleteItemArgs.key === 'string') {
+    if (typeof dynamoDeleteItemArgs.key === 'string') {
         dynamoDeleteItemArgs.key = JSON.parse(dynamoDeleteItemArgs.key)
     }
     queryParameters.Key = dynamoDeleteItemArgs.key
 
     if (dynamoDeleteItemArgs.expressionAttributeValues) {
-        if (dynamoDeleteItemArgs.expressionAttributeValues === 'string') {
+        if (typeof dynamoDeleteItemArgs.expressionAttributeValues === 'string') {
             dynamoDeleteItemArgs.expressionAttributeValues = JSON.parse(
                 dynamoDeleteItemArgs.expressionAttributeValues
             )
@@ -474,9 +492,6 @@ async function deleteItem(activeArgs, additionalArgs) {
     }
     if (dynamoDeleteItemArgs.expressionAttributeNames) {
         queryParameters.ExpressionAttributeNames = dynamoDeleteItemArgs.expressionAttributeNames
-    }
-    if (dynamoDeleteItemArgs.updateExpression) {
-        queryParameters.UpdateExpression = dynamoDeleteItemArgs.updateExpression
     }
     queryParameters.ReturnValues = 'ALL_OLD'
     if (additionalArgs) {
@@ -487,7 +502,7 @@ async function deleteItem(activeArgs, additionalArgs) {
 }
 
 /**
- * Extracts variables for dynamodb query and preforms the aws command
+ * Extracts variables for dynamodb delete-item and performs the aws command
  * @param {JSON} payload an object containing keys / values for the deletion
  */
 async function performDynamoDBDeleteFromJSON(payload) {

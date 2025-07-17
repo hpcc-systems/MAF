@@ -106,3 +106,156 @@ Feature: AWS: DynamoDB
       | item               | deletedItem                                                                             |
       | {"label":"_Alpha"} | {"some_word": "Orange","label": "_Alpha","some_number": "86"}                           |
       | {"label":"_Beta"}  | {"new_attribute": "Balloon","some_word": "Grapes","label": "_Beta","some_number": "32"} |
+
+  Scenario: Test conversion with different data types
+    Given table "testtable" exists on dynamo
+    When '{"label":"_Test","isActive":true,"score":95,"data":"SGVsbG8gV29ybGQ="}' is converted to dynamo
+    And set "item" to it
+    And set "tableName" to "testtable"
+    And dynamodb put-item is performed
+
+  Scenario: Test query with filterExpression and scanIndexForward
+    Given table "testtable" exists on dynamo
+    And set "tableName" to "testtable"
+    And set "keyConditionExpression" to "label = :label"
+    And set "filterExpression" to "some_number > :minNumber"
+    And set "scanIndexForward" to "true"
+    And set "expressionAttributeValues" to:
+      """
+      {
+        ":label": {"S": "_Alpha"},
+        ":minNumber": {"N": "50"}
+      }
+      """
+    And dynamodb query is performed
+
+  Scenario: Test query with expressionAttributeNames
+    Given table "testtable" exists on dynamo
+    And set "tableName" to "testtable"
+    And set "keyConditionExpression" to "#lbl = :label"
+    And set "expressionAttributeNames" to:
+      """
+      {
+        "#lbl": "label"
+      }
+      """
+    And set "expressionAttributeValues" to:
+      """
+      {
+        ":label": {"S": "_Alpha"}
+      }
+      """
+    And dynamodb query is performed
+
+  Scenario: Test dynamodb query from jsonObject
+    Given table "testtable" exists on dynamo
+    When dynamodb query from '{"tableName":"testtable","keyConditionExpression":"label = :label","expressionAttributeValues":{":label":{"S":"_Alpha"}}}' is performed
+
+  Scenario: Test dynamodb put-item from jsonObject
+    Given table "testtable" exists on dynamo
+    When dynamodb put-item from '{"tableName":"testtable","item":{"label":{"S":"_JsonTest"},"value":{"S":"test"}}}' is performed
+
+  Scenario: Test dynamodb update-item from jsonObject
+    Given table "testtable" exists on dynamo
+    When dynamodb update-item from '{"tableName":"testtable","key":{"label":{"S":"_JsonTest"}},"updateExpression":"SET #v = :val","expressionAttributeNames":{"#v":"value"},"expressionAttributeValues":{":val":{"S":"updated"}}}' is performed
+
+  Scenario: Test dynamodb delete-item from jsonObject
+    Given table "testtable" exists on dynamo
+    When dynamodb delete-item from '{"tableName":"testtable","key":{"label":{"S":"_JsonTest"}}}' is performed
+
+  Scenario: Test cleaning different JSON formats
+    Given table "testtable" exists on dynamo
+    When set "testItem" to '{"Item":{"label":{"S":"test"}}}'
+    And '${testItem}' is cleaned
+    Then it is equal to '{"label":"test"}'
+
+  Scenario: Test perform dynamodb put-item with docstring
+    Given table "testtable" exists on dynamo
+    When perform dynamodb put-item:
+      """
+      {
+        "tableName": "testtable",
+        "item": {
+          "label": {"S": "_DocStringTest"},
+          "description": {"S": "test item"}
+        }
+      }
+      """
+
+  Scenario: Test perform dynamodb update-item with docstring
+    Given table "testtable" exists on dynamo
+    When perform dynamodb update-item:
+      """
+      {
+        "tableName": "testtable",
+        "key": {"label": {"S": "_DocStringTest"}},
+        "updateExpression": "SET description = :desc",
+        "expressionAttributeValues": {
+          ":desc": {"S": "updated description"}
+        }
+      }
+      """
+
+  Scenario: Test object conversion with nested objects
+    Given table "testtable" exists on dynamo
+    When '{"label":"_NestedTest","simpleString":"test"}' is converted to dynamo
+    And set "item" to it
+    And set "tableName" to "testtable"
+    And dynamodb put-item is performed
+
+  Scenario: Test query with additional parameters but no indexName
+    Given table "testtable" exists on dynamo
+    And set "tableName" to "testtable"
+    And set "keyConditionExpression" to "label = :label"
+    And set "expressionAttributeValues" to:
+      """
+      {
+        ":label": {"S": "_Alpha"}
+      }
+      """
+    And dynamodb query is performed
+
+  Scenario: Test cleaning array of items
+    Given table "testtable" exists on dynamo
+    When set "arrayData" to '[{"label":{"S":"test1"}},{"label":{"S":"test2"}}]'
+    And '${arrayData}' is cleaned
+    Then it contains "test1"
+
+  Scenario: Test operations with results not initialized
+    Given table "testtable" exists on dynamo
+    When perform dynamodb query:
+      """
+      {
+        "tableName": "testtable",
+        "keyConditionExpression": "label = :label",
+        "expressionAttributeValues": {
+          ":label": {"S": "_Alpha"}
+        }
+      }
+      """
+
+  Scenario: Test update with expressionAttributeNames
+    Given table "testtable" exists on dynamo
+    And set "tableName" to "testtable"
+    And set "key" to '{"label":{"S":"_Test"}}'
+    And set "updateExpression" to "SET #score = :newScore"
+    And set "expressionAttributeNames" to:
+      """
+      {
+        "#score": "score"
+      }
+      """
+    And set "expressionAttributeValues" to:
+      """
+      {
+        ":newScore": {"N": "100"}
+      }
+      """
+    And dynamodb update-item is performed
+
+  Scenario: Test conversion with different data types including string numbers
+    Given table "testtable" exists on dynamo
+    When '{"label":"_NumberTest","stringNumber":"123","realNumber":456,"boolTrue":true,"boolFalse":false}' is converted to dynamo
+    And set "item" to it
+    And set "tableName" to "testtable"
+    And dynamodb put-item is performed
