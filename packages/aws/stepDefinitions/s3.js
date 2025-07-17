@@ -111,15 +111,7 @@ function validateFilePath(filePath) {
  * @throws {Error} Enhanced error with context
  */
 function handleS3Error(error, operation) {
-    // Log full error for debugging but don't expose to user
-    console.error(`S3 ${operation} error:`, error)
-
-    // Return generic error message to prevent information disclosure
-    if (process.env.NODE_ENV === 'development' || process.env.AWSENV === 'LOCALSTACK') {
-        throw new Error(`S3 ${operation} failed: ${error.message}`)
-    } else {
-        throw new Error(`S3 ${operation} failed`)
-    }
+    throw new Error(`S3 ${operation} failed: ${error.message}`)
 }
 
 /**
