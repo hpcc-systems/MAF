@@ -192,7 +192,11 @@ async function requestBuilder(request) {
         const details = request.apiParams
         for (const property in details) {
             const encodedKey = encodeURIComponent(property)
-            const encodedValue = encodeURIComponent(details[property])
+            // Handle nested objects by JSON stringifying them
+            const value = typeof details[property] === 'object' && details[property] !== null
+                ? JSON.stringify(details[property])
+                : details[property]
+            const encodedValue = encodeURIComponent(value)
             formBody.push(encodedKey + '=' + encodedValue)
         }
         formBody = formBody.join('&')
