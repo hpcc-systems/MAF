@@ -22,7 +22,7 @@ jobs:
     - uses: actions/checkout@v4.2.2
     - uses: LocalStack/setup-localstack@v0.2.3
       with:
-        image-tag: '3.7.2'
+        image-tag: '4.6.0'
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4.4.0
       with:

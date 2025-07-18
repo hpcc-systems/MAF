@@ -231,12 +231,12 @@ Running the tests for the modules is done using the `npm test -w packages/PACKAG
 
 ### Running localstack
 
-All the modules can be tested locally without any external dependencies, except for the AWS module. To test AWS locally, you can use a [localstack](https://github.com/localstack/localstack) docker container. The version used as of now is 4.6.0.
+All the modules can be tested locally without any external dependencies, except for the AWS module. To test AWS locally, you can use a [localstack](https://github.com/localstack/localstack) docker container. The version used as of now is 4.6.0. Note that the localstack container requires access to the docker socket to test lambda functions, so you need to mount the docker socket into the container.
 
 To run localstack locally in a docker container, you can use the following command:
 
 ```bash
-docker run --rm -it -p 4566:4566 localstack/localstack:4.6.0
+docker run -d --name localstack -p 4566:4566 -v /var/run/docker.sock:/var/run/docker.sock localstack/localstack:4.6.0
 ```
 
 Command explanation:

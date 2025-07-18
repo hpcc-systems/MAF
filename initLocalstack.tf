@@ -11,6 +11,7 @@ provider "aws" {
     dynamodb = "http://localhost:4566"
     s3       = "http://localhost:4566"
     sqs      = "http://localhost:4566"
+    lambda   = "http://localhost:4566"
   }
 }
 
@@ -52,4 +53,14 @@ resource "aws_sqs_queue" "testQueueAlpha" {
 
 resource "aws_sqs_queue" "testQueueBeta" {
   name = "testQueueBeta"
+}
+
+# Lambda functions for testing - using a dummy role ARN for LocalStack
+resource "aws_lambda_function" "test_lambda_function" {
+  filename         = "packages/aws/lambda-functions/lambda-function.zip"
+  function_name    = "test-lambda-function"
+  role            = "arn:aws:iam::000000000000:role/lambda-role"
+  handler         = "index.handler"
+  runtime         = "nodejs20.x"
+  source_code_hash = filebase64sha256("packages/aws/lambda-functions/lambda-function.zip")
 }
