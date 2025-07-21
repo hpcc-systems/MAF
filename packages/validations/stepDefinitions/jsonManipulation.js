@@ -80,12 +80,24 @@ MAFWhen('JSON key {string} is extracted from {jsonObject}', function (jsonPath, 
     for (const key of jsonPath.split('.')) {
         if (key.includes('[') && key.includes(']')) {
             const index = key.match(/\[(.*?)\]/)[1]
-            value = value[key.split('[')[0]][index]
+            const arrayKey = key.split('[')[0]
+            if (value && value[arrayKey]) {
+                value = value[arrayKey][index]
+            } else {
+                value = undefined
+            }
         } else {
-            value = value[key]
+            if (value && Object.prototype.hasOwnProperty.call(value, key)) {
+                value = value[key]
+            } else {
+                value = undefined
+            }
+        }
+        if (value === undefined) {
+            break
         }
     }
-    return value
+    return value === undefined ? 'undefined' : value
 })
 
 /**

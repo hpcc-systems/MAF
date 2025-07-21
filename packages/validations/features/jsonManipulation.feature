@@ -26,7 +26,7 @@ Feature: Validations: JSON Manipulation and Processing
     When JSON key "subErrorCodes[0].subErrorMessage" is extracted from item "response.error"
     And it is equal to "Phone Number is required"
     When JSON key "doesnotexist" is extracted from item "response"
-    And it is equal to "null"
+    And it is equal to "undefined"
 
   Scenario: JSON element existence checking
     When set "Data" to:
