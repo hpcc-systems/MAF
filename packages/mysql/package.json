@@ -37,11 +37,6 @@
     "@ln-maf/validations": "file:../validations",
     "concurrently": "^8.2.2",
     "wait-on": "^7.2.0",
-    "eslint": "^8.0.0",
-    "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6.0.0",
     "multiple-cucumber-html-reporter": "3.7.0",
     "nyc": "^15.1.0"
   },
