@@ -67,8 +67,8 @@ const applyJSONToString = function (string, scenario, fillTemplateValues = true)
 }
 
 /**
- * Retrieves the value of an item from a nested object using dot notation.
- * @param {string} item - The item path to retrieve using dot notation (e.g., 'user.profile.name')
+ * Retrieves the value of an item from a nested object using dot notation and array bracket notation.
+ * @param {string} item - The item path to retrieve using dot notation (e.g., 'user.profile.name') and array notation (e.g., 'users[0].name')
  * @param {object} itemsList - The nested object containing the items
  * @returns {*} The value of the item, or undefined if not found
  * @throws {Error} If item is not a string or itemsList is not an object
@@ -82,11 +82,34 @@ function getItemValue(item, itemsList) {
     }
 
     let value = itemsList
-    for (const key of item.split('.')) {
+
+    // Split the path and handle both dot notation and array bracket notation
+    const pathParts = item.split('.')
+
+    for (const pathPart of pathParts) {
         if (value === null || value === undefined) {
             return undefined
         }
-        value = value[key]
+
+        // Check if this path part contains array bracket notation
+        if (pathPart.includes('[') && pathPart.includes(']')) {
+            // Handle array notation like "lastRun[0]" or "users[2]"
+            const arrayMatch = pathPart.match(/^([^[]+)\[(\d+)\]$/)
+            if (arrayMatch) {
+                const [, arrayName, index] = arrayMatch
+                value = value[arrayName]
+                if (value === null || value === undefined) {
+                    return undefined
+                }
+                value = value[parseInt(index)]
+            } else {
+                // If bracket notation is malformed, treat as regular key
+                value = value[pathPart]
+            }
+        } else {
+            // Regular property access
+            value = value[pathPart]
+        }
     }
     return value
 }
@@ -110,12 +133,75 @@ function MAFSave(item, itemValue) {
     let currentItem = this.results
 
     for (let i = 0; i < keys.length - 1; i++) {
-        if (!currentItem[keys[i]]) {
-            currentItem[keys[i]] = {}
+        const key = keys[i]
+
+        // Check if this key contains array bracket notation
+        if (key.includes('[') && key.includes(']')) {
+            const arrayMatch = key.match(/^([^[]+)\[(\d+)\]$/)
+            if (arrayMatch) {
+                const [, arrayName, index] = arrayMatch
+                const arrayIndex = parseInt(index)
+
+                // Initialize array if it doesn't exist
+                if (!currentItem[arrayName]) {
+                    currentItem[arrayName] = []
+                }
+
+                // Ensure array is large enough
+                while (currentItem[arrayName].length <= arrayIndex) {
+                    currentItem[arrayName].push(undefined)
+                }
+
+                // Initialize object at array index if needed
+                if (!currentItem[arrayName][arrayIndex]) {
+                    currentItem[arrayName][arrayIndex] = {}
+                }
+
+                currentItem = currentItem[arrayName][arrayIndex]
+            } else {
+                // Malformed bracket notation, treat as regular key
+                if (!currentItem[key]) {
+                    currentItem[key] = {}
+                }
+                currentItem = currentItem[key]
+            }
+        } else {
+            // Regular property access
+            if (!currentItem[key]) {
+                currentItem[key] = {}
+            }
+            currentItem = currentItem[key]
         }
-        currentItem = currentItem[keys[i]]
     }
-    currentItem[keys[keys.length - 1]] = itemValue
+
+    // Handle the final key (could also have array notation)
+    const finalKey = keys[keys.length - 1]
+    if (finalKey.includes('[') && finalKey.includes(']')) {
+        const arrayMatch = finalKey.match(/^([^[]+)\[(\d+)\]$/)
+        if (arrayMatch) {
+            const [, arrayName, index] = arrayMatch
+            const arrayIndex = parseInt(index)
+
+            // Initialize array if it doesn't exist
+            if (!currentItem[arrayName]) {
+                currentItem[arrayName] = []
+            }
+
+            // Ensure array is large enough
+            while (currentItem[arrayName].length <= arrayIndex) {
+                currentItem[arrayName].push(undefined)
+            }
+
+            currentItem[arrayName][arrayIndex] = itemValue
+        } else {
+            // Malformed bracket notation, treat as regular key
+            currentItem[finalKey] = itemValue
+        }
+    } else {
+        // Regular property assignment
+        currentItem[finalKey] = itemValue
+    }
+
     tryAttach.call(this, { [resultKey]: this.results[resultKey] })
 }
 

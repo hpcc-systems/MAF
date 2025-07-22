@@ -401,3 +401,25 @@ Then('{jsonObject} has a length less than {int}', function (jsonObject, expected
         )
     }
 })
+
+Then('{jsonObject} is greater than {int}', function (itemPath, expectedValue) {
+    const actualValue = performJSONObjectTransform.call(this, itemPath)
+    const numActual = Number(actualValue)
+    const numExpected = Number(expectedValue)
+
+    if (isNaN(numActual)) {
+        throw new Error(`Expected numeric value but got: ${JSON.stringify(actualValue)} (type: ${typeof actualValue})`)
+    }
+
+    if (numActual <= numExpected) {
+        throw new Error(`Expected ${actualValue} to be greater than ${expectedValue}`)
+    }
+})
+
+Then('{jsonObject} is equal to null', function (itemPath) {
+    const actualValue = performJSONObjectTransform.call(this, itemPath)
+
+    if (actualValue !== null) {
+        throw new Error(`Expected null but got: ${JSON.stringify(actualValue)} (type: ${typeof actualValue})`)
+    }
+})
