@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 
 /**
- * Sets database credentials in secure storage (keytar)
+ * Sets database credentials in secure storage using the credential manager
  * Usage: node setCreds.js <configFile> <username> <password>
  */
 const fs = require('fs')
+const CredentialManager = require('./credentialManager')
 
 async function setCredentials() {
     const args = process.argv.slice(2)
@@ -28,12 +29,8 @@ async function setCredentials() {
         // Create environment key
         const environment = `sql.${config.host}.${config.database}`
 
-        // Store credentials securely
-        const keytar = require('keytar')
-        await keytar.setPassword(environment, 'username', username)
-        await keytar.setPassword(environment, 'password', password)
-
-        console.log(`Credentials stored successfully for environment: ${environment}`)
+        // Store credentials using the credential manager
+        await CredentialManager.setCredentials(environment, username, password)
     } catch (error) {
         console.error(`Error setting credentials: ${error.message}`)
         process.exit(1)

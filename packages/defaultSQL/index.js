@@ -1,6 +1,9 @@
 const { Given } = require('@cucumber/cucumber')
 const { readFile } = require('@ln-maf/core')
 const { MAFWhen, performJSONObjectTransform } = require('@ln-maf/core')
+const CredentialManager = require('./credentialManager')
+const configureDatabase = require('./config')
+const connect = require('./connect')
 
 /**
  * Sets up database step definitions for a given SQL module
@@ -31,18 +34,21 @@ const setupDatabaseStepDefinitions = function (moduleInfo) {
             const transformedQuery = performJSONObjectTransform.call(this, query)
 
             // Get user credentials
-            const userInfoObtainer = require('./userInfo')
             const environment = `${name}.${connectionInfo.host}.${connectionInfo.database}`
-            const userInfo = await userInfoObtainer(environment)
+            const credentials = await CredentialManager.getCredentials(environment)
 
-            if (!userInfo.username) {
+            if (!credentials.username) {
                 throw new Error(`No username found for environment: ${environment}`)
             }
 
             // Execute query
-            const connection = await connect(connectionInfo, userInfo.username, userInfo.password)
+            const connection = await connect(connectionInfo, credentials.username, credentials.password)
             const result = await runQuery(connection, transformedQuery)
             await disconnect(connection)
+
+            // Store result in context for further use
+            this.results = this.results || {}
+            this.results.lastRun = result
 
             return result
         } catch (error) {
@@ -69,4 +75,10 @@ const setupDatabaseStepDefinitions = function (moduleInfo) {
     })
 }
 
+// Export the main function and utility modules
 module.exports = setupDatabaseStepDefinitions
+
+// Export additional utilities for advanced usage
+module.exports.CredentialManager = CredentialManager
+module.exports.configureDatabase = configureDatabase
+module.exports.connect = connect

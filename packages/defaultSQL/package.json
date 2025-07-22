@@ -7,8 +7,8 @@
   "description": "Default Sql setup on Node with cucumber",
   "main": "index.js",
   "scripts": {
-    "test": "bash runFeature.sh",
-    "test:coverage": "TEST_COVERAGE=1 bash runFeature.sh"
+    "test": "echo 'defaultSQL is a utility package used by postgresql, mysql, and other database packages. Run tests in those packages instead.'",
+    "test:unit": "node test/unit-tests.js"
   },
   "author": "",
   "license": "Apache-2.0",
@@ -19,7 +19,14 @@
   },
   "peerDependencies": {
     "@cucumber/cucumber": ">= 10.0.0",
-    "@ln-maf/core": "*",
+    "@ln-maf/core": "*"
+  },
+  "peerDependenciesMeta": {
+    "keytar": {
+      "optional": true
+    }
+  },
+  "optionalDependencies": {
     "keytar": "7.*"
   },
   "devDependencies": {

@@ -2,7 +2,7 @@
 
 const fs = require('fs')
 const prompt = require('prompt')
-const checkCredentials = require('./checkCredentials')
+const CredentialManager = require('./credentialManager')
 
 /**
  * Configures database connection settings
@@ -27,7 +27,7 @@ const configureDatabase = async function (name) {
             }
 
             const environment = `${name}.${config.host}.${config.database}`
-            await checkCredentials(environment)
+            await CredentialManager.checkCredentials(environment)
             return
         } catch (error) {
             console.error(`Error reading config file: ${error.message}`)
@@ -71,7 +71,7 @@ const configureDatabase = async function (name) {
             console.log(`Configuration saved to ${configFile}`)
 
             const environment = `${name}.${result.host}.${result.database}`
-            await checkCredentials(environment)
+            await CredentialManager.checkCredentials(environment)
         }
     } catch (error) {
         console.error(`Configuration failed: ${error.message}`)
