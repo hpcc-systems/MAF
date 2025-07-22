@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "3.0.0",
+  "version": "4.0.0-beta.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -13,15 +13,15 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ln-maf/core": "file:../core",
     "ssh2-sftp-client": "^10.0.0"
   },
   "peerDependencies": {
     "@cucumber/cucumber": ">= 12.0.0",
-    "@ln-maf/core": "*"
+    "@ln-maf/core": ">= 4.0.0"
   },
   "devDependencies": {
     "@cucumber/cucumber": "^12.0.0",
+    "@ln-maf/core": "file:../core",
     "multiple-cucumber-html-reporter": "3.7.0"
   },
   "gitHead": "9bf55a2c86fa17707fabfb4320c3d722e270f9e6",
