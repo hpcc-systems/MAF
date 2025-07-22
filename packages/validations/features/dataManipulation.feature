@@ -127,6 +127,19 @@ Feature: Validations: Data Manipulation and Variable Setting
       }
       """
 
+  Scenario: Random number generation in templates
+    When set "randomTest" to:
+      """
+      {
+      "first": ${random},
+      "second": ${random},
+      "third": ${random}
+      }
+      """
+    Then item "randomTest.first" is not equal to item "randomTest.second"
+    And item "randomTest.second" is not equal to item "randomTest.third"
+    And item "randomTest.first" is not equal to item "randomTest.third"
+
   Scenario: Template string execution
     Given set "numVal" to 5
     When run templateString

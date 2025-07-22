@@ -2,8 +2,13 @@ const Cucumber = require('@cucumber/cucumber')
 const fs = require('fs')
 const path = require('path')
 
-const When = Cucumber.When
+const { When } = Cucumber
 
+/**
+ * Tries to attach content to the current scenario if attachment is enabled.
+ * @param {*} attach - The content to attach (object or string)
+ * @param {string} [type='text'] - The MIME type of the attachment
+ */
 const tryAttach = function (attach, type = 'text') {
     if (canAttach.call(this)) {
         if (typeof attach === 'object') {
@@ -14,10 +19,21 @@ const tryAttach = function (attach, type = 'text') {
     }
 }
 
+/**
+ * Checks if attachment is enabled for the current scenario.
+ * @returns {boolean} True if attachment is enabled, false otherwise
+ */
 const canAttach = function () {
-    return this.results.attach !== 'false'
+    return this.results && this.results.attach !== 'false'
 }
 
+/**
+ * Applies JSON parsing to a string with template filling capabilities.
+ * @param {string} string - The string to process
+ * @param {object} scenario - The scenario context containing results
+ * @param {boolean} [fillTemplateValues=true] - Whether to fill template values
+ * @returns {*} The processed string, object, or array
+ */
 const applyJSONToString = function (string, scenario, fillTemplateValues = true) {
     if (!scenario.results) {
         scenario.results = {}
@@ -26,32 +42,50 @@ const applyJSONToString = function (string, scenario, fillTemplateValues = true)
         scenario.results.DateTime = require('luxon').DateTime
         scenario.results.moment = require('moment')
     }
-    if (fillTemplateValues) { string = fillTemplate(string, scenario.results) }
+    if (fillTemplateValues) {
+        string = fillTemplate(string, scenario.results)
+    }
+
     try {
         if (string.trim() !== '') {
             const obj = JSON.parse(string)
             if (typeof obj === 'object') {
-                string = obj
+                return obj
             }
         }
     } catch (e) {
         try {
-            string = string.split('\n').filter(i => i !== '').map(i => JSON.parse(i))
-        } catch (e) { }
+            // Try to parse as multiple JSON lines
+            return string.split('\n')
+                .filter(line => line.trim() !== '')
+                .map(line => JSON.parse(line))
+        } catch (parseError) {
+            // If all parsing fails, return the original string
+        }
     }
     return string
 }
 
 /**
  * Retrieves the value of an item from a nested object using dot notation.
- *
- * @param {string} item - The item to retrieve the value for.
- * @param {object} itemsList - The nested object containing the items.
- * @returns {*} - The value of the item.
+ * @param {string} item - The item path to retrieve using dot notation (e.g., 'user.profile.name')
+ * @param {object} itemsList - The nested object containing the items
+ * @returns {*} The value of the item, or undefined if not found
+ * @throws {Error} If item is not a string or itemsList is not an object
  */
 function getItemValue(item, itemsList) {
+    if (typeof item !== 'string') {
+        throw new Error('Item must be a string')
+    }
+    if (!itemsList || typeof itemsList !== 'object') {
+        throw new Error('ItemsList must be an object')
+    }
+
     let value = itemsList
     for (const key of item.split('.')) {
+        if (value === null || value === undefined) {
+            return undefined
+        }
         value = value[key]
     }
     return value
@@ -85,6 +119,12 @@ function MAFSave(item, itemValue) {
     tryAttach.call(this, { [resultKey]: this.results[resultKey] })
 }
 
+/**
+ * Performs object transformation based on item type.
+ * @param {object} items - The items object containing type and value
+ * @param {boolean} [fillTemplateValues=true] - Whether to fill template values
+ * @returns {*} The transformed value based on the item type
+ */
 function performJSONObjectTransform(items, fillTemplateValues = true) {
     if (!this.results) {
         this.results = {}
@@ -107,10 +147,14 @@ function performJSONObjectTransform(items, fillTemplateValues = true) {
     case 'it':
         return this.results.lastRun
     case 'item':
-        if (fillTemplateValues) { items.value = fillTemplate(items.value, this.results) }
+        if (fillTemplateValues) {
+            items.value = fillTemplate(items.value, this.results)
+        }
         return getItemValue(items.value, this.results)
     case 'file':
-        if (fillTemplateValues) { items.value = fillTemplate(items.value, this.results) }
+        if (fillTemplateValues) {
+            items.value = fillTemplate(items.value, this.results)
+        }
         return applyJSONToString(readFile(items.value, this), this, fillTemplateValues)
     case '':
     case 'string':
@@ -120,6 +164,13 @@ function performJSONObjectTransform(items, fillTemplateValues = true) {
     }
 }
 
+/**
+ * Constructs a file path by joining directory and filename.
+ * @param {string} filename - The filename to get the path for
+ * @param {object} scenario - The scenario object containing directory information
+ * @returns {string} The constructed file path
+ * @throws {Error} If filename or scenario is missing
+ */
 function getFilePath(filename, scenario) {
     if (!filename) throw new Error('getFilePath: filename is required')
     if (!scenario) throw new Error('getFilePath: scenario is required')
@@ -136,6 +187,14 @@ function getFilePath(filename, scenario) {
     return filename
 }
 
+/**
+ * Writes data to a file with UTF-8 encoding.
+ * @param {string} filename - The filename to write to
+ * @param {*} data - The data to write
+ * @param {object} scenario - The scenario object containing directory information
+ * @returns {undefined}
+ * @throws {Error} If filename or scenario is missing
+ */
 const writeFile = (filename, data, scenario) => {
     if (!filename || !scenario) {
         throw new Error('writeFile: filename and scenario are required')
@@ -146,18 +205,44 @@ const writeFile = (filename, data, scenario) => {
     }
     return fs.writeFileSync(getFilePath(filename, scenario), toWrite, 'utf-8')
 }
+
+/**
+ * Writes binary data to a file.
+ * @param {string} filename - The filename to write to
+ * @param {Buffer} data - The binary data to write
+ * @param {object} scenario - The scenario object containing directory information
+ * @returns {undefined}
+ * @throws {Error} If filename or scenario is missing
+ */
 const writeFileBuffer = (filename, data, scenario) => {
     if (!filename || !scenario) {
         throw new Error('writeFileBuffer: filename and scenario are required')
     }
     return fs.writeFileSync(getFilePath(filename, scenario), data)
 }
+
+/**
+ * Reads binary data from a file.
+ * @param {string} filename - The filename to read from
+ * @param {object} scenario - The scenario object containing directory information
+ * @returns {Buffer} The file contents as a buffer
+ * @throws {Error} If filename or scenario is missing
+ */
 const readFileBuffer = (filename, scenario) => {
     if (!filename || !scenario) {
         throw new Error('readFileBuffer: filename and scenario are required')
     }
     return fs.readFileSync(getFilePath(filename, scenario))
 }
+
+/**
+ * Reads text data from a file.
+ * @param {string} filename - The filename to read from
+ * @param {object} scenario - The scenario object containing directory information
+ * @param {string} [dataType='utf-8'] - The encoding to use for reading
+ * @returns {string} The file contents as a string
+ * @throws {Error} If filename or scenario is missing
+ */
 const readFile = (filename, scenario, dataType = 'utf-8') => {
     if (!filename || !scenario) {
         throw new Error('readFile: filename and scenario are required')
@@ -165,116 +250,228 @@ const readFile = (filename, scenario, dataType = 'utf-8') => {
     return fs.readFileSync(getFilePath(filename, scenario), dataType)
 }
 
+/**
+ * Creates a Cucumber When step with automatic result saving and attachment.
+ * @param {string} name - The step definition pattern
+ * @param {Function} func - The step implementation function
+ */
 function MAFWhen(name, func) {
-    const params = []
-    for (let i = 0; i < func.length; i++) {
-        params.push('var' + i)
-    }
-    // eslint-disable-next-line no-use-before-define
-    let tmpFunc
-    eval(`
-    tmpFunc=async function(${params.join(',')}) {
-      if(!this.results) {
-        this.results={}
-      }
-      this.results.lastRun=await func.call(this, ...([].slice.call(arguments)))
-      if(canAttach.call(this))
-        this.attach(JSON.stringify({ lastRun: this.results.lastRun }, null, 2))
+    // Create a wrapper function that handles any number of parameters
+    // We'll create a generic wrapper that uses ...args but preserve the original function's length
+    const wrapperFunction = async function (...args) {
+        if (!this.results) {
+            this.results = {}
         }
-  `)
-    When(name, tmpFunc)
+        this.results.lastRun = await func.call(this, ...args)
+        if (canAttach.call(this)) {
+            this.attach(JSON.stringify({ lastRun: this.results.lastRun }, null, 2))
+        }
+    }
+
+    // Preserve the original function's parameter count by setting the length property
+    Object.defineProperty(wrapperFunction, 'length', {
+        value: func.length,
+        writable: false,
+        enumerable: false,
+        configurable: true
+    })
+
+    When(name, wrapperFunction)
+}
+
+/**
+ * Helper function to check if a string is valid JSON
+ * @param {string} str - The string to check
+ * @returns {boolean} - True if valid JSON, false otherwise
+ */
+function isValidJSON(str) {
+    try {
+        JSON.parse(str)
+        return true
+    } catch (e) {
+        return false
+    }
+}
+
+/**
+ * Helper function to safely evaluate a template expression
+ * @param {string} expression - The expression to evaluate
+ * @param {object} variables - The variables available for evaluation
+ * @returns {*} - The result of the evaluation
+ */
+function evaluateExpression(expression, variables) {
+    const trimmedExpression = expression.trim()
+    const keys = Object.keys(variables)
+    const values = Object.values(variables)
+
+    try {
+        // eslint-disable-next-line no-new-func
+        return (new Function(...keys, `return ${trimmedExpression};`))(...values)
+    } catch (error) {
+        // Return the original expression if evaluation fails
+        return `{${expression}}`
+    }
+}
+
+/**
+ * Helper function to format the result based on context
+ * @param {*} result - The result to format
+ * @param {boolean} isJSON - Whether the template is JSON
+ * @returns {string} - The formatted result
+ */
+function formatResult(result, isJSON) {
+    let formattedResult = result
+
+    // Handle object/array results
+    if (typeof result === 'object' && result !== null) {
+        formattedResult = JSON.stringify(result, null, 2)
+    } else if (typeof result === 'string' && isJSON) {
+        formattedResult = JSON.stringify(result, null, 2)
+    }
+
+    // Remove extra quotes for JSON strings
+    if (isJSON && typeof result === 'string' && typeof formattedResult === 'string' &&
+        formattedResult.length > 1 &&
+        formattedResult.startsWith('"') &&
+        formattedResult.endsWith('"')) {
+        formattedResult = formattedResult.slice(1, -1)
+    }
+
+    return formattedResult
 }
 
 /**
  * Fills a template string with variables from templateVars.
+ * Supports ${expression} syntax for variable substitution and evaluation.
  * @param {string|object} templateString - The template string or object.
  * @param {object} templateVars - Variables to fill into the template.
  * @returns {string} - The filled template string.
  */
 const fillTemplate = function (templateString, templateVars) {
-    // Check if the template string is a json object
-    let isJSON = true
-    try {
-        JSON.parse(templateString)
-    } catch (e) {
-        isJSON = false
+    // Input validation
+    if (!templateVars || typeof templateVars !== 'object') {
+        templateVars = {}
     }
-    templateVars.random = Math.floor(Math.random() * 100000)
+
+    // Check if the template string is valid JSON
+    const isJSON = typeof templateString === 'string' && isValidJSON(templateString)
+
+    // Create a copy of template variables to avoid mutation
+    const variables = { ...templateVars }
+    variables.require = require
+
+    // Define a getter for random to generate a new number each time it's accessed
+    Object.defineProperty(variables, 'random', {
+        get: () => Math.floor(Math.random() * 100000),
+        enumerable: true,
+        configurable: true
+    })
+
+    // Convert non-string input to string
     if (typeof templateString !== 'string') {
         templateString = JSON.stringify(templateString, null, 2)
     }
-    // Get all the items between the curly braces.
-    const left = []
-    let prev = false
-    let retStr = ''
-    const append = function (c) {
-        if (left.length === 0) {
-            retStr += c
+
+    // State variables for parsing
+    const bracketStack = []
+    let previousChar = ''
+    let result = ''
+
+    /**
+     * Appends character to either result or current bracket expression
+     * @param {string} char - Character to append
+     */
+    const appendChar = (char) => {
+        if (bracketStack.length === 0) {
+            result += char
         } else {
-            left[left.length - 1].str += c
+            bracketStack[bracketStack.length - 1].expression += char
         }
     }
-    templateVars.require = require
-    const keys = Object.keys(templateVars)
-    const vals = Object.values(templateVars)
+
+    // Process each character in the template string
     for (let i = 0; i < templateString.length; i++) {
-        const c = templateString.charAt(i)
-        if (c === '{') {
-            const item = {
+        const currentChar = templateString[i]
+
+        if (currentChar === '{') {
+            const bracketInfo = {
                 index: i,
-                str: ''
+                expression: '',
+                isVariable: previousChar === '$'
             }
-            if (prev) {
-                item.var = true
-            }
-            // If we have no items to replace the bracket should be treated as a character
-            if (left.length === 0 && !prev) {
-                append(c)
+
+            // Handle opening bracket
+            if (bracketStack.length === 0 && !bracketInfo.isVariable) {
+                appendChar(currentChar)
             } else {
-                left.push(item)
+                bracketStack.push(bracketInfo)
             }
-            prev = false
-            continue
-        } else if (c === '}') {
-            if (left.length !== 0) {
-                const l = left.pop()
-                if (l.var) {
-                    // Use the provided string to process
-                    let str = l.str
-                    str = str.trim()
-                    const res = (new Function(...keys, 'return ' + str + ';'))(...vals)
-                    let ret = res
-                    if ((typeof res === 'string' && isJSON) || typeof res === 'object') { ret = JSON.stringify(res, null, 2) }
-                    if (isJSON && typeof res === 'string' && ret.length > 1 && ret[0] === '"' && ret[ret.length - 1] === '"') {
-                        ret = ret.substring(1, ret.length - 1)
-                    }
-                    append(ret)
+            previousChar = ''
+        } else if (currentChar === '}') {
+            // Handle closing bracket
+            if (bracketStack.length > 0) {
+                const bracket = bracketStack.pop()
+
+                if (bracket.isVariable) {
+                    // Evaluate the expression and append result
+                    const evaluationResult = evaluateExpression(bracket.expression, variables)
+                    const formattedResult = formatResult(evaluationResult, isJSON)
+                    appendChar(formattedResult)
                 } else {
-                    append('{' + l.str + '}')
+                    // Not a variable, treat as literal text
+                    appendChar(`{${bracket.expression}}`)
                 }
             } else {
-                append(c)
+                appendChar(currentChar)
             }
-            prev = false
-            continue
+            previousChar = ''
         } else {
-            if (prev) {
-                append('$')
+            // Handle regular characters
+            if (previousChar === '$' && currentChar !== '{') {
+                appendChar('$')
             }
-            if (c !== '$') {
-                append(c)
+
+            if (currentChar !== '$') {
+                appendChar(currentChar)
             }
-            prev = (c === '$')
+
+            previousChar = currentChar
         }
     }
-    while (left.length !== 0) {
-        const l = left.shift()
-        if (l.var) {
-            retStr += '$'
+
+    // Handle any remaining unclosed brackets
+    while (bracketStack.length > 0) {
+        const bracket = bracketStack.shift()
+        if (bracket.isVariable) {
+            result += '$'
         }
-        retStr += '{' + l.str
+        result += `{${bracket.expression}`
     }
-    return retStr
+
+    // Handle trailing $
+    if (previousChar === '$') {
+        result += '$'
+    }
+
+    return result
 }
 
-module.exports = { performJSONObjectTransform, applyJSONToString, readFile, writeFile, writeFileBuffer, readFileBuffer, getFilePath, canAttach, MAFWhen, MAFSave, fillTemplate, tryAttach }
+module.exports = {
+    // Template and data processing functions
+    fillTemplate,
+    applyJSONToString,
+    performJSONObjectTransform,
+
+    // File operations
+    readFile,
+    writeFile,
+    readFileBuffer,
+    writeFileBuffer,
+    getFilePath,
+
+    // Cucumber and testing utilities
+    MAFWhen,
+    MAFSave,
+    tryAttach,
+    canAttach
+}
