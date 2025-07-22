@@ -223,3 +223,50 @@ Feature: Validations: Assertions and Comparisons
       """
       "Banana"
       """
+
+  Scenario: Array and string length validation
+    Given set "testArray" to:
+      """
+      [
+        "Apple",
+        "Banana",
+        "Orange"
+      ]
+      """
+    And set "testString" to "Hello World"
+    And set "emptyArray" to:
+      """
+      []
+      """
+    And set "testObject" to:
+      """
+      {
+        "name": "John",
+        "age": 30,
+        "city": "New York"
+      }
+      """
+    Then item "testArray" has a length of 3
+    And item "testString" has a length of 11
+    And item "emptyArray" has a length of 0
+    And item "testObject" has a length of 3
+    And item "testArray" has a length greater than 2
+    And item "testArray" has a length less than 5
+    And item "testString" has a length greater than 5
+    And item "testString" has a length less than 20
+
+  Scenario: Length validation with variables
+    Given set "dynamicArray" to:
+      """
+      ["item1", "item2", "item3", "item4"]
+      """
+    And set "expectedLength" to "4"
+    Then item "dynamicArray" has a length of 4
+    And item "dynamicArray" has a length greater than 3
+    And item "dynamicArray" has a length less than 6
+
+  Scenario: Length validation edge cases
+    And set "numberValue" to "12345"
+    And set "booleanValue" to "true"
+    Then item "numberValue" has a length of 5
+    And item "booleanValue" has a length of 4

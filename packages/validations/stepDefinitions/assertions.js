@@ -339,3 +339,65 @@ Then('{jsonObject} does not contain {string}', function (jsonObject, searchStrin
         )
     }
 })
+
+/**
+ * Gets the size/length of a value
+ * @param {*} value - The value to get size of
+ * @returns {number} The size/length of the value
+ */
+const getSize = (value) => {
+    if (value == null) return 0
+    if (Array.isArray(value)) return value.length
+    if (typeof value === 'string') return value.length
+    if (typeof value === 'object') return Object.keys(value).length
+    if (typeof value === 'number') return String(value).length
+    return String(value).length
+}
+
+Then('{jsonObject} has a length of {int}', function (jsonObject, expectedLength) {
+    const obj = performJSONObjectTransform.call(this, jsonObject)
+    const actualLength = getSize(obj)
+
+    if (actualLength !== expectedLength) {
+        const objType = Array.isArray(obj) ? 'array' : typeof obj
+        const objStr = typeof obj === 'object' ? JSON.stringify(obj, null, 2) : String(obj)
+        throw new Error(
+            `Expected ${objType} to have length ${expectedLength}:\n` +
+            `Actual: ${objStr}\n` +
+            `Actual length: ${actualLength}\n` +
+            `Expected length: ${expectedLength}`
+        )
+    }
+})
+
+Then('{jsonObject} has a length greater than {int}', function (jsonObject, expectedLength) {
+    const obj = performJSONObjectTransform.call(this, jsonObject)
+    const actualLength = getSize(obj)
+
+    if (actualLength <= expectedLength) {
+        const objType = Array.isArray(obj) ? 'array' : typeof obj
+        const objStr = typeof obj === 'object' ? JSON.stringify(obj, null, 2) : String(obj)
+        throw new Error(
+            `Expected ${objType} to have length greater than ${expectedLength}:\n` +
+            `Actual: ${objStr}\n` +
+            `Actual length: ${actualLength}\n` +
+            `Expected: length > ${expectedLength}`
+        )
+    }
+})
+
+Then('{jsonObject} has a length less than {int}', function (jsonObject, expectedLength) {
+    const obj = performJSONObjectTransform.call(this, jsonObject)
+    const actualLength = getSize(obj)
+
+    if (actualLength >= expectedLength) {
+        const objType = Array.isArray(obj) ? 'array' : typeof obj
+        const objStr = typeof obj === 'object' ? JSON.stringify(obj, null, 2) : String(obj)
+        throw new Error(
+            `Expected ${objType} to have length less than ${expectedLength}:\n` +
+            `Actual: ${objStr}\n` +
+            `Actual length: ${actualLength}\n` +
+            `Expected: length < ${expectedLength}`
+        )
+    }
+})
