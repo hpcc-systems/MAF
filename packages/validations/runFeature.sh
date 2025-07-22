@@ -3,7 +3,7 @@ mkdir -p test/report
 
 # Run Cucumber.js, optionally with nyc for code coverage if TEST_COVERAGE is set
 if [ "$TEST_COVERAGE" = "1" ]; then
-  npx nyc --reporter=lcov --reporter=text --report-dir=../../coverage npx cucumber-js $EXTRAS -f json:test/report/validations.json --require "stepDefinitions/*.js" features/$FEATURE_FILE
+  npx nyc npx cucumber-js $EXTRAS -f json:test/report/validations.json --require "stepDefinitions/*.js" features/$FEATURE_FILE
   result=$?
 else
   npx cucumber-js $EXTRAS -f json:test/report/validations.json --require "stepDefinitions/*.js" features/$FEATURE_FILE

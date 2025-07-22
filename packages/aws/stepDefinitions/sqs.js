@@ -260,22 +260,7 @@ MAFWhen('{jsonObject} is sent to queue {string}', async function (message, Queue
     return sendMessageToQueue(message, QueueUrl)
 })
 
-// Duplicate step definition - Will Deprecate
-MAFWhen('{jsonObject} is sent to queue url {string}', async function (message, QueueUrl) {
-    message = performJSONObjectTransform.call(this, message)
-    QueueUrl = fillTemplate(QueueUrl, this.results)
-    return sendMessageToQueue(message, QueueUrl)
-})
-
 MAFWhen('{string} message is sent to queue {string}', async function (message, QueueUrl) {
-    message = fillTemplate(message, this.results)
-    QueueUrl = fillTemplate(QueueUrl, this.results)
-    QueueUrl = await getURLfromQueueName(QueueUrl)
-    return sendMessageToQueue(message, QueueUrl)
-})
-
-// Duplicate step definition - Will Deprecate
-MAFWhen('{string} message is sent to queue url {string}', async function (message, QueueUrl) {
     message = fillTemplate(message, this.results)
     QueueUrl = fillTemplate(QueueUrl, this.results)
     QueueUrl = await getURLfromQueueName(QueueUrl)

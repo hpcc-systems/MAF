@@ -241,10 +241,11 @@ docker run -d --name localstack -p 4566:4566 -v /var/run/docker.sock:/var/run/do
 
 Command explanation:
 
-- --rm: remove the container after it stops
-- -it: interactive mode, so the container logs are shown in the terminal
-- -p 4566:4566: expose the port 4566 of the container to the port 4566 of the host
-- localstack/localstack:3.0.2: the image to use and version
+- -d: run the container in detached mode
+- --name localstack: name the container "localstack"
+- -p 4566:4566: expose port 4566 of the container to port 4566 of the host
+- -v /var/run/docker.sock:/var/run/docker.sock: mount the docker socket for lambda support
+- localstack/localstack:4.6.0: the image to use and version
 
 Then you can initialize, or reinitialize the services in localstack using the `initLocalstack.tf` file when testing:
 

@@ -1,62 +1,104 @@
+
 # AWS Cucumber Steps
 
-This module provides scenarios where Gherkins/Cucumber is implemented for AWS.
+This module provides Cucumber step definitions for AWS services, making it easy to write Gherkin scenarios that interact with AWS resources.
 
 [![npm package][npm-image]][npm-url]
-[![GitHub Actions](https://github.com/hpcc-systems/MAF/workflows/Build/badge.svg)](https://github.com/hpcc-systems/MAF/actions)
+[![GitHub Actions](https://github.com/hpcc-systems/MAF/workflows/Build/badge.svg)](https:**Note:** This is a duplicate of the above step and will be deprecated. Use `{jsonObject} is sent to queue {string}` instead.
+
+Sends a JSON object message to the SQS queue using the full queue URL. `${lastRun}` will contain the message ID and message.
+
+- `When {string} message is sent to queue {string}`thub.com/hpcc-systems/MAF/actions)
 [![Dependencies][dep-image]][dep-url]
 
-## Set up
+---
 
-1. Install by running `npm i @ln-maf/aws`.
+## Quick Start
 
-2. Add a step file with the following code in the features folder of the project:
+1. Install the AWS module:
 
-```JavaScript
-require('@ln-maf/aws')
+   ```bash
+   npm i @ln-maf/aws
+   ```
+
+2. In your project's `features` folder, create a step file and add:
+
+   ```js
+   require('@ln-maf/aws')
+   ```
+
+---
+
+## AWS Credentials & Configuration
+
+This module uses AWS SDK V3. You must provide AWS credentials so only your account and resources are accessed. See [AWS docs](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/loading-node-credentials-shared.html) for details. You can use real AWS or localstack.
+
+To run example features:
+
+1. Start localstack
+2. Run the terraform script: `terraform apply -auto-approve` (sets up localstack)
+3. Run tests: `npm t`
+
+---
+
+## Step Definitions Overview
+
+This module provides step definitions for AWS services. You can use them in your Gherkin feature files to interact with S3, Lambda, DynamoDB, SQS, ECS, and CloudWatch.
+
+For advanced usage, see [_{jsonObject}_](../validations/JSONObject.md) for details on using items, files, and template variables in steps.
+
+### Example Usage
+
+Here's a simple example of using multiple AWS services together:
+
+```Feature
+Feature: AWS Integration Example
+  Scenario: Process data through AWS services
+    # Upload a file to S3
+    When file "data.json" is uploaded to bucket "my-bucket" as key "input/data.json"
+    
+    # Send a message to SQS to trigger processing
+    When "process-file" message is sent to queue "processing-queue"
+    
+    # Check that processing completed by verifying DynamoDB record
+    When set "tableName" to "ProcessingResults"
+    When set "keyConditionExpression" to "filename = :name"
+    When set "expressionAttributeValues" to:
+    """
+    {
+      ":name": {
+        "S": "data.json"
+      }
+    }
+    """
+    When dynamodb query is performed
+    Then item "lastRun" has a length of 1
 ```
 
-## Dev Testing Steps
-
-- Run `docker run --rm -it -p 4566:4566 -p 4510-4559:4510-4559 localstack/localstack:3.7.2` to spin up a localstack environment.
-- Run `terraform init` to initialize the terraform environment. Last tested with hashicorp/aws v5.66.0
-- Run `terraform apply -auto-approve` to apply the terraform script to the localstack environment.
-- Be sure environment variable `AWSENV` is set to `LOCALSTACK`
-- Run `npm i` to install the dependencies
-- Run individual tests, or run all tests using `npm run test -w packages/aws`
-
-## Configurations
-
-The AWS SDK V3 is used for communication to AWS / Localstack.
-You need to provide credentials to AWS so that only your account and its resources are accessed by the SDK. For more information about obtaining your account credentials, see [Loading credentials in Node.js from the shared credentials file from AWS Documentation.](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/loading-node-credentials-shared.html)
-This can be point to a remote aws location, or point to a localstack configuration depending on the environment variable `AWSENV`. If `AWSENV` is set to `LOCALSTACK`, then the AWS MAF framework will use the default localstack configuration endpoint `http://localhost:4566`, or `http://${LOCALSTACK_HOSTNAME}:4566` if env variable `LOCALSTACK_HOSTNAME` is defined
-
-To run the example feature files, start the localstack and run the terraform script by running `terraform apply -auto-approve` to run initLocalstack.tf, then run `npm t` to start testing. `initLocalstack.tf` is needed for running the feature files in the features directory as this will set up the localstack environment for dev testing.
-
-## Step Definitions
-
-This library implements some step definitions for aws and adheres to the global cucumber implementation for various internals.
-
-Note [_{jsonObject}_](../validations/JSONObject.md) includes the steps `item {string}`, `it`, `{string}`, and `file {string}` to complete the step function
+---
 
 ### S3 Step Definitions
 
-- `Given bucket {string} exists on S3`
+**Bucket Operations:**
 
-Fails if a bucket with name {string} can not be found on the s3 server
+- `When bucket {string} exists on S3`
 
-- `Given bucket {string} is not on S3`
+Verifies that a bucket with the given name exists on S3. Fails if the bucket cannot be found.
 
-Fails if a bucket with name {string} can be found on the s3 server
+- `When bucket {string} is not on S3`
 
-- `Then bucket {string} exists`
+Verifies that a bucket with the given name does NOT exist on S3. Fails if the bucket is found.
 
-Fails if a bucket with name {string} can not be found on the s3 server
+- `When bucket {string} exists`
+
+Alias for `bucket {string} exists on S3`. Verifies that a bucket exists.
+
+**File Listing and Checking:**
 
 - `When file list of bucket {string} on path {string} is retrieved`
 
-Gets the list of files in the s3 bucket (s3://[bucket]/[path]). The file content list is stored to `${lastRun}`.
-Note: the order of the files returned may not follow a particular order.
+Gets the list of files in the S3 bucket at the specified path (s3://[bucket]/[path]). The file list is stored in `${lastRun}`.
+Note: The order of files returned may not follow a specific order.
 
 Example:
 
@@ -67,33 +109,39 @@ Then it is equal to "[test1.txt,test2.txt]"
 
 - `When all files of bucket {string} is retrieved`
 
-Gets a list of all files on the bucket as an array.
+Gets a list of all files in the bucket as an array. The file list is stored in `${lastRun}`.
 
-- `Then file exists with name {string} at path {string} in bucket {string}`
+- `When file exists with name {string} at path {string} in bucket {string}`
 
-Checks to see if a file exists at the provided path in the bucket . Fails if it does not exist
+Checks if a file exists at the specified path in the bucket. Fails if the file does not exist.
 
-- `When {jsonObject} is uploaded to bucket {string} as key {string}`
+**File Upload and Download:**
 
-Uploads a local file to the bucket. The file is placed at the path provided within the bucket.
+- `When file {string} is uploaded to bucket {string} as key {string}`
+
+Uploads a local file to the specified bucket. The file is placed at the path provided within the bucket. The local file path is relative to the project root.
 
 Example:
 
-`When file "hello.txt" is uploaded to bucket "myBucket" as key "foo/bar/hello"`
+```Feature
+When file "hello.txt" is uploaded to bucket "myBucket" as key "foo/bar/hello"
+```
 
 The file hello.txt and its contents now exist at s3://myBucket/foo/bar/hello
 
-- `When gz file {string} is uploaded to bucket {string} as key {string}`
+- `When file {string} from bucket {string} at path {string} is retrieved`
 
-- `When gz file {string} is uploaded to bucket {string} as key {string} with sha256 check`
+Gets the contents of the file from S3 at s3://[bucket]/[path]/[file] and stores it in `${lastRun}`. The file contents are returned as a string.
 
-Uploads gz files to the s3 bucket. This is necessary for gz / compressed files as there is an encoding issue when using jsonObject with gzips.
-The gzip must be a local file and should not be in memory. the stepDefinition with sha256 will fail if the file uploaded is not matching the original gzip file.
+- `When file {string} from bucket {string} at path {string} is written to {string}`
+
+Downloads a file from S3 and writes it to a local file path.
+
+**File Deletion:**
 
 - `When file {string} is deleted from bucket {string} at path {string}`
 
-Deletes a file from an s3 bucket.
-This **will** still pass if the file did not already exist in the bucket.
+Deletes a file from an S3 bucket. This step will still pass if the file did not already exist in the bucket.
 
 Example:
 
@@ -105,7 +153,6 @@ Then it is equal to:
   "test1.txt",
   "test2.txt"
 ]
-
 """
 When file "test1.txt" is deleted from bucket "testbucket" at path "folder1/folder2/"
 When file list of bucket "testbucket" on path "folder1/folder2/" is retrieved
@@ -117,413 +164,259 @@ Then it is equal to:
 """
 ```
 
-- `When file {string} from bucket {string} at path {string} is retrieved`
+### Lambda Step Definitions
 
-Gets the contents of the file s3://[bucket]/[path]/[file] and sends it content value to `${lastRun}`
+- `When a user supplies {jsonObject} to endpoint {string}`
 
-### Lambda Step Definitions (NOT TESTED)
-
-- `When a user supplies {jsonObject} to function {string}`
-
-Invokes a lambda function On AWS. {jsonObject} is the payload and {string} is the function name
+Invokes a Lambda function on AWS. The {jsonObject} is the payload and {string} is the function name. The response payload is stored in `${lastRun}`. The response object includes the status code, execution logs, and the function's return value.
 
 ### DynamoDB Step Definitions
 
-- `Given table {string} exists on dynamo`
+**Table Validation:**
 
-Checks that the table exists in dynamodb. Fails if it does not exist in AWS
+- `When table {string} exists on dynamo`
 
-**Warning**: You can add your own custom options to dynamo query / put-item / update-item / delete-item stepDefinitions, but they are not supported. You may add them at your own risk
-For example:
+Checks that the table exists in DynamoDB. Fails if it does not exist.
 
-```Feature
-When perform dynamodb query:
-"""
-{
-  "page-size":123
-}
-"""
-```
-
-This will add `--page-size 123` to the following dynamodb querys that take a jsonObject, but not all options are tested
-
-- `When perform dynamodb query: {docString}`
-
-- `When dynamodb query from {jsonObject} is performed`
-
-- `When dynamodb query is performed`
-
-Receives an Array of JSON items from dynamodb using defined variables, and stores the query results to `${lastRun}`. This is similar to [Query](https://docs.aws.amazon.com/cli/latest/reference/dynamodb/query.html) in AWS CLI
-
-This stepFunction looks at the following items to see if they exist, and pre-applies them to the dynamo query
-
-- tableName - required
-- indexName
-- keyConditionExpression - required
-- filterExpression
-- projectionExpression
-- expressionAttributeNames
-- expressionAttributeValues - Must be a JSON object
-
-For Example:
-
-The following item is on the dynamoDB table:
-{"label":"\_Alpha","some_number":86,"some_word":"Apple"}
-
- ```Feature
-When set "keyConditionExpression" to "label = :a"
-And set "tableName" to "testTable"
-And set "expressionAttributeValues" to:
-"""
-{
-  ":a": {
-    "S": "_Alpha"
-  }
-}
-"""
-When dynamodb query is performed
-Then it is equal to
-"""
-[
-    {
-      "some_word": {
-        "S": "Apple"
-      },
-      "label": {
-        "S": "_Alpha"
-      },
-      "some_number": {
-        "N": "86"
-      }
-    }
-]
-"""
-```
-
-- `When perform dynamodb put-item: {docString}`
-
-- `When dynamodb put-item from {jsonObject} is performed`
-
-- `When dynamodb put-item is performed`
-
-Places an item to the dynamodb table. The {jsonObject} should contain the item key information and attributes in DynamoDB JSON format as used by the aws cli. This is similar to [Put-Item](https://docs.aws.amazon.com/cli/latest/reference/dynamodb/put-item.html) in AWS CLI
-
-This stepFunction looks at the following items to see if they exist, and pre-applies them to the dynamo query
-
-- tableName - required
-- item - required, Must be a JSON object
-
-Example:
-
-```Feature
-When set "item" to:
-"""
-{
-  "label": {
-    "S":"_Alpha"
-  },
-  "some_number": {
-    "N":"86"
-  },
-  "some_word": {
-    "S":"Apple"
-  }
-}
-"""
-And set "tableName" to "testTable"
-When dynamodb put-item is performed
-```
-
-- `When perform dynamodb update-item: {docString}`
-
-- `When dynamodb update-item from {jsonObject} is performed`
-
-- `When dynamodb update-item is performed`
-
-Updates an item on a dynamodb table. It will also set `lastRun` as the item updated, only containing its new attributes. The {jsonObject} should contain the item key information in DynamoDB JSON format as used by the aws cli. This is similar to [Update-Item](https://docs.aws.amazon.com/cli/latest/reference/dynamodb/update-item.html) in AWS CLI
-
-This stepFunction looks at the following items to see if they exist, and pre-applies them to the dynamo query
-
-- tableName - required
-- key - required, Must be a JSON object
-- updateExpression
-- expressionAttributeNames
-- expressionAttributeValues - Must be a JSON object
-
-Example:
-
-```Feature
-And set "updateExpression" to "SET some_word = :a"
-And set "expressionAttributeValues" to:
-"""
-{
-  ":a": {
-    "S": "Orange"
-  }
-}
-"""
-And set "itemToUpdate" to:
-"""
-{
-  "label": {
-    "S": "_Alpha"
-  }
-}
-"""
-And dynamodb updates item "itemToUpdate" on table "testtable"
-```
-
-- `When perform dynamodb delete-item: {docString}`
-
-- `When dynamodb delete-item from {jsonObject} is performed`
-
-- `When dynamodb delete-item is performed`
-
-Deletes an item on a dynamodb table. The {jsonObject} should contain the item key information in DynamoDB JSON format as used by the aws cli. Fails if the item can't be removed, or is not found. This is similar to [Delete-Item](https://docs.aws.amazon.com/cli/latest/reference/dynamodb/delete-item.html) in AWS CLI
-
-This stepFunction looks at the following items to see if they exist, and pre-applies them to the dynamo query
-
-- tableName - required
-- item - required, Must be a JSON object
-
-Example:
-
-```Feature
-Given table "testtable" exists on dynamo
-When set "myItem" to:
-"""
-{
-  "label":"_Alpha"
-}
-"""
-When "myItem" is converted to dynamo
-And set "myKey" to it
-And perform dynamodb delete-item:
-"""
-{
-  "tableName":"testtable",
-  "key": ${myKey}
-}
-"""
-And it is cleaned
-And it is equal to:
-"""
-{
-  "some_word": "Orange",
-  "label": "_Alpha",
-  "some_number": "86"
-}
-"""
-Examples:
-  | item             |
-  |{"label":"_Alpha"}|
-```
+**Data Conversion Utilities:**
 
 - `When {jsonObject} is cleaned`
 
-This cleans the JSON object that came from a dynamoDB query. It will extract "S", "N", "B" and other dynamodb keys to its parent key. The cleaned JSON will be set to `lastRun`
-
-Example:
-
-```Feature
-When set "itemToClean" to:
-"""
-{
-  "label": {
-    "S":"_Alpha"
-  },
-  "some_number": {
-    "N":"86"
-  },
-  "some_word": {
-    "S":"Apple"
-  }
-}
-"""
-And item "itemToClean" is cleaned
-Then it is equal to:
-"""
-{
-  "label": "_Alpha",
-  "some_number": "86",
-  "some_word":"Apple"
-}
-"""
-```
+Cleans a JSON object that came from a DynamoDB query. It extracts "S", "N", "B" and other DynamoDB type keys to their parent key. The cleaned JSON is stored in `${lastRun}`.
 
 - `When {jsonObject} is converted to dynamo`
 
-This converts a JSON object into a dynamoDB JSON item, ready for a dynamoDB query / update. The conversion will be stored in `lastRun`
-Please note that this will not work with JSON values that have arrays, and base64 strings will be stored as binary in AWS.
+Converts a JSON object into a DynamoDB JSON item format, ready for DynamoDB operations. The conversion is stored in `${lastRun}`.
+Note: This will not work with JSON values that have arrays, and base64 strings will be stored as binary in AWS.
 
-Example:
+**Query Operations:**
 
-```Feature
-When set "data" to
-"""
-{
-  "some_number": "13375",
-  "some_word": "Grapes",
-  "str_bool": "true",
-  "some_bool": true
-}
-"""
-When item "data" is converted to dynamo
-Then it is equal to
-"""
-{
-  "some_number": {
-    "N": "13375",
-  },
-  "some_word": {
-    "S": "Grapes",
-  },
-  "str_bool": {
-    "S": "true",
-  },
-  "some_bool": {
-    "BOOL": true
-  }
-}
-"""
-```
+- `When perform dynamodb query: {docString}`
+- `When dynamodb query from {jsonObject} is performed`
+- `When dynamodb query is performed`
+
+Receives an array of JSON items from DynamoDB using defined variables, and stores the query results in `${lastRun}`. Similar to [Query](https://docs.aws.amazon.com/cli/latest/reference/dynamodb/query.html) in AWS CLI.
+
+Required variables:
+
+- `tableName` (required)
+- `keyConditionExpression` (required)
+
+Optional variables:
+
+- `indexName`
+- `filterExpression`
+- `projectionExpression`
+- `expressionAttributeNames`
+- `expressionAttributeValues` (must be a JSON object)
+
+**Put Item Operations:**
+
+- `When perform dynamodb put-item: {docString}`
+- `When dynamodb put-item from {jsonObject} is performed`
+- `When dynamodb put-item is performed`
+
+Places an item in the DynamoDB table. Similar to [Put-Item](https://docs.aws.amazon.com/cli/latest/reference/dynamodb/put-item.html) in AWS CLI.
+
+Required variables:
+
+- `tableName` (required)
+- `item` (required, must be a JSON object in DynamoDB format)**Update Item Operations:**
+
+- `When perform dynamodb update-item: {docString}`
+- `When dynamodb update-item from {jsonObject} is performed`
+- `When dynamodb update-item is performed`
+
+Updates an item in a DynamoDB table. Sets `${lastRun}` to the updated item with only new attributes. Similar to [Update-Item](https://docs.aws.amazon.com/cli/latest/reference/dynamodb/update-item.html) in AWS CLI.
+
+Required variables:
+
+- `tableName` (required)
+- `key` (required, must be a JSON object)
+
+Optional variables:
+
+- `updateExpression`
+- `expressionAttributeNames`
+- `expressionAttributeValues` (must be a JSON object)
+
+**Delete Item Operations:**
+
+- `When perform dynamodb delete-item: {docString}`
+- `When dynamodb delete-item from {jsonObject} is performed`
+- `When dynamodb delete-item is performed`
+
+Deletes an item from a DynamoDB table. Fails if the item cannot be removed or is not found. Similar to [Delete-Item](https://docs.aws.amazon.com/cli/latest/reference/dynamodb/delete-item.html) in AWS CLI.
+
+Required variables:
+
+- `tableName` (required)
+- `key` (required, must be a JSON object)
 
 ### SQS Step Definitions
 
-- `Given queue {string} exists on SQS`
+**Queue Validation:**
 
-Is true if the queue can be found on AWS. The string can be the url, or the queue name.
+- `When queue {string} exists on SQS`
+
+Verifies that the queue can be found on AWS. The string can be the URL or the queue name.
 If a queue name is used, a regex search will be done to find the queue.
 
-- `Then queue {string} is empty within {int} seconds`
+**Queue State Checks:**
 
-Checks if the queue is empty within the specified time. The string can be the url, or the queue name.
+- `When queue {string} is empty within {int} second(s)`
 
-- `Then queue {string} has {int} messages within {int} seconds`
+Checks if the queue is empty within the specified time. The string can be the URL or the queue name.
 
-Checks if the queue has the specified number of messages within the specified time. The string can be the url, or the queue name.
+- `When queue {string} has {int} message(s) within {int} second(s)`
+
+Checks if the queue has the specified number of messages within the specified time. The string can be the URL or the queue name.
+
+**Queue Management:**
 
 - `When attributes of queue {string} are received`
 
-Gets all attributes for a SQS queue to `lastRun`. The string can be the url, or the queue name.
-If a queue name is used, a regex search will be done to find the queue.
+Gets all attributes for an SQS queue and stores them in `${lastRun}`. The string can be the URL or the queue name.
 
-The following attributes are received from the queue:
+Attributes included: VisibilityTimeout, DelaySeconds, ReceiveMessageWaitTimeSeconds, ApproximateNumberOfMessages, ApproximateNumberOfMessagesNotVisible, ApproximateNumberOfMessagesDelayed, CreatedTimestamp, LastModifiedTimestamp, QueueArn.
 
-- VisibilityTimeout
-- DelaySeconds
-- ReceiveMessageWaitTimeSeconds
-- ApproximateNumberOfMessages
-- ApproximateNumberOfMessagesNotVisible
-- ApproximateNumberOfMessagesDelayed
-- CreatedTimestamp
-- LastModifiedTimestamp
-- QueueArn
+- `When queue {string} is purged`
 
-For example, on an SQS queue named "testQueue" that has one message in its queue:
+Removes all messages from the SQS queue. The string can be the URL or the queue name.
 
-```Feature
-When attributes of queue "testQueue" are received
-Then item "lastRun.ApproximateNumberOfMessages" is equal to "0"
-```
+**Message Operations:**
 
 - `When {jsonObject} is sent to queue {string}`
+- `When {string} message is sent to queue {string}`
 
-Sends a new message to the SQS queue name provided. If the queue name does not begin with https://, This will search for the first queue that matches the provided name. `lastRun` will contain the message id and message
+Sends a message to the SQS queue. If the queue name does not begin with https://, it will search for the first queue that matches the provided name. `${lastRun}` will contain the message ID and message.
 
 - `When the next message is received from queue {string}`
 
-Receives / Dequeues the message in the SQS queue and stores the value in `lastRun`
+Receives/dequeues the next message in the SQS queue and stores the value in `${lastRun}`.
 
 - `When {int} messages are received from queue {string}`
 
-Receives the next {int} messages in the SQS queue and stores the values in an array in `lastRun`
+Receives the next {int} messages in the SQS queue and stores the values in an array in `${lastRun}`.
 
 Example:
 
 ```Feature
-When message "Alpha" is sent to queue "testQueue2"
-And message "Beta" is sent to queue "testQueue2"
-And message "Charlie" is sent to queue "testQueue2"
-And 3 messages are received from queue "testQueue2"
-Then it is equal to:`
+When "Alpha" message is sent to queue "testQueue2"
+When "Beta" message is sent to queue "testQueue2"
+When "Charlie" message is sent to queue "testQueue2"
+When 3 messages are received from queue "testQueue2"
+Then it is equal to:
 """
 [
   "Alpha",
-  "Beta",
+  "Beta", 
   "Charlie"
 ]
 """
 ```
 
-- `When queue {string} is purged`
-
-Removes all messages from the sqs queue. The string can be the url, or the queue name.
-If a queue name is used, a regex search will be done to find the queue.
-
 ### ECS Step Definitions
+
+**Task Definition Management:**
+
+- `When ecs taskDefinition {string} exists`
+- `When ecs taskDefinition {string} does not exist`
+
+Checks if the task definition exists on ECS.
+
+**Cluster Management:**
+
+- `When ecs clusters from AWS are retrieved`
+
+Retrieves all ECS clusters and stores them in `${lastRun}`.
+
+- `When ecs cluster {string} exists`
+- `When ecs cluster {string} does not exist`
+
+Checks if the cluster exists on ECS.
+
+- `When get ARN of ecs cluster {string}`
+
+Gets the ARN of the specified ECS cluster and stores it in `${lastRun}`.
+
+- `When information from ecs cluster {string} is retrieved`
+
+Retrieves detailed information about the ECS cluster and stores it in `${lastRun}`.
+
+**Service Operations:**
 
 - `When at least one task is running for service {string} in cluster {string}`
 
-Checks if the service in an AWS cluster has at least one task running on ECS. Returns the number of running tasks to `lastRun`
+Checks if the service in an AWS cluster has at least one task running on ECS. Returns the number of running tasks to `${lastRun}`.
 
 - `When image name for service {string} in cluster {string} is retrieved`
 
-Retrieves the task definition image name / version of the running service in the cluster and set it to `lastRun`. Fails if the service is not running, or if there are no tasks running
+Retrieves the task definition image name/version of the running service in the cluster and sets it to `${lastRun}`. Fails if the service is not running or if there are no tasks running.
 
-- `When ecs taskDefinition {string} exists`
-
-- `When ecs taskDefinition {string} does not exist`
-
-Checks if the task definition exists on ecs
-
-- `When ecs cluster {string} exists`
-
-- `When ecs cluster {string} does not exist`
-
-Checks if the cluster exists on ecs
+**Task Execution:**
 
 - `When ecs run-task from {jsonObject} is performed`
-
-- `When perform ecs run-task:`
-
+- `When perform ecs run-task: {docString}`
 - `When ecs run-task is performed`
 
-Runs a task on ecs
+Runs a task on ECS.
 
-This stepFunction looks at the following items to see if they exist, and pre-applies them to the ecs command:
+Required variables:
 
-- taskDefinition - required
-- cluster - required, must be a JSON object
-- networkConfiguration - optional, must be a JSON object.
-  - subnets - required if using networkConfiguration
-  - securityGroups - required if using networkConfiguration
-  - assignPublicIp - optional. 'DISABLED' by default
-- enableECSManagedTags - optional. set as true or false.
-- launchType - optional. 'FARGATE' by default
+- `taskDefinition` (required)
+- `cluster` (required)
 
-Example:
+Optional variables:
 
-```Feature
-When perform ecs run-task:
-"""
-{
-    "taskDefinition": "batch-rrfe-selective:4",
-    "cluster": "telematics-us-qa-batch-ecs-cluster",
-    "networkConfiguration": {
-        "subnets": ["subnet-0c00d7b410e44e056","subnet-014af5a4f682f0d3f","subnet-0e3f8254dd77bc0cd","subnet-0c8bf0db90a9d8c45"],
-        "securityGroups": ["sg-0d07fc820ce3cf266"]
-    },
-    "enableECSManagedTags": true
-}
-"""
+- `networkConfiguration` (must be a JSON object)
+  - `subnets` (required if using networkConfiguration)
+  - `securityGroups` (required if using networkConfiguration)
+  - `assignPublicIp` (optional, 'DISABLED' by default)
+- `enableECSManagedTags` (optional, set as true or false)
+- `launchType` (optional, 'FARGATE' by default)
+
+### CloudWatch and SSM Step Definitions
+
+**CloudWatch Logs:**
+
+- `When cloudwatch logs from log group {string} from {int} minutes ago to now are retrieved`
+
+Gets the CloudWatch logs from a specific log group and time frame, storing them in `${lastRun}`.
+
+**SSM Parameter Store:**
+
+- `When parameter {string} value is retrieved from the parameter store`
+
+Retrieves a parameter value from AWS Systems Manager Parameter Store. Automatically attempts to parse JSON strings. The value is stored in `${lastRun}`.
+
+---
+
+## Local AWS Testing (Localstack)
+
+You can test AWS features locally using [localstack](https://github.com/localstack/localstack). This simulates AWS services on your machine.
+
+Start localstack with Docker:
+
+```bash
+docker run -d --name localstack -p 4566:4566 -v /var/run/docker.sock:/var/run/docker.sock localstack/localstack:4.6.0
 ```
 
-### Cloudwatch Step Definitions
+**What the command does:**
 
-- `When cloudwatch logs from log group {string} from {int} minutes ago to now are retrieved
+- `-d`: Detached mode (runs in background)
+- `--name localstack`: Names the container "localstack"
+- `-p 4566:4566`: Maps port 4566 from container to host
+- `-v /var/run/docker.sock:/var/run/docker.sock`: Mounts Docker socket for Lambda support
+- `localstack/localstack:4.6.0`: Uses localstack version 4.6.0
 
-Gets the cloudwatch logs from a specific log group and time frame
+To initialize AWS services in localstack, run:
+
+```bash
+terraform destroy -auto-approve && terraform apply -auto-approve
+```
+
+Set the environment variable `AWSENV=LOCALSTACK` to use localstack instead of real AWS.
 
 [npm-image]:https://img.shields.io/npm/v/@ln-maf/aws.svg
 [npm-url]:https://www.npmjs.com/package/@ln-maf/aws

@@ -9,62 +9,6 @@ const { fetchToCurl } = require('fetch-to-curl')
 
 setDefaultTimeout(30 * 1000)
 
-/**
- * @deprecated Set the item 'url' instead
- */
-MAFWhen('url {string}', function (url) {
-    fillTemplate(url, this.results)
-    // Remove trailing slash
-    url = url.replace(/\/$/, '')
-    MAFSave.call(this, 'url', url)
-})
-
-/**
- * @deprecated Set the item 'api' instead
- */
-MAFWhen('api {string}', function (api) {
-    fillTemplate(api, this.results)
-    // Remove leading slash
-    api = api.replace(/^\//, '')
-    MAFSave.call(this, 'api', api)
-})
-
-/**
- * @deprecated Set the item 'body' instead
- */
-MAFWhen('body {string}', function (body) {
-    fillTemplate(body, this.results)
-    MAFSave.call(this, 'body', body)
-})
-
-/**
- * @deprecated Set the item 'headers' instead
- */
-MAFWhen('headers {string}', function (headers) {
-    fillTemplate(headers, this.results)
-    MAFSave.call(this, 'headers', headers)
-})
-
-/**
- * @deprecated Set the item 'method' to 'POST' and call the method 'api request is performed' instead
- */
-MAFWhen('method post', async function () {
-    MAFSave.call(this, 'method', 'POST')
-    const results = await requestBuilder.call(this, {})
-    MAFSave.call(this, 'response', results.response)
-    return results
-})
-
-/**
- * @deprecated Set the item 'method' to 'GET' and call the method 'api request is performed' instead
- */
-MAFWhen('method get', async function () {
-    MAFSave.call(this, 'method', 'GET')
-    const results = await requestBuilder.call(this, {})
-    MAFSave.call(this, 'response', results.response)
-    return results
-})
-
 // Builds a request object from the given request, populating any missing fields using the results object
 async function requestBuilder(request) {
     if (!request.url && this.results && this.results.url) {
@@ -285,18 +229,6 @@ MAFWhen('perform api request:', async function (string) {
     return results
 })
 
-/**
- * @deprecated Use the status is ok, the status is {int} or the status is not ok instead
-*/
-Then('status not ok', function () {
-    assert(!this.results.lastRun.ok, `The status ${this.results.lastRun.status} was in the range of valid http response codes 200-299`)
-})
-/**
- * @deprecated Use the status is ok, the status is {int} or the status is not ok instead
-*/
-Then('status ok', function () {
-    assert(this.results.lastRun.ok, `The status ${this.results.lastRun.status} was not in the range of valid http response codes 200-299`)
-})
 Then('the status is ok', function () {
     assert(this.results.lastRun.ok, `The status ${this.results.lastRun.status} was not in the range of valid http response codes 200-299`)
 })
@@ -304,12 +236,6 @@ Then('the status is not ok', function () {
     assert(!this.results.lastRun.ok, `The status ${this.results.lastRun.status} was in the range of valid http response codes 200-299`)
 })
 
-/**
- * @deprecated Use the status is ok, the status is {int} or the status is not ok instead
- */
-Then('status {int}', function (int) {
-    assert(this.results.lastRun.status === int, `The status ${this.results.lastRun.status} was not ${int}`)
-})
 Then('the status is {int}', function (int) {
     assert(this.results.lastRun.status === int, `The status ${this.results.lastRun.status} was not ${int}`)
 })

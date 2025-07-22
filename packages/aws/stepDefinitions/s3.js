@@ -373,18 +373,6 @@ MAFWhen('file {string} from bucket {string} at path {string} is written to {stri
     }
 })
 
-/**
- * Deprecated: Use `file {string} from bucket {string} at path {string} is written to {string}` instead
- * @deprecated
-*/
-MAFWhen('gz file {string} from bucket {string} at path {string} is written to {string}', async function (key, bucketName, path, localFilePath) {
-    try {
-        await downloadS3FileToLocal(this, key, bucketName, path, localFilePath)
-    } catch (error) {
-        handleS3Error(error, 'file retrieval')
-    }
-})
-
 MAFWhen('file {string} from bucket {string} at path {string} is retrieved', async function (key, bucketName, path) {
     try {
         return await downloadS3FileToMemory(this, key, bucketName, path)
