@@ -15,7 +15,7 @@ class CredentialManager {
         // Try keytar first if available (backward compatibility)
         try {
             return require('keytar')
-        } catch (error) {
+        } catch {
             // Fall back to file-based storage if keytar is not available
             const FileCredentialStore = require('./fileCredentialStore')
             return new FileCredentialStore()

@@ -53,13 +53,13 @@ const applyJSONToString = function (string, scenario, fillTemplateValues = true)
                 return obj
             }
         }
-    } catch (e) {
+    } catch {
         try {
             // Try to parse as multiple JSON lines
             return string.split('\n')
                 .filter(line => line.trim() !== '')
                 .map(line => JSON.parse(line))
-        } catch (parseError) {
+        } catch {
             // If all parsing fails, return the original string
         }
     }
@@ -374,7 +374,7 @@ function isValidJSON(str) {
     try {
         JSON.parse(str)
         return true
-    } catch (e) {
+    } catch {
         return false
     }
 }
@@ -391,9 +391,9 @@ function evaluateExpression(expression, variables) {
     const values = Object.values(variables)
 
     try {
-        // eslint-disable-next-line no-new-func
+         
         return (new Function(...keys, `return ${trimmedExpression};`))(...values)
-    } catch (error) {
+    } catch {
         // Return the original expression if evaluation fails
         return `{${expression}}`
     }
