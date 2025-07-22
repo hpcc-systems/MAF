@@ -218,6 +218,27 @@ Feature: View the text "Hello World"
 
 ## Developer Notes
 
+### Monorepo Structure
+
+MAF is organized as a monorepo using Lerna for package management. This structure allows for:
+
+- **Independent versioning**: Each package can have its own version number
+- **Cross-package dependencies**: Packages can depend on each other within the monorepo
+- **Unified testing**: Run tests across all packages with a single command
+- **Coordinated releases**: Version and publish related packages together
+
+The monorepo contains the following packages:
+
+- `@ln-maf/core` - Core functionality and utilities
+- `@ln-maf/api` - API testing capabilities
+- `@ln-maf/aws` - AWS services integration (S3, DynamoDB, SQS, Lambda, ECS, CloudWatch)
+- `@ln-maf/validations` - Data validation and assertion steps
+- `@ln-maf/mysql` - MySQL database testing
+- `@ln-maf/postgresql` - PostgreSQL database testing
+- `@ln-maf/defaultSQL` - Common SQL functionality
+- `@ln-maf/sftp` - SFTP file transfer capabilities
+- `@ln-maf/preprocessor` - Feature file preprocessing
+
 ### Adding a module
 
 Please view [AddModule](./AddModule.md) for information on how to add a module.  This will allow the creation of new steps that can be used in your project.
@@ -227,7 +248,27 @@ Please view [AddModule](./AddModule.md) for information on how to add a module. 
 
 ### Testing the modules
 
-Running the tests for the modules is done using the `npm test -w packages/PACKAGE_NAME` command. Set PACKAGE_NAME to the name of the package you want to test. eg. `npm test -w packages/api`.
+Running the tests for the modules can be done in several ways:
+
+#### Using npm workspaces
+
+- `npm test -w packages/PACKAGE_NAME` - Test a specific package (e.g., `npm test -w packages/api`)
+
+#### Using Lerna commands
+
+- `npm test` or `lerna run test` - Run tests across all packages in parallel
+- `lerna run test --scope=@ln-maf/PACKAGE_NAME` - Test a specific package using Lerna
+- `lerna run test:coverage` - Run coverage tests across all packages (if available)
+- `lerna run test --stream` - Run tests with streaming output for better debugging
+
+#### Other useful Lerna commands
+
+- `lerna bootstrap` - Install dependencies and link cross-dependencies
+- `lerna clean` - Remove node_modules from all packages
+- `lerna ls` - List all packages in the monorepo
+- `lerna changed` - Show packages that have changed since last release
+- `lerna version` - Version packages that have changed
+- `lerna publish` - Publish packages to npm registry
 
 ### Running localstack
 
