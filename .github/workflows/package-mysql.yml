@@ -1,0 +1,49 @@
+name: Test MySQL Package
+
+on:
+  workflow_dispatch: 
+  push:
+    branches: [ main ]
+    paths:
+      - 'packages/mysql/**'
+  pull_request:
+    paths:
+      - 'packages/mysql/**'
+
+jobs:
+  MAF-MySQL:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22.x, 24.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/previous-releases
+
+    steps:
+      - uses: actions/checkout@v4.2.2
+    
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4.4.0
+        with:
+          node-version: ${{ matrix.node-version }}
+      
+      - run: npm ci
+      
+      - name: Test MySQL Package
+        run: npm test -w packages/mysql
+        env: 
+          ENVIRONMENT: CI
+          USE_ENV_VARIABLES: "TRUE"
+          MYSQL_SQL_USERNAME: root
+          MYSQL_SQL_PASSWORD: testpassword
+      
+      - name: Status Create Action
+        if: ${{ always() }}
+        uses: hkusu/status-create-action@v1.0.1
+        id: status-create
+        with:
+          state: ${{ job.status }} 
+          sha: ${{ github.sha }}
+    
+      - name: Show result
+        if: always()
+        run: echo '${{ steps.status-create.outputs.result }}'

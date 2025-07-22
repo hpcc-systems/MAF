@@ -1,0 +1,49 @@
+name: Test PostgreSQL Package
+
+on:
+  workflow_dispatch: 
+  push:
+    branches: [ main ]
+    paths:
+      - 'packages/postgresql/**'
+  pull_request:
+    paths:
+      - 'packages/postgresql/**'
+
+jobs:
+  MAF-PostgreSQL:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22.x, 24.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/previous-releases
+
+    steps:
+      - uses: actions/checkout@v4.2.2
+    
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4.4.0
+        with:
+          node-version: ${{ matrix.node-version }}
+      
+      - run: npm ci
+      
+      - name: Test PostgreSQL Package
+        run: npm test -w packages/postgresql
+        env: 
+          ENVIRONMENT: CI
+          USE_ENV_VARIABLES: "TRUE"
+          POSTGRESQL_SQL_USERNAME: postgres
+          POSTGRESQL_SQL_PASSWORD: testpassword
+      
+      - name: Status Create Action
+        if: ${{ always() }}
+        uses: hkusu/status-create-action@v1.0.1
+        id: status-create
+        with:
+          state: ${{ job.status }} 
+          sha: ${{ github.sha }}
+    
+      - name: Show result
+        if: always()
+        run: echo '${{ steps.status-create.outputs.result }}'
