@@ -159,6 +159,7 @@ Feature: AWS: S3 Testing
     Then file exists with name "root-level-file.txt" at path "" in bucket "test-bucket1"
     When file "root-level-file.txt" from bucket "test-bucket1" at path "" is retrieved
     Then it is equal to "Root level content"
+    And file "root-level-file.txt" is deleted from bucket "test-bucket1" at path ""
 
   Scenario: Complex File Names and Paths
     Given bucket "test-bucket2" exists on S3
