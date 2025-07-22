@@ -195,15 +195,6 @@ Feature: AWS: S3 Testing
     When file "${fileVar}" from bucket "${bucketVar}" at path "${pathVar}" is retrieved
     Then it is equal to "Template test content"
 
-  Scenario: Deprecated Step Definition Usage
-    Given bucket "test-bucket1" exists on S3
-    And "Gzip deprecated test content" is written to file "./test/deprecated-test.txt"
-    And the file "./test/deprecated-test.txt" is gzipped
-    When file "./test/deprecated-test.txt.gz" is uploaded to bucket "test-bucket1" as key "deprecated/test.txt.gz"
-    When gz file "test.txt.gz" from bucket "test-bucket1" at path "deprecated/" is written to "./test/deprecated-downloaded.txt.gz"
-    Then file "./test/deprecated-downloaded.txt.gz" is gzip unzipped to file "./test/deprecated-result.txt"
-    And file "./test/deprecated-result.txt" is equal to "Gzip deprecated test content"
-
   Scenario: Empty and Special Path Handling
     Given bucket "test-bucket2" exists on S3
     And "Empty path test" is written to file "./test/empty-path.txt"

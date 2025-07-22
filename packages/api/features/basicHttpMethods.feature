@@ -6,10 +6,8 @@ Feature: API - Basic HTTP Methods
         Given set "url" to "http://localhost:3001"
         And set "method" to "GET"
         When api request is performed
-        Then status ok
-        And the status is ok
+        Then the status is ok
         And the status is 200
-        And status 200
         And "${response.body}" is equal to ""
         And "${response.params}" is equal to "{}"
         And "${response.customHeaders}" is equal to:
@@ -25,12 +23,12 @@ Feature: API - Basic HTTP Methods
         And api request is performed
         Then the status is 200
         Given set "attach" to "false"
-        When method get
+        When set "method" to "GET"
         Then the status is 200
         And set "attach" to "true"
-        And body "Hello Example"
-        When method post
-        Then status ok
+        And set "body" to "Hello Example"
+        When set "method" to "POST"
+        Then api request is performed
         And the status is ok
         And the status is 201
 
@@ -46,7 +44,7 @@ Feature: API - Basic HTTP Methods
             """
             ${req}
             """
-        Then status ok
+        Then the status is ok
         And the status is 200
 
     Scenario: GET request using request object and perform api request
@@ -58,5 +56,5 @@ Feature: API - Basic HTTP Methods
             }
             """
         When api request from item "req" is performed
-        Then status ok
+        Then the status is ok
         And the status is 200

@@ -16,7 +16,7 @@ Feature: API - Request Body Types
                 "method": "POST"
             }
             """
-        Then status ok
+        Then the status is ok
         And the status is 201
         And "${response.customHeaders}" is equal to:
             """
@@ -42,7 +42,7 @@ Feature: API - Request Body Types
                 "method": "POST"
             }
             """
-        Then status ok
+        Then the status is ok
         And the status is 201
         And "${response.body}" is equal to "NOPE"
         And "${response.params}" is equal to "{}"

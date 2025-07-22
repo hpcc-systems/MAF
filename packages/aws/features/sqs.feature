@@ -73,33 +73,12 @@ Feature: AWS: SQS Testing
         When the next message is received from queue "${queueUrl}"
         Then it is equal to "Direct URL test message"
 
-    Scenario: Test Deprecated Queue URL Step Definitions
-        Given queue "testQueueBeta" exists on SQS
-        When queue "testQueueBeta" is purged
-        And set "betaQueueUrl" to "http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/testQueueBeta"
-        When "Deprecated URL test" is sent to queue url "${betaQueueUrl}"
-        And '{"message": "JSON test", "id": 123}' is sent to queue url "${betaQueueUrl}"
-        Then wait 500 milliseconds
-        When 2 messages are received from queue "testQueueBeta"
-        Then "${lastRun[0]}" is equal to "Deprecated URL test"
-        And set "message2" to "${lastRun[1].replace(/\\\"/g, '"')}"
-        And item "message2" is equal to '{"message": "JSON test", "id": 123}'
-
     Scenario: Test String Message Step Definition
         Given queue "testQueueAlpha" exists on SQS
         When "String message test" message is sent to queue "testQueueAlpha"
         Then wait 500 milliseconds
         When the next message is received from queue "testQueueAlpha"
         Then it is equal to "String message test"
-
-    Scenario: Test String Message to Queue URL (Deprecated)
-        Given queue "testQueueBeta" exists on SQS
-        When queue "testQueueBeta" is purged
-        And set "queueUrl" to "http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/testQueueBeta"
-        When "Deprecated string message" message is sent to queue url "${queueUrl}"
-        Then wait 500 milliseconds
-        When the next message is received from queue "testQueueBeta"
-        Then it is equal to "Deprecated string message"
 
     Scenario: Test Queue Empty Check
         Given queue "testQueueAlpha" exists on SQS

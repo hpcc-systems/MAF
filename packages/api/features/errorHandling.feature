@@ -23,13 +23,13 @@ Feature: API - Error Handling
         Given set "url" to "http://localhost:3001/custom-404"
         And set "method" to "GET"
         When api request is performed
-        Then status not ok
+        Then the status is not ok
 
     Scenario: status {int} step (deprecated) with 500
         Given set "url" to "http://localhost:3001/custom-500"
         And set "method" to "GET"
         When api request is performed
-        Then status 500
+        Then the status is 500
 
     Scenario: Use apiRetrieveType to retrieve response as text
         Given set "url" to "http://localhost:3001"

@@ -8,15 +8,16 @@ Feature: API - Image and File Handling
         And set "api" to "test-image"
         And set "method" to "GET"
         When api request is performed
-        Then status ok
+        Then the status is ok
         And blob item "response" is written to file "pickle_blob_write1.jpeg"
         And blob item "response" is attached
 
     Scenario: GET image with attach enabled
-        Given url "http://localhost:3001"
-        And api "test-image"
-        When method get
-        Then status ok
+        Given set "url" to "http://localhost:3001"
+        And set "api" to "test-image"
+        And set "method" to "GET"
+        When api request is performed
+        Then the status is ok
         And blob item "response" is written to file "pickle_blob_write2.jpeg"
         And blob item "response" is attached
 
