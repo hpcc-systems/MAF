@@ -365,7 +365,7 @@ MAFWhen('file {string} is uploaded to bucket {string} as key {string}', async fu
     }
 })
 
-MAFWhen('file {string} from bucket {string} at path {string} is written to {string}', async function (key, bucketName, path, localFilePath) {
+MAFWhen('S3 file {string} from bucket {string} at path {string} is written to file {string}', async function (key, bucketName, path, localFilePath) {
     try {
         await downloadS3FileToLocal(this, key, bucketName, path, localFilePath)
     } catch (error) {

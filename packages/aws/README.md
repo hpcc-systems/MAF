@@ -133,7 +133,7 @@ The file hello.txt and its contents now exist at s3://myBucket/foo/bar/hello
 
 Gets the contents of the file from S3 at s3://[bucket]/[path]/[file] and stores it in `${lastRun}`. The file contents are returned as a string.
 
-- `When file {string} from bucket {string} at path {string} is written to {string}`
+- `When S3 file {string} from bucket {string} at path {string} is written to file {string}`
 
 Downloads a file from S3 and writes it to a local file path.
 

@@ -92,7 +92,7 @@ Feature: AWS: S3 Testing
     And "Sample text content for testing" is written to file "./test/sample.txt"
     When file "./test/sample.txt" is uploaded to bucket "test-bucket4" as key "text-files/sample.txt"
     Then file exists with name "sample.txt" at path "text-files/" in bucket "test-bucket4"
-    When file "sample.txt" from bucket "test-bucket4" at path "text-files/" is written to "./test/sample_download.txt"
+    When S3 file "sample.txt" from bucket "test-bucket4" at path "text-files/" is written to file "./test/sample_download.txt"
     Then file "./test/sample_download.txt" is equal to "Sample text content for testing"
 
   Scenario: Gzip File Upload And Download To Storage
@@ -101,7 +101,7 @@ Feature: AWS: S3 Testing
     And the file "./test/gzip-sample.txt" is gzipped
     When file "./test/gzip-sample.txt.gz" is uploaded to bucket "test-bucket4" as key "gzip-files/sample.txt.gz"
     Then file exists with name "sample.txt.gz" at path "gzip-files/" in bucket "test-bucket4"
-    When file "sample.txt.gz" from bucket "test-bucket4" at path "gzip-files/" is written to "./test/sample_download.txt.gz"
+    When S3 file "sample.txt.gz" from bucket "test-bucket4" at path "gzip-files/" is written to file "./test/sample_download.txt.gz"
     Then file "./test/sample_download.txt.gz" is gzip unzipped to file "./test/sample_download.txt"
     And file "./test/sample_download.txt" is equal to "Content to be uploaded as gzip"
 
@@ -166,7 +166,7 @@ Feature: AWS: S3 Testing
     And "Complex name content" is written to file "./test/complex-file-name.txt"
     When file "./test/complex-file-name.txt" is uploaded to bucket "test-bucket2" as key "complex-paths/file-with-dashes_and_underscores.v1.2.3.txt"
     Then file exists with name "file-with-dashes_and_underscores.v1.2.3.txt" at path "complex-paths/" in bucket "test-bucket2"
-    When file "file-with-dashes_and_underscores.v1.2.3.txt" from bucket "test-bucket2" at path "complex-paths/" is written to "./test/complex-downloaded.txt"
+    When S3 file "file-with-dashes_and_underscores.v1.2.3.txt" from bucket "test-bucket2" at path "complex-paths/" is written to file "./test/complex-downloaded.txt"
     Then file "./test/complex-downloaded.txt" is equal to "Complex name content"
 
   Scenario: Multiple File Operations in Single Path
@@ -255,7 +255,7 @@ Feature: AWS: S3 Testing
     And file "./test/backup.sql.bz2" is uploaded to bucket "test-bucket3" as key "backups/db.sql.bz2"
     Then file exists with name "data.tar.gz" at path "archives/" in bucket "test-bucket3"
     And file exists with name "db.sql.bz2" at path "backups/" in bucket "test-bucket3"
-    When file "data.tar.gz" from bucket "test-bucket3" at path "archives/" is written to "./test/downloaded-archive.tar.gz"
-    And file "db.sql.bz2" from bucket "test-bucket3" at path "backups/" is written to "./test/downloaded-backup.sql.bz2"
+    When S3 file "data.tar.gz" from bucket "test-bucket3" at path "archives/" is written to file "./test/downloaded-archive.tar.gz"
+    And S3 file "db.sql.bz2" from bucket "test-bucket3" at path "backups/" is written to file "./test/downloaded-backup.sql.bz2"
     Then file "./test/downloaded-archive.tar.gz" is equal to "Archive content"
     And file "./test/downloaded-backup.sql.bz2" is equal to "Database backup"
