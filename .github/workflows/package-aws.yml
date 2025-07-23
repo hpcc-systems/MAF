@@ -10,6 +10,10 @@ on:
     paths:
       - 'packages/aws/**'
 
+permissions:
+  contents: read
+  statuses: write
+
 jobs:
   MAF-AWS:
     runs-on: ubuntu-latest
