@@ -7,8 +7,6 @@
 
 const setupDatabaseStepDefinitions = require('../index')
 const CredentialManager = require('../credentialManager')
-const configureDatabase = require('../config')
-const connect = require('../connect')
 
 function assert(condition, message) {
     if (!condition) {
@@ -76,9 +74,9 @@ function testValidSetup() {
     try {
         const validConfig = {
             name: 'test-db',
-            runQuery: (connection, query) => 'mock result',
-            connect: (connectionInfo, username, password) => ({ mock: true }),
-            disconnect: (connection) => {}
+            runQuery: () => 'mock result',
+            connect: () => ({ mock: true }),
+            disconnect: () => {}
         }
 
         // The function should validate parameters before calling Cucumber functions

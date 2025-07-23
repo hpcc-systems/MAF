@@ -40,7 +40,7 @@ MAFWhen('parameter {string} value is retrieved from the parameter store', async 
     if (typeof value === 'string' && (value.startsWith('{') || value.startsWith('['))) {
         try {
             value = JSON.parse(value)
-        } catch (e) {
+        } catch {
             // Keep as string if JSON parsing fails
         }
     }

@@ -25,7 +25,7 @@ const toISO = (value) => {
 
     try {
         return new Date(numericValue).toISOString()
-    } catch (error) {
+    } catch {
         return value
     }
 }
@@ -116,7 +116,7 @@ const performEqualityComparison = (value1, value2) => {
 const safeJsonParse = (jsonString) => {
     try {
         return JSON.parse(jsonString)
-    } catch (error) {
+    } catch {
         return jsonString
     }
 }

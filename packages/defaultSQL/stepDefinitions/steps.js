@@ -1,12 +1,12 @@
 const create = require('../index')
 create({
     name: 'FAKE',
-    connect: (connectionInfo, username, password) => {
+    connect: () => {
         // For FAKE database, just return a mock connection
         return { isFakeConnection: true }
     },
-    runQuery: (connection, query) => 'I AM NOT SQL',
-    disconnect: (connection) => {
+    runQuery: () => 'I AM NOT SQL',
+    disconnect: () => {
         // No-op for fake connection
     }
 })

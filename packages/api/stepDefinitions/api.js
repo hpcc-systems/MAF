@@ -38,7 +38,7 @@ async function requestBuilder(request) {
     if (request.jsonBody && typeof request.jsonBody !== 'object') {
         try {
             request.jsonBody = JSON.parse(request.jsonBody)
-        } catch (err) {
+        } catch {
             throw new Error('The jsonBody could not be parsed as a JSON object')
         }
     }
@@ -89,7 +89,7 @@ async function requestBuilder(request) {
         } else if (item && item.type === 'base64blob') {
             try {
                 return Buffer.from(item.base64blob, 'base64')
-            } catch (err) {
+            } catch {
                 throw new Error('Invalid base64blob provided in formBody')
             }
         } else {
@@ -188,12 +188,12 @@ async function performRequest(request, additionalParams = {}) {
                 const tmpBlob = Buffer.from(await response.arrayBuffer())
                 this.attach(tmpBlob, 'image/png')
             }
-        } catch (err) { }
+        } catch { /* empty */ }
     } else {
         try {
             response = await response.text()
             response = JSON.parse(response)
-        } catch (err) { }
+        } catch { /* empty */ }
     }
     const results = {
         request: {

@@ -108,7 +108,7 @@ MAFWhen('JSON keys {string} are extracted from {jsonObject}', function (array, v
     array = fillTemplate(array, this.results)
     try {
         array = JSON.parse(array)
-    } catch (e) {
+    } catch {
         array = array.replace('[', '')
         array = array.replace(']', '')
         array = array.split(',')
@@ -198,7 +198,7 @@ Then('elements {string} do not exist in {jsonObject}', function (element, jsonOb
     const obj = performJSONObjectTransform.call(this, jsonObject)
     try {
         element = JSON.parse(element)
-    } catch (e) {
+    } catch {
         element = element.replace('[', '')
         element = element.replace(']', '')
         element = element.split(',')
@@ -212,7 +212,7 @@ Then('elements {string} exist in {jsonObject}', function (element, jsonObject) {
     element = fillTemplate(element, this.results)
     try {
         element = JSON.parse(element)
-    } catch (e) {
+    } catch {
         element = element.replace('[', '')
         element = element.replace(']', '')
         element = element.split(',')
