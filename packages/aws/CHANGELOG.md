@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-beta.4](https://github.com/hpcc-systems/MAF/compare/@ln-maf/aws@4.0.0-beta.3...@ln-maf/aws@4.0.0-beta.4) (2025-07-23)
+
+
+### Features
+
+* remove allowed directories check for file path traversal ([dfa20d3](https://github.com/hpcc-systems/MAF/commit/dfa20d3f04c07f399ee43e22d01790804c6a5004))
+
+
+
+
+
 # [4.0.0-beta.3](https://github.com/hpcc-systems/MAF/compare/@ln-maf/aws@4.0.0-beta.2...@ln-maf/aws@4.0.0-beta.3) (2025-07-23)
 
 **Note:** Version bump only for package @ln-maf/aws
