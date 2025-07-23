@@ -1,2 +1,2 @@
-node_modules
-test/
+# SFTP package specific ignores
+# (common patterns are handled by root .gitignore)

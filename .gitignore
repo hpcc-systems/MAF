@@ -1,29 +1,75 @@
-# Defaults
-coverage
-.nyc_output
-node_modules
-test/
-*/*/test/
-!*/*/test/test*.json
-.git.bfg-report/
-*.sqlConfig.json
-.terraform.*
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Testing & Coverage
+coverage/
+.nyc_output/
+test/report/
 /packages/*/report/
 
-# Local .terraform directories
-**/.terraform/*
+# Build outputs
+dist/
+build/
+tmp/
+*.tgz
 
-# .tfstate files
-*.tfstate
-*.tfstate.*
-*.log
+# Environment & Config
+.env
+.env.*
+*.sqlConfig.json
 
 # Security - prevent committing sensitive files
 *.pem
 *.key
 *private*key*
-.env
-.env.*
 secrets.*
 credential*
 passwords.txt
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Terraform
+.terraform/
+.terraform.*
+*.tfstate
+*.tfstate.*
+terraform.tfvars
+
+# Logs
+*.log
+logs/
+
+# Runtime
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Git
+.git.bfg-report/
+
+# Package-specific test files (allow specific test files)
+test/
+*/*/test/
+!*/*/test/test*.json
+!*/*/test/test*.txt
+!*/*/test/test*.abc
+!*/*/test/unit-tests.js

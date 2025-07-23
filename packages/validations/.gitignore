@@ -1,5 +1,5 @@
-node_modules
-test/report
+# Validations package specific ignores
+# Test files generated during validation testing
 hello.txt
 hello2.txt
 test/*.txt

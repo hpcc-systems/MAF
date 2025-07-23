@@ -1,2 +1,3 @@
-node_modules
-test/report
+# DefaultSQL package specific ignores
+# Allow specific test files
+!test/unit-tests.js

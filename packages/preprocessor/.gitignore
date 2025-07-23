@@ -1,4 +1,2 @@
-node_modules
-test/report
-dist
-tmp
+# Preprocessor package specific ignores
+# (common patterns are handled by root .gitignore)

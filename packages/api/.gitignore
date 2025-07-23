@@ -1,9 +1,10 @@
-node_modules
-test/report
-.vscode
+# API package specific ignores
+# Image files (except specific test files)
 *.png
 *.jpg
 *.jpeg
 *.gif
 !pickle.jpeg
+
+# API response files
 test/response.txt
