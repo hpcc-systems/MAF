@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "4.0.0-beta.1",
+  "version": "4.0.0-beta.2",
   "description": "MAF module providing API steps",
   "main": "index.js",
   "scripts": {
@@ -15,9 +15,9 @@
   "license": "Apache-2.0",
   "dependencies": {
     "fetch-blob": "^3.1.5",
+    "fetch-to-curl": "^0.6.0",
     "form-data": "^4.0.0",
-    "node-fetch": "^2.7.0",
-    "fetch-to-curl": "^0.6.0"
+    "node-fetch": "^2.7.0"
   },
   "peerDependencies": {
     "@cucumber/cucumber": ">= 12.0.0",
@@ -26,9 +26,9 @@
   "devDependencies": {
     "@ln-maf/core": "file:../core",
     "@ln-maf/validations": "file:../validations",
+    "concurrently": "^8.0.0",
     "multiple-cucumber-html-reporter": "3.7.0",
     "nyc": "^15.1.0",
-    "concurrently": "^8.0.0",
     "wait-on": "^7.0.1"
   },
   "gitHead": "2a575448a74cfaee5ec68fa10db24cf4ccade849",
