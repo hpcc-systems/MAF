@@ -1,12 +1,10 @@
-testItem.txt
 coverage
 .nyc_output
 node_modules
 /test/
+*/*/test/
 .git.bfg-report/
 *.sqlConfig.json
-passwords.txt
-/image2.png
 .terraform.*
 /packages/*/report/
 
@@ -26,3 +24,4 @@ passwords.txt
 .env.*
 secrets.*
 credential*
+passwords.txt
