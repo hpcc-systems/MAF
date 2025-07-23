@@ -135,6 +135,11 @@ function MAFSave(item, itemValue) {
     for (let i = 0; i < keys.length - 1; i++) {
         const key = keys[i]
 
+        // Validate key to prevent prototype pollution
+        if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+            throw new Error('Invalid key detected during recursive assignment')
+        }
+
         // Check if this key contains array bracket notation
         if (key.includes('[') && key.includes(']')) {
             const arrayMatch = key.match(/^([^[]+)\[(\d+)\]$/)
@@ -176,6 +181,12 @@ function MAFSave(item, itemValue) {
 
     // Handle the final key (could also have array notation)
     const finalKey = keys[keys.length - 1]
+    // Validate finalKey to prevent prototype pollution
+    if (finalKey === '__proto__' || finalKey === 'constructor' || finalKey === 'prototype') {
+        throw new Error('Invalid key detected during final assignment')
+    }
+
+
     if (finalKey.includes('[') && finalKey.includes(']')) {
         const arrayMatch = finalKey.match(/^([^[]+)\[(\d+)\]$/)
         if (arrayMatch) {
