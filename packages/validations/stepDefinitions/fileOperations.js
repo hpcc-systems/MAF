@@ -36,7 +36,7 @@ When('{string} is applied to item {string} on JSON path {string}', function (val
             if (typeof tmp === 'object') {
                 value = tmp
             }
-        } catch (e) { }
+        } catch { /* empty */ }
     }
     jp.apply(fileContents, jsonPath, function () { return value })
     this.results[item] = fileContents
@@ -47,7 +47,7 @@ When('{jsonObject} is written in json line delimited format to file {string}', f
     const { performJSONObjectTransform } = require('@ln-maf/core')
     let obj = performJSONObjectTransform.call(this, item)
     file = fillTemplate(file, this.results)
-    try { obj = JSON.parse(obj) } catch (e) { }
+    try { obj = JSON.parse(obj) } catch { /* empty */ }
     writeFile(file, obj.map(i => JSON.stringify(i)).join('\n'), this)
 })
 
@@ -65,8 +65,7 @@ MAFWhen('the file {string} is gzipped', function (filename) {
     filename = fillTemplate(filename, this.results)
     try {
         fs.deleteFileSync(getFilePath(filename, this))
-    } catch (e) {
-    }
+    } catch { /* empty */ }
     const zlib = require('zlib')
     const bf = readFileBuffer(filename, this)
     const buffer = zlib.gzipSync(bf)
