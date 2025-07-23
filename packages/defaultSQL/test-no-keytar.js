@@ -26,12 +26,16 @@ async function testCredentialManager() {
     try {
         // Test setting credentials
         console.log('\n1. Setting test credentials...')
-        await CredentialManager.setCredentials(environment, 'testuser', 'testpass')
+        const testUsername = 'testuser'
+        const testPassword = 'testpass'
+        await CredentialManager.setCredentials(environment, testUsername, testPassword)
 
         // Test retrieving credentials
         console.log('\n2. Retrieving credentials...')
         const creds = await CredentialManager.getCredentials(environment)
-        console.log(`Retrieved: username=${creds.username}, password=${creds.password ? '[HIDDEN]' : 'null'}`)
+        const hasPassword = creds.password ? true : false
+        const hasUsername = creds.username ? true : false
+        console.log(`Retrieved: username=${hasUsername ? '[HIDDEN]' : 'null'}, password=${hasPassword ? '[HIDDEN]' : 'null'}`)
 
         // Test clearing credentials
         console.log('\n3. Clearing credentials...')
@@ -40,7 +44,9 @@ async function testCredentialManager() {
         // Verify credentials are cleared
         console.log('\n4. Verifying credentials are cleared...')
         const clearedCreds = await CredentialManager.getCredentials(environment)
-        console.log(`After clearing: username=${clearedCreds.username || 'null'}, password=${clearedCreds.password || 'null'}`)
+        const usernameStatus = clearedCreds.username ? '[PRESENT]' : 'null'
+        const passwordStatus = clearedCreds.password ? '[PRESENT]' : 'null'
+        console.log(`After clearing: username=${usernameStatus}, password=${passwordStatus}`)
 
         console.log('\n✅ All tests passed! Credential manager works without keytar.')
     } catch (error) {
@@ -55,12 +61,16 @@ async function testEnvironmentVariables() {
 
     // Set environment variables
     process.env.USE_ENV_VARIABLES = 'TRUE'
-    process.env.TEST_SQL_USERNAME = 'env_user'
-    process.env.TEST_SQL_PASSWORD = 'env_pass'
+    const envUsername = 'env_user'
+    const envPassword = 'env_pass'
+    process.env.TEST_SQL_USERNAME = envUsername
+    process.env.TEST_SQL_PASSWORD = envPassword
 
     try {
         const creds = await CredentialManager.getCredentials('test.localhost.testdb')
-        console.log(`Environment mode: username=${creds.username}, password=${creds.password ? '[HIDDEN]' : 'null'}`)
+        const hasPassword = creds.password ? true : false
+        const hasUsername = creds.username ? true : false
+        console.log(`Environment mode: username=${hasUsername ? '[HIDDEN]' : 'null'}, password=${hasPassword ? '[HIDDEN]' : 'null'}`)
         console.log('✅ Environment variable mode works!')
     } catch (error) {
         console.error('❌ Environment variable test failed:', error.message)
