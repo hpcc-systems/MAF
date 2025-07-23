@@ -17,3 +17,12 @@ passwords.txt
 *.tfstate
 *.tfstate.*
 *.log
+
+# Security - prevent committing sensitive files
+*.pem
+*.key
+*private*key*
+.env
+.env.*
+secrets.*
+credential*

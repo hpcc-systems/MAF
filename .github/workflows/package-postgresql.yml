@@ -10,9 +10,30 @@ on:
     paths:
       - 'packages/postgresql/**'
 
+permissions:
+  contents: read
+  statuses: write
+
 jobs:
   MAF-PostgreSQL:
     runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_USER: postgres
+          POSTGRES_DB: testdb
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres -d testdb"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+          --health-start-period=30s
+    
     strategy:
       matrix:
         node-version: [22.x, 24.x]
@@ -26,10 +47,25 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       
-      - run: npm ci
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          until nc -z localhost 5433; do
+            echo "Waiting for PostgreSQL..."
+            sleep 2
+          done
+          echo "PostgreSQL is ready!"
+      
+      - name: Initialize PostgreSQL database
+        run: |
+          if [ -f packages/postgresql/init-db.sql ]; then
+            PGPASSWORD=testpassword psql -h localhost -p 5433 -U postgres -d testdb -f packages/postgresql/init-db.sql
+          fi
       
       - name: Test PostgreSQL Package
-        run: npm test -w packages/postgresql
+        run: npm run test:run -w packages/postgresql
         env: 
           ENVIRONMENT: CI
           USE_ENV_VARIABLES: "TRUE"

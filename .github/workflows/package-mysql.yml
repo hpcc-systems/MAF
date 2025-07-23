@@ -10,9 +10,31 @@ on:
     paths:
       - 'packages/mysql/**'
 
+permissions:
+  contents: read
+  statuses: write
+
 jobs:
   MAF-MySQL:
     runs-on: ubuntu-latest
+    
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: testpassword
+          MYSQL_DATABASE: testdb
+          MYSQL_USER: testuser
+          MYSQL_PASSWORD: testpass
+        ports:
+          - 3307:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -u root -ptestpassword"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+          --health-start-period=30s
+    
     strategy:
       matrix:
         node-version: [22.x, 24.x]
@@ -26,10 +48,26 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       
-      - run: npm ci
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Wait for MySQL to be ready
+        run: |
+          until nc -z localhost 3307; do
+            echo "Waiting for MySQL..."
+            sleep 2
+          done
+          echo "MySQL is ready!"
+      
+      - name: Initialize MySQL database
+        run: |
+          mysql -h127.0.0.1 -P3307 -uroot -ptestpassword -e "CREATE DATABASE IF NOT EXISTS testdb;"
+          if [ -f packages/mysql/init-db.sql ]; then
+            mysql -h127.0.0.1 -P3307 -uroot -ptestpassword testdb < packages/mysql/init-db.sql
+          fi
       
       - name: Test MySQL Package
-        run: npm test -w packages/mysql
+        run: npm run test:run -w packages/mysql
         env: 
           ENVIRONMENT: CI
           USE_ENV_VARIABLES: "TRUE"
