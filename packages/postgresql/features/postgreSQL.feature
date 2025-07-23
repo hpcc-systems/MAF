@@ -1,5 +1,8 @@
 Feature: PostgreSQL Database Operations
 
+    Background:
+        Given postgresql config from file "./test/test.postgresql.json"
+
     Scenario: Basic SELECT Query - Retrieve all records
         Given postgresql query from "DELETE FROM HelloWorld WHERE id > 3" is run
         When postgresql query from "SELECT * FROM HelloWorld ORDER BY id" is run

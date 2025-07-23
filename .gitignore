@@ -1,8 +1,10 @@
+# Defaults
 coverage
 .nyc_output
 node_modules
-/test/
+test/
 */*/test/
+!*/*/test/test*.json
 .git.bfg-report/
 *.sqlConfig.json
 .terraform.*

@@ -1,5 +1,8 @@
 Feature: MySQL Database Operations
 
+    Background: Set config:
+        Given mysql config from file "./test/test.mySQL.json"
+
     Scenario: Basic SELECT Query - Retrieve all records
         When mysql query from "SELECT * FROM HelloWorld ORDER BY id" is run
         Then it is equal to:
