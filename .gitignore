@@ -8,6 +8,7 @@ node_modules
 passwords.txt
 /image2.png
 .terraform.*
+/packages/*/report/
 
 # Local .terraform directories
 **/.terraform/*
@@ -16,3 +17,12 @@ passwords.txt
 *.tfstate
 *.tfstate.*
 *.log
+
+# Security - prevent committing sensitive files
+*.pem
+*.key
+*private*key*
+.env
+.env.*
+secrets.*
+credential*

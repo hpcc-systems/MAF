@@ -2,3 +2,4 @@ node_modules
 test/report
 hello.txt
 hello2.txt
+test/*.txt
