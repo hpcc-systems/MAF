@@ -37,7 +37,7 @@ async function main() {
         }
         case 'get': {
             const credentials = await CredentialManager.getCredentials(environment)
-            console.log(`Username: ${credentials.username || 'Not found'}`)
+            console.log(`Username: ${credentials.username ? '[SET]' : '[NOT SET]'}`)
             console.log(`Password: ${credentials.password ? '[SET]' : '[NOT SET]'}`)
             break
         }
