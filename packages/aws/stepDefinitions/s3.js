@@ -88,19 +88,15 @@ function validateAndSanitizeKey(key) {
  */
 function validateFilePath(filePath) {
     if (!filePath || typeof filePath !== 'string') {
-        throw new Error('File path cannot be empty')
+        throw new Error(`File path cannot be empty. Received: ${filePath}`)
     }
 
     // Check for path traversal attempts
-    if (filePath.includes('..') || filePath.includes('~')) {
-        throw new Error('File path contains invalid characters')
+    if (filePath.includes('..')) {
+        throw new Error(`File path contains invalid characters ('..'): ${filePath}`)
     }
-
-    // Ensure it's within allowed directories (adjust as needed)
-    const allowedPrefixes = ['./test/', './tmp/', '/tmp/']
-    const isAllowed = allowedPrefixes.some(prefix => filePath.startsWith(prefix))
-    if (!isAllowed && !process.env.ALLOW_ALL_PATHS) {
-        throw new Error('File path not in allowed directory')
+    if (filePath.includes('~')) {
+        throw new Error(`File path contains invalid characters ('~'): ${filePath}`)
     }
 }
 
