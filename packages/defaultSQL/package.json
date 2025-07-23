@@ -19,7 +19,7 @@
   },
   "peerDependencies": {
     "@cucumber/cucumber": ">= 12.0.0",
-    "@ln-maf/core": ">= 4.0.0"
+    "@ln-maf/core": ">= 4.0.0-beta.1"
   },
   "peerDependenciesMeta": {
     "keytar": {
