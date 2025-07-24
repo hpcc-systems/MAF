@@ -12,7 +12,11 @@
         },
         {
             "parameter": "{validationsEquivalence}",
-            "value": "(<|<=|>|>=|=|!=)"
+            "value": "(?<=\"\\s+)([><=!]=?)(?=\\s+\")"
+        },
+        {
+            "parameter": "{timeQualifier}",
+            "value": "/before|after/"
         }
     ],
     "cucumberautocomplete.syncfeatures": "packages/**/features/*.feature",

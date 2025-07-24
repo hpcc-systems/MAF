@@ -173,27 +173,73 @@ async function performRequest(request, additionalParams = {}) {
     let response = await fetch(absoluteUrl, parameters)
     const curlCommand = fetchToCurl(absoluteUrl, parameters)
 
-    const headers = await response.clone().headers.raw()
-    Object.keys(headers).forEach(header => {
-        headers[header] = headers[header][0]
-    })
+    // Extract headers without cloning the response to save memory
+    const headers = {}
+    for (const [key, value] of response.headers.entries()) {
+        headers[key] = value
+    }
+    
     const ok = response.ok
     const status = response.status
+    
+    // Check content-length to determine if response is large
+    const contentLength = headers['content-length'] ? parseInt(headers['content-length']) : null
+    const maxResponseSize = 10 * 1024 * 1024 // 10MB threshold
+    const isLargeResponse = contentLength && contentLength > maxResponseSize
+    
+    let processedResponse
     if (this.results.apiRetrieveType) {
-        response = await (response[this.results.apiRetrieveType])()
+        processedResponse = await (response[this.results.apiRetrieveType])()
     } else if (headers['content-type'] && headers['content-type'].includes('image')) {
-        response = await response.blob()
+        // Process all images regardless of size
+        processedResponse = await response.blob()
         try {
             if (canAttach.call(this)) {
-                const tmpBlob = Buffer.from(await response.arrayBuffer())
+                const tmpBlob = Buffer.from(await processedResponse.arrayBuffer())
                 this.attach(tmpBlob, 'image/png')
             }
         } catch { /* empty */ }
+        
+        // Add size information for large images
+        if (isLargeResponse) {
+            processedResponse.sizeInfo = {
+                size: contentLength,
+                isLarge: true,
+                message: `Large image processed (${contentLength} bytes)`
+            }
+        }
     } else {
         try {
-            response = await response.text()
-            response = JSON.parse(response)
-        } catch { /* empty */ }
+            if (isLargeResponse) {
+                // For large text responses, read only the first chunk
+                const reader = response.body.getReader()
+                const decoder = new TextDecoder()
+                const { value } = await reader.read()
+                reader.releaseLock()
+                
+                const partialText = decoder.decode(value || new Uint8Array())
+                const truncatedText = partialText.substring(0, 1000) // First 1000 chars
+                
+                processedResponse = {
+                    type: 'large_response',
+                    size: contentLength,
+                    contentType: headers['content-type'],
+                    truncated: true,
+                    preview: truncatedText,
+                    message: `Response too large (${contentLength} bytes) - only preview shown`
+                }
+            } else {
+                processedResponse = await response.text()
+                try {
+                    processedResponse = JSON.parse(processedResponse)
+                } catch { /* empty */ }
+            }
+        } catch (error) {
+            processedResponse = {
+                error: 'Failed to process response',
+                message: error.message
+            }
+        }
     }
     const results = {
         request: {
@@ -203,7 +249,7 @@ async function performRequest(request, additionalParams = {}) {
         curlCommand,
         ok,
         status,
-        response,
+        response: processedResponse,
         headers
     }
     return results

@@ -14,5 +14,5 @@ defineParameterType({
 })
 defineParameterType({
     name: 'validationsEquivalence',
-    regexp: /[=><!]=?/
+    regexp: /(?<=\s)[=><!]=?(?=\s)/
 })
