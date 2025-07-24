@@ -1,6 +1,6 @@
-const create = require('@ln-maf/default-sql')
+const setupDatabaseStepDefinitions = require('@ln-maf/default-sql')
 const { Client } = require('pg')
-create({
+setupDatabaseStepDefinitions({
     name: 'postgresql',
     connect: async (connectionInfo, username, password) => {
         const clientConfiguration = {

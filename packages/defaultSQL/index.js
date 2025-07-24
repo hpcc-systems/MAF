@@ -1,5 +1,4 @@
-const { Given } = require('@cucumber/cucumber')
-const { readFile } = require('@ln-maf/core')
+const { readFile, MAFSave } = require('@ln-maf/core')
 const { MAFWhen, performJSONObjectTransform } = require('@ln-maf/core')
 const CredentialManager = require('./credentialManager')
 const configureDatabase = require('./config')
@@ -57,7 +56,7 @@ const setupDatabaseStepDefinitions = function (moduleInfo) {
     })
 
     // Step definition: Set database configuration
-    Given(`${name} config from {jsonObject}`, function (configString) {
+    MAFWhen(`${name} config from {jsonObject}`, function (configString) {
         try {
             const config = performJSONObjectTransform.call(this, configString)
 
@@ -67,8 +66,8 @@ const setupDatabaseStepDefinitions = function (moduleInfo) {
             }
 
             // Store config in test context
-            this.results = this.results || {}
-            this.results[`${name}ConnectionInfo`] = config
+            MAFSave.call(this, `${name}ConnectionInfo`, config)
+            return config
         } catch (error) {
             throw new Error(`Failed to set ${name} config: ${error.message}`)
         }

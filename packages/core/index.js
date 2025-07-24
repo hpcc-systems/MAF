@@ -132,6 +132,7 @@ function MAFSave(item, itemValue) {
     const keys = item.split('.')
     let currentItem = this.results
 
+
     for (let i = 0; i < keys.length - 1; i++) {
         const key = keys[i]
 
@@ -142,10 +143,15 @@ function MAFSave(item, itemValue) {
 
         // Check if this key contains array bracket notation
         if (key.includes('[') && key.includes(']')) {
-            const arrayMatch = key.match(/^([^[]+)\[(\d+)\]$/)
+            const arrayMatch = key.match(/^([^[]+)[[](\d+)[\]]$/)
             if (arrayMatch) {
                 const [, arrayName, index] = arrayMatch
                 const arrayIndex = parseInt(index)
+
+                // Validate arrayName to prevent prototype pollution
+                if (arrayName === '__proto__' || arrayName === 'constructor' || arrayName === 'prototype') {
+                    throw new Error('Invalid arrayName detected during recursive assignment')
+                }
 
                 // Initialize array if it doesn't exist
                 if (!currentItem[arrayName]) {
@@ -179,6 +185,7 @@ function MAFSave(item, itemValue) {
         }
     }
 
+
     // Handle the final key (could also have array notation)
     const finalKey = keys[keys.length - 1]
     // Validate finalKey to prevent prototype pollution
@@ -186,12 +193,16 @@ function MAFSave(item, itemValue) {
         throw new Error('Invalid key detected during final assignment')
     }
 
-
     if (finalKey.includes('[') && finalKey.includes(']')) {
-        const arrayMatch = finalKey.match(/^([^[]+)\[(\d+)\]$/)
+        const arrayMatch = finalKey.match(/^([^[]+)[[](\d+)[\]]$/)
         if (arrayMatch) {
             const [, arrayName, index] = arrayMatch
             const arrayIndex = parseInt(index)
+
+            // Validate arrayName to prevent prototype pollution
+            if (arrayName === '__proto__' || arrayName === 'constructor' || arrayName === 'prototype') {
+                throw new Error('Invalid arrayName detected during final assignment')
+            }
 
             // Initialize array if it doesn't exist
             if (!currentItem[arrayName]) {
