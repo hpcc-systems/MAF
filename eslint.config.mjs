@@ -2,6 +2,34 @@ import js from '@eslint/js'
 import globals from 'globals'
 
 export default [
+    // Global ignores configuration
+    {
+        ignores: [
+            // Node and build output
+            'node_modules/',
+            'dist/',
+            'build/',
+            'coverage/',
+            'tmp/',
+            '**/tmp/',
+            // Test and report output
+            '**/test/report/',
+            '**/report/',
+            '**/lcov-report/',
+            '**/lcov.info',
+            // Documentation and changelogs
+            '**/CHANGELOG.md',
+            '**/Changelog.md',
+            '**/changelog.md',
+            '**/README.md',
+            '**/LICENSE',
+            // Config files
+            'eslint.config.mjs',
+            'lerna.json',
+            // Specific files to ignore
+            '**/packages/preprocessor/src/value_checker.js'
+        ]
+    },
     js.configs.recommended,
     {
         languageOptions: {

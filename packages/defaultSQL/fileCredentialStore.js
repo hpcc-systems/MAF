@@ -23,14 +23,14 @@ class FileCredentialStore {
         try {
             const existingKey = require('fs').readFileSync(keyPath, 'utf8')
             return existingKey
-        } catch (error) {
+        } catch {
             // Generate new key if it doesn't exist
             const newKey = crypto.randomBytes(32).toString('hex')
             try {
                 require('fs').mkdirSync(this.credentialsDir, { recursive: true, mode: 0o700 })
                 require('fs').writeFileSync(keyPath, newKey, { mode: 0o600 })
                 return newKey
-            } catch (writeError) {
+            } catch {
                 console.warn('Could not create encryption key file, using session key')
                 return newKey
             }
@@ -90,7 +90,7 @@ class FileCredentialStore {
             const encryptedData = JSON.parse(data)
             const decryptedData = this.decrypt(encryptedData.data)
             return JSON.parse(decryptedData)
-        } catch (error) {
+        } catch {
             // Return empty credentials if file doesn't exist or can't be read
             return {}
         }

@@ -18,8 +18,7 @@ if (!appRoot) {
 }
 try {
     require(appRoot + '/apply.js')
-} catch (e) {
-}
+} catch { /* empty */ }
 let pLoc = options.packageLocation
 if (!pLoc) {
     pLoc = 'features'
