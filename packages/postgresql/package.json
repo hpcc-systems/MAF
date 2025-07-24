@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "4.0.0-beta.3",
+  "version": "4.0.0-beta.4",
   "description": "PostgreSQL support / step definitions for MAF",
   "main": "index.js",
   "scripts": {
@@ -25,7 +25,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ln-maf/default-sql": "^4.0.0-beta.3",
+    "@ln-maf/default-sql": "^4.0.0-beta.4",
     "keytar": "^7.9.0",
     "pg": "^8.0.0"
   },

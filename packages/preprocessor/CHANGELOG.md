@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-beta.4](https://github.com/hpcc-systems/MAF/compare/@ln-maf/preprocessor@4.0.0-beta.3...@ln-maf/preprocessor@4.0.0-beta.4) (2025-07-24)
+
+**Note:** Version bump only for package @ln-maf/preprocessor
+
+
+
+
+
 # [4.0.0-beta.3](https://github.com/hpcc-systems/MAF/compare/@ln-maf/preprocessor@4.0.0-beta.2...@ln-maf/preprocessor@4.0.0-beta.3) (2025-07-23)
 
 **Note:** Version bump only for package @ln-maf/preprocessor
