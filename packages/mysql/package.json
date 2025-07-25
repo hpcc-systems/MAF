@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "4.0.0-beta.4",
+  "version": "4.0.0-beta.5",
   "description": "Setup for sql on Node",
   "main": "index.js",
   "scripts": {
@@ -25,7 +25,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ln-maf/default-sql": "^4.0.0-beta.4",
+    "@ln-maf/default-sql": "^4.0.0-beta.5",
     "keytar": "^7.9.0",
     "mysql2": "^3.9.7"
   },
