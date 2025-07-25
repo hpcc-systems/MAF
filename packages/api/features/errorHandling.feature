@@ -37,3 +37,25 @@ Feature: API - Error Handling
         And set "apiRetrieveType" to "text"
         When api request is performed
         Then "${response}" contains ""
+
+    Scenario: Use apiRetrieveType to retrieve response as blob
+        Given set "url" to "http://localhost:3001"
+        And set "method" to "GET"
+        And set "apiRetrieveType" to "blob"
+        When api request is performed
+        Then the status is ok
+
+    Scenario: Response with text that fails JSON parsing
+        Given set "url" to "http://localhost:3001/plain-text"
+        And set "method" to "GET"
+        And set "apiRetrieveType" to "text"
+        When api request is performed
+        Then the status is ok
+        And "${response}" contains "This is plain text"
+
+    Scenario: GET request with large response handling
+        Given set "url" to "http://localhost:3001/large-response"
+        And set "method" to "GET"
+        When api request is performed
+        Then the status is ok
+        And "${response.size}" is equal to "large"

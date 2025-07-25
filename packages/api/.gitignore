@@ -1,10 +1,21 @@
-# API package specific ignores
-# Image files (except specific test files)
+# API Package Specific .gitignore
+
+# Test Output Files
+test/report/
+test/tmp/
+test/response.txt
+
+# Generated Test Files (keep essential test files)
+test/*_blob_write*.jpeg
+test/*.tmp
+
+# Image Files (except specific test files needed for testing)
 *.png
 *.jpg
 *.jpeg
 *.gif
-!pickle.jpeg
+!test/pickle.jpeg
 
-# API response files
-test/response.txt
+# Allow specific test files that are required for functionality
+!test/test_file.txt
+!test/testApiServer.js

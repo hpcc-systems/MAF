@@ -39,6 +39,43 @@ const server = http.createServer((req, res) => {
         return
     }
 
+    // Serve /plain-text for text response that fails JSON parsing
+    if (parsedUrl.pathname === '/plain-text') {
+        res.statusCode = 200
+        res.setHeader('Content-Type', 'text/plain')
+        res.end('This is plain text response that cannot be parsed as JSON')
+        return
+    }
+
+    // Serve /large-response for testing large response handling
+    if (parsedUrl.pathname === '/large-response') {
+        res.statusCode = 200
+        res.setHeader('Content-Type', 'application/json')
+        const largeData = 'x'.repeat(10000) // Large string
+        res.end(JSON.stringify({ data: largeData, size: 'large' }))
+        return
+    }
+
+    // Serve /very-large-image for testing large image response handling
+    if (parsedUrl.pathname === '/very-large-image') {
+        res.statusCode = 200
+        res.setHeader('Content-Type', 'image/png')
+        res.setHeader('Content-Length', '2000000') // 2MB
+        const largeBuffer = Buffer.alloc(2000000, 'x') // 2MB buffer
+        res.end(largeBuffer)
+        return
+    }
+
+    // Serve /very-large-text for testing large text response handling
+    if (parsedUrl.pathname === '/very-large-text') {
+        res.statusCode = 200
+        res.setHeader('Content-Type', 'text/plain')
+        res.setHeader('Content-Length', '1500000') // 1.5MB
+        const largeText = 'This is a very large text response. '.repeat(40000) // Smaller but still large
+        res.end(largeText)
+        return
+    }
+
     req.on('data', chunk => {
         body += chunk
     })

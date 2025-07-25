@@ -58,3 +58,58 @@ Feature: API - Basic HTTP Methods
         When api request from item "req" is performed
         Then the status is ok
         And the status is 200
+
+    Scenario: GET request with api endpoint from results
+        Given set "url" to "http://localhost:3001"
+        And set "method" to "GET"  
+        And set "api" to "test-endpoint"
+        When api request is performed
+        Then the status is ok
+
+    Scenario: GET request with api endpoint having leading slash
+        When perform api request:
+            """
+            {
+                "url": "http://localhost:3001",
+                "api": "/test-endpoint",
+                "method": "GET"
+            }
+            """
+        Then the status is ok
+
+    Scenario: GET request with headers from results object
+        Given set "headers" to:
+            """
+            {
+                "X-Test-Header": "test-value"
+            }
+            """
+        When perform api request:
+            """
+            {
+                "url": "http://localhost:3001",
+                "method": "GET"
+            }
+            """
+        Then the status is ok
+        And "${response.customHeaders['x-test-header']}" is equal to "test-value"
+
+    Scenario: GET request with method from results object
+        Given set "method" to "GET"
+        When perform api request:
+            """
+            {
+                "url": "http://localhost:3001"
+            }
+            """
+        Then the status is ok
+
+    Scenario: GET request with url from results object
+        Given set "url" to "http://localhost:3001"
+        When perform api request:
+            """
+            {
+                "method": "GET"
+            }
+            """
+        Then the status is ok

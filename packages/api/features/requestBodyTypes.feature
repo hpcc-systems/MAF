@@ -59,3 +59,47 @@ Feature: API - Request Body Types
         When api request is performed
         Then the status is 201
         And "${response.hello}" is equal to "world"
+
+    Scenario: POST request with headers as string
+        When perform api request:
+            """
+            {
+                "headers": "{\"X-Content-Type\": \"application/json\", \"X-Custom\": \"test\"}",
+                "url": "http://localhost:3001",
+                "body": "test body",
+                "method": "POST"
+            }
+            """
+        Then the status is 201
+        And "${response.customHeaders['x-content-type']}" is equal to "application/json"
+        And "${response.customHeaders['x-custom']}" is equal to "test"
+        And "${response.body}" is equal to "test body"
+
+    Scenario: POST request with jsonBody from results object
+        Given set "jsonBody" to:
+            """
+            {
+                "message": "from results"
+            }
+            """
+        When perform api request:
+            """
+            {
+                "url": "http://localhost:3001",
+                "method": "POST"
+            }
+            """
+        Then the status is 201
+        And "${response.message}" is equal to "from results"
+
+    Scenario: POST request with body from results object
+        Given set "body" to "body from results"
+        When perform api request:
+            """
+            {
+                "url": "http://localhost:3001",
+                "method": "POST"
+            }
+            """
+        Then the status is 201
+        And "${response.body}" is equal to "body from results"

@@ -51,14 +51,13 @@ async function requestBuilder(request) {
         request.urlEncodedBody = this.results.urlEncodedBody
     }
     if (request.urlEncodedBody) {
-        const urlEncodedBody = []
         const details = request.urlEncodedBody
-        for (const property in details) {
+        const urlEncodedBody = Object.entries(details).map(([property, value]) => {
             const encodedKey = encodeURIComponent(property)
-            const encodedValue = encodeURIComponent(details[property])
-            urlEncodedBody.push(encodedKey + '=' + encodedValue)
-        }
-        request.api = request.api + '?' + urlEncodedBody.join('&')
+            const encodedValue = encodeURIComponent(value)
+            return encodedKey + '=' + encodedValue
+        }).join('&')
+        request.api = request.api + '?' + urlEncodedBody
     }
     const formBodyMap = function (item) {
         if (item && item.type === 'file') {
@@ -105,8 +104,8 @@ async function requestBuilder(request) {
         const details = request.formBody
         for (const property in details) {
             if (Array.isArray(details[property])) {
-                details[property].map(formBodyMap.bind(this)).forEach(i => {
-                    data.append(property + '[]', i)
+                details[property].map(formBodyMap.bind(this)).forEach(item => {
+                    data.append(property + '[]', item)
                 })
             } else {
                 data.append(property, formBodyMap.call(this, details[property]))
@@ -132,55 +131,44 @@ async function requestBuilder(request) {
         request.apiParams = this.results.apiParams
     }
     if (request.apiParams) {
-        let formBody = []
         const details = request.apiParams
-        for (const property in details) {
+        const formBody = Object.entries(details).map(([property, value]) => {
             const encodedKey = encodeURIComponent(property)
             // Handle nested objects by JSON stringifying them
-            const value = typeof details[property] === 'object' && details[property] !== null
-                ? JSON.stringify(details[property])
-                : details[property]
-            const encodedValue = encodeURIComponent(value)
-            formBody.push(encodedKey + '=' + encodedValue)
-        }
-        formBody = formBody.join('&')
+            const processedValue = typeof value === 'object' && value !== null
+                ? JSON.stringify(value)
+                : value
+            const encodedValue = encodeURIComponent(processedValue)
+            return encodedKey + '=' + encodedValue
+        }).join('&')
         request.api = request.api + '?' + formBody
     }
-    let additionalParams = {}
-    if (this.results && this.results.api) {
-        additionalParams = this.results.api.additionalParams
-    }
-    return await performRequest.call(this, request, additionalParams)
+    return await performRequest.call(this, request, this.results?.api?.additionalParams || {})
 }
 
 // Performs the given request, returning the response
 async function performRequest(request, additionalParams = {}) {
-    if (typeof request.body === 'object') {
-        request.body = JSON.stringify(request.body)
+    // Pre-build URL to avoid array operations
+    const absoluteUrl = request.api ? `${request.url}/${request.api}` : request.url
+    
+    // Optimize body handling
+    let body = request.body
+    if (body && typeof body === 'object' && !Buffer.isBuffer(body) && !(body instanceof FormData)) {
+        body = JSON.stringify(body)
     }
+    
     const parameters = {
         method: request.method,
         headers: request.headers,
-        body: request.body,
+        body,
         ...additionalParams
     }
-    const url = [request.url]
-    if (request.api) {
-        url.push(request.api)
-    }
-    const absoluteUrl = url.join('/')
 
     let response = await fetch(absoluteUrl, parameters)
     const curlCommand = fetchToCurl(absoluteUrl, parameters)
 
-    // Extract headers without cloning the response to save memory
-    const headers = {}
-    for (const [key, value] of response.headers.entries()) {
-        headers[key] = value
-    }
-    
-    const ok = response.ok
-    const status = response.status
+    // Extract headers more efficiently
+    const headers = Object.fromEntries(response.headers.entries())
     
     // Check content-length to determine if response is large
     const contentLength = headers['content-length'] ? parseInt(headers['content-length']) : null
@@ -190,54 +178,62 @@ async function performRequest(request, additionalParams = {}) {
     let processedResponse
     if (this.results.apiRetrieveType) {
         processedResponse = await (response[this.results.apiRetrieveType])()
-    } else if (headers['content-type'] && headers['content-type'].includes('image')) {
-        // Process all images regardless of size
-        processedResponse = await response.blob()
-        try {
-            if (canAttach.call(this)) {
-                const tmpBlob = Buffer.from(await processedResponse.arrayBuffer())
-                this.attach(tmpBlob, 'image/png')
-            }
-        } catch { /* empty */ }
-        
-        // Add size information for large images
-        if (isLargeResponse) {
-            processedResponse.sizeInfo = {
-                size: contentLength,
-                isLarge: true,
-                message: `Large image processed (${contentLength} bytes)`
-            }
-        }
     } else {
-        try {
-            if (isLargeResponse) {
-                // For large text responses, read only the first chunk
-                const reader = response.body.getReader()
-                const decoder = new TextDecoder()
-                const { value } = await reader.read()
-                reader.releaseLock()
-                
-                const partialText = decoder.decode(value || new Uint8Array())
-                const truncatedText = partialText.substring(0, 1000) // First 1000 chars
-                
-                processedResponse = {
-                    type: 'large_response',
-                    size: contentLength,
-                    contentType: headers['content-type'],
-                    truncated: true,
-                    preview: truncatedText,
-                    message: `Response too large (${contentLength} bytes) - only preview shown`
+        const contentType = headers['content-type'] || ''
+        
+        if (contentType.includes('image')) {
+            // Process all images regardless of size
+            processedResponse = await response.blob()
+            try {
+                if (canAttach.call(this)) {
+                    const tmpBlob = Buffer.from(await processedResponse.arrayBuffer())
+                    this.attach(tmpBlob, 'image/png')
                 }
-            } else {
-                processedResponse = await response.text()
-                try {
-                    processedResponse = JSON.parse(processedResponse)
-                } catch { /* empty */ }
+            } catch { /* empty */ }
+            
+            // Add size information for large images
+            if (isLargeResponse) {
+                processedResponse.sizeInfo = {
+                    size: contentLength,
+                    isLarge: true,
+                    message: `Large image processed (${contentLength} bytes)`
+                }
             }
-        } catch (error) {
-            processedResponse = {
-                error: 'Failed to process response',
-                message: error.message
+        } else {
+            try {
+                if (isLargeResponse) {
+                    // For large text responses, read only the first chunk
+                    const reader = response.body.getReader()
+                    const decoder = new TextDecoder()
+                    try {
+                        const { value } = await reader.read()
+                        const partialText = decoder.decode(value || new Uint8Array())
+                        const truncatedText = partialText.substring(0, 1000) // First 1000 chars
+                        
+                        processedResponse = {
+                            type: 'large_response',
+                            size: contentLength,
+                            contentType,
+                            truncated: true,
+                            preview: truncatedText,
+                            message: `Response too large (${contentLength} bytes) - only preview shown`
+                        }
+                    } finally {
+                        reader.releaseLock()
+                    }
+                } else {
+                    const text = await response.text()
+                    try {
+                        processedResponse = JSON.parse(text)
+                    } catch {
+                        processedResponse = text
+                    }
+                }
+            } catch (error) {
+                processedResponse = {
+                    error: 'Failed to process response',
+                    message: error.message
+                }
             }
         }
     }
@@ -247,8 +243,8 @@ async function performRequest(request, additionalParams = {}) {
             ...parameters
         },
         curlCommand,
-        ok,
-        status,
+        ok: response.ok,
+        status: response.status,
         response: processedResponse,
         headers
     }
