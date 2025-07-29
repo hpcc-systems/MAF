@@ -38,5 +38,3 @@ Runs a query from the provided item.  Allows templated args as per the global cu
 
 [npm-image]:https://img.shields.io/npm/v/@ln-maf/mysql.svg
 [npm-url]:https://www.npmjs.com/package/@ln-maf/mysql-sql
-[dep-image]:https://david-dm.org/hpcc-systems/MAF.svg?path=packages%2Fmysql
-[dep-url]:https://david-dm.org/hpcc-systems/MAF?path=packages%2Fmysql

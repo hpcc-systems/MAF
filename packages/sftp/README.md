@@ -115,5 +115,3 @@ The SFTP module integrates with MAF's global variable system and supports templa
 
 [npm-image]:https://img.shields.io/npm/v/@ln-maf/sftp.svg
 [npm-url]:https://www.npmjs.com/package/@ln-maf/sftp
-[dep-image]:https://david-dm.org/hpcc-systems/MAF.svg?path=packages%2Fsftp
-[dep-url]:https://david-dm.org/hpcc-systems/MAF?path=packages%2Fsftp

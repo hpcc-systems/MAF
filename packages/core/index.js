@@ -419,7 +419,6 @@ function evaluateExpression(expression, variables) {
     const values = Object.values(variables)
 
     try {
-         
         return (new Function(...keys, `return ${trimmedExpression};`))(...values)
     } catch {
         // Return the original expression if evaluation fails

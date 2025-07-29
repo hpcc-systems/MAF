@@ -420,5 +420,3 @@ Set the environment variable `AWSENV=LOCALSTACK` to use localstack instead of re
 
 [npm-image]:https://img.shields.io/npm/v/@ln-maf/aws.svg
 [npm-url]:https://www.npmjs.com/package/@ln-maf/aws
-[dep-image]:https://david-dm.org/hpcc-systems/MAF.svg?path=packages%2Faws
-[dep-url]:https://david-dm.org/hpcc-systems/MAF?path=packages%2Faws

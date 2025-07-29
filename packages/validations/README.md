@@ -1048,5 +1048,3 @@ Checks if the `jsonObject` does not contain the string (opposite of above).
 
 [npm-image]: https://img.shields.io/npm/v/@ln-maf/validations.svg
 [npm-url]: https://www.npmjs.com/package/@ln-maf/validations
-[dep-image]: https://david-dm.org/hpcc-systems/MAF.svg?path=packages%2Fvalidations
-[dep-url]: https://david-dm.org/hpcc-systems/MAF?path=packages%2Fvalidations

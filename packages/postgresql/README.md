@@ -43,5 +43,3 @@ Runs a query from the provided item. Allows templated args as per the global cuc
 
 [npm-image]:https://img.shields.io/npm/v/@ln-maf/postgresql.svg
 [npm-url]:https://www.npmjs.com/package/@ln-maf/postgresql-sql
-[dep-image]:https://david-dm.org/hpcc-systems/MAF.svg?path=packages%2Fpostgresql
-[dep-url]:https://github.com/hpcc-systems/MAF/tree/main/packages/postgressql

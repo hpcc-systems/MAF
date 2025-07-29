@@ -8,7 +8,6 @@ An expandable, fast, and easy-to-use automation framework built with the Cucumbe
 
 [![npm package][npm-image]][npm-url]
 [![Testing Status](https://github.com/hpcc-systems/MAF/actions/workflows/Test.yml/badge.svg)](https://github.com/hpcc-systems/MAF/actions/workflows/Test.yml)
-[![Dependencies](https://david-dm.org/hpcc-systems/MAF.svg)](https://david-dm.org/hpcc-systems/MAF)
 
 ### Module Test Status
 
@@ -17,6 +16,7 @@ An expandable, fast, and easy-to-use automation framework built with the Cucumbe
 | API | [![API Tests](https://github.com/hpcc-systems/MAF/actions/workflows/package-api.yml/badge.svg)](https://github.com/hpcc-systems/MAF/actions/workflows/package-api.yml) |
 | AWS | [![AWS Tests](https://github.com/hpcc-systems/MAF/actions/workflows/package-aws.yml/badge.svg)](https://github.com/hpcc-systems/MAF/actions/workflows/package-aws.yml) |
 | MySQL | [![MySQL Tests](https://github.com/hpcc-systems/MAF/actions/workflows/package-mysql.yml/badge.svg)](https://github.com/hpcc-systems/MAF/actions/workflows/package-mysql.yml) |
+| SFTP | [![SFTP Tests](https://github.com/hpcc-systems/MAF/actions/workflows/package-sftp.yml/badge.svg)](https://github.com/hpcc-systems/MAF/actions/workflows/package-sftp.yml) |
 | PostgreSQL | [![PostgreSQL Tests](https://github.com/hpcc-systems/MAF/actions/workflows/package-postgresql.yml/badge.svg)](https://github.com/hpcc-systems/MAF/actions/workflows/package-postgresql.yml) |
 | DefaultSQL | [![DefaultSQL Tests](https://github.com/hpcc-systems/MAF/actions/workflows/package-default-sql.yml/badge.svg)](https://github.com/hpcc-systems/MAF/actions/workflows/package-default-sql.yml) |
 | Preprocessor | [![Preprocessor Tests](https://github.com/hpcc-systems/MAF/actions/workflows/package-preprocessor.yml/badge.svg)](https://github.com/hpcc-systems/MAF/actions/workflows/package-preprocessor.yml) |
@@ -26,27 +26,32 @@ An expandable, fast, and easy-to-use automation framework built with the Cucumbe
 
 ### Prerequisites
 
-- Node.js
+- Node.js v22 or greater
 
 ### Setup
 
 1. Create a new npm project:
 
-   ```bash
-   npm init
-   ```
+    ```bash
+    npm init
+    ```
 
-2. Install the required dependencies:
+2. Install any of the required dependencies for testing:
 
-   ```bash
-   npm i @cucumber/cucumber
-   npm i @ln-maf/aws
-   npm i @ln-maf/validations
-   npm i @ln-maf/api
-   npm i @ln-maf/mysql
-   npm i @ln-maf/core
-   npm i multiple-cucumber-html-reporter
-   ```
+    ```bash
+    npm i @cucumber/cucumber
+    npm i @ln-maf/aws
+    npm i @ln-maf/validations
+    npm i @ln-maf/api
+    npm i @ln-maf/mysql
+    npm i @ln-maf/core
+    ```
+
+    (Optional) Install multiple-cucumber-html-reporter for reporting
+
+    ```bash
+    npm i multiple-cucumber-html-reporter
+    ```
 
 3. Create a features directory and step definitions:
 
@@ -54,7 +59,7 @@ An expandable, fast, and easy-to-use automation framework built with the Cucumbe
    mkdir features
    ```
 
-   Create `features/steps.js` with the following content:
+   Create `imports.js` with the following content:
 
    ```javascript
    require('@ln-maf/core/parameter_types')
@@ -69,7 +74,7 @@ An expandable, fast, and easy-to-use automation framework built with the Cucumbe
    ```json
    {
      "scripts": {
-       "test": "cucumber-js -f json:test/report/report.json $EXTRAS"
+       "test": "npx cucumber-js -f json:test/report/report.json $EXTRAS"
      }
    }
    ```
@@ -80,33 +85,166 @@ An expandable, fast, and easy-to-use automation framework built with the Cucumbe
    mkdir -p test/report
    ```
 
-Now you can run `npm test` to execute tests and `npx report` to generate an HTML report.
+Now you can run `npm test` to execute tests and `npx multiReport` to generate an HTML report.
 
 ## Important Concepts
 
 ### Items
 
-MAF stores information as items in a global object called `results`. This allows for easy access to information across steps.
+MAF uses a global storage system called `items` to share data between test steps. Think of it as a shared memory where you can store values with names (keys) and retrieve them later in any step.
 
-**Example:**
+#### How Items Work
+
+When you store data using MAF, it gets saved in a global `results` object that persists throughout your entire test scenario. This allows you to:
+
+- **Store data** from API responses, database queries, or manual assignments
+- **Access data** in subsequent steps using the stored item name
+- **Pass data** between different types of operations (API → Database → Validation)
+
+#### Storing Items
+
+**Basic Assignment:**
 
 ```gherkin
 When set "name" to "John"
+When set "age" to 25
+When set "isActive" to true
 ```
 
-Now there is an item called "name" that has the string value of "John" and can be accessed in other steps. You can validate that the name is "John" in the following ways:
+**From API Responses:**
+
+```gherkin
+When perform api request:
+"""
+{
+  "url": "https://api.example.com/users/1",
+  "method": "GET"
+}
+"""
+# The response automatically gets stored as item "response"
+```
+
+**From Database Queries:**
+
+```gherkin
+When mysql query from string "SELECT name FROM users WHERE id = 1" is run
+# The query results get stored as item "queryResult"
+```
+
+#### Accessing Items
+
+**Direct Item Comparison:**
 
 ```gherkin
 Then item "name" is equal to "John"
+Then item "age" is equal to 25
+Then item "isActive" is equal to true
 ```
 
-Or using template literals:
+**Template Literals (Variable Substitution):**
 
 ```gherkin
+# Using ${itemName} syntax to inject stored values
 Then "${name} Doe" is equal to "John Doe"
+Then "User ${name} is ${age} years old" is equal to "User John is 25 years old"
 ```
 
-The first example uses a [{jsonObject}](packages/validations/JSONObject.md) to infer the item. The second example uses a template literal to access the global `results` variable. Both step definitions are provided by the [validations](packages/validations/README.md) module.
+**In API Requests:**
+
+```gherkin
+When set "userId" to 123
+When perform api request:
+"""
+{
+  "url": "https://api.example.com/users/${userId}",
+  "method": "GET"
+}
+"""
+```
+
+**In SQL Queries:**
+
+```gherkin
+When set "userEmail" to "john@example.com"
+When mysql query from string "SELECT * FROM users WHERE email = '${userEmail}'" is run
+```
+
+#### Advanced Item Usage
+
+**Complex Objects:**
+
+```gherkin
+When set "user" to:
+"""
+{
+  "name": "John",
+  "email": "john@example.com",
+  "preferences": {
+    "theme": "dark",
+    "notifications": true
+  }
+}
+"""
+
+# Access nested properties
+Then item "user.name" is equal to "John"
+Then item "user.preferences.theme" is equal to "dark"
+```
+
+**JavaScript Expressions:**
+
+```gherkin
+When set "tomorrow" to "${new Date(Date.now() + 86400000).toISOString().split('T')[0]}"
+When set "randomId" to "${Math.floor(Math.random() * 1000)}"
+When set "calculation" to "${5 * 10 + 2}"
+```
+
+#### Common Patterns
+
+**Data Pipeline Example:**
+
+```gherkin
+# Step 1: Create a user via API
+When set "newUser" to:
+"""
+{
+  "name": "Jane Smith",
+  "email": "jane@example.com"
+}
+"""
+When perform api request:
+"""
+{
+  "url": "https://api.example.com/users",
+  "method": "POST",
+  "body": "${newUser}"
+}
+"""
+
+# Step 2: Extract the created user ID from response
+When set "userId" to "${response.id}"
+
+# Step 3: Verify in database
+When mysql query from string "SELECT * FROM users WHERE id = ${userId}" is run
+Then item "queryResult[0].email" is equal to "jane@example.com"
+
+# Step 4: Update the user
+When perform api request:
+"""
+{
+  "url": "https://api.example.com/users/${userId}",
+  "method": "PUT",
+  "body": {
+    "name": "Jane Johnson"
+  }
+}
+"""
+
+# Step 5: Verify the update
+Then item "response.name" is equal to "Jane Johnson"
+```
+
+The first example uses a [{jsonObject}](packages/validations/JSONObject.md) to reference stored items. The second example uses template literals to inject values directly into strings. Both approaches are provided by the [validations](packages/validations/README.md) module.
 
 ### JavaScript Injection
 
@@ -114,11 +252,11 @@ You can inline JavaScript code in feature files, removing the need to create ful
 
 ```gherkin
 # If today was January 16, 2024
-When set "currentDate" to "${moment().format('YYYY-MM-DD')}"
+When set "currentDate" to "${DateTime.now().toFormat('yyyy-MM-dd')}"
 Then item "currentDate" is equal to "2024-01-16"
 ```
 
-**Note:** Only simple functions that don't require external dependencies should be inlined. Luxon is available in the core module (moment is deprecated), so you can use Luxon functions in feature files.
+**Note:** Only simple functions that don't require external dependencies should be inlined. Luxon is available in the core module (moment is deprecated), so you can use Luxon functions like `DateTime.now().toFormat('yyyy-MM-dd')` in feature files.
 
 ## Examples
 
@@ -161,75 +299,6 @@ Feature: View the text "Hello World"
 
 ![API Result](./APIResult.png)
 
-### Hello World MySQL Example
-
-This requires setting up your SQL environment. To use this:
-
-1. Install the MySQL module: `npm i @ln-maf/mysql`
-2. Run `npx mysql-configure` to set up credentials
-   - It will store the config in a `sqlConfig.json` file
-   - Credentials are stored using `node-keytar` in your OS's secure password storage:
-     - **Windows**: Credential Vault
-     - **macOS**: Keychain
-     - **Linux**: libSecret
-
-Create `features/HelloWorldSQL.feature`:
-
-```gherkin
-Feature: SQL Hello World
-  Scenario: Run a query
-      When mysql query from string "SELECT * FROM HelloWorld" is run
-      Then it matches set from the file "helloWorldSQL.json"
-```
-
-Create `helloWorldSQL.json`:
-
-```json
-[
-  {
-    "id": "1",
-    "hello": "world"
-  },
-  {
-    "id": "2",
-    "hello": "day"
-  }
-]
-```
-
-**Sample Table Structure:**
-
-| id | hello |
-|----|-------|
-| 1  | world |
-| 2  | day   |
-
-### Variable Usage Example
-
-Variables can be used within almost any step using template literals:
-
-Create `features/HelloWorldAPI.feature`:
-
-```gherkin
-Feature: View the text "Hello World"
-  Scenario: Hello World
-    Given set "url" to "https://mocky.io/v2/"
-    Given set "exampleLiteral" to "${5+5}Works?"
-    When api request from file "helloWorld.json" is performed
-    Then status ok
-    And "${response}" is equal to "Hello World"
-```
-
-Create `helloWorld.json`:
-
-```json
-{
-  "url": "${url}",
-  "api": "5ec540242f00004cb1dc30dd",
-  "method": "GET"
-}
-```
-
 ## Available Modules
 
 The framework includes several modules that can be used independently or together:
@@ -248,7 +317,7 @@ The framework includes several modules that can be used independently or togethe
 
 - **[DefaultSQL](packages/defaultSQL/README.md)** [![DefaultSQL Tests](https://github.com/hpcc-systems/MAF/actions/workflows/package-default-sql.yml/badge.svg)](https://github.com/hpcc-systems/MAF/actions/workflows/package-default-sql.yml) - Common SQL functionality used to create other SQL modules. Reference implementation for creating new SQL database modules.
 
-- **[SFTP](packages/sftp/README.md)** - SFTP file transfer capabilities for testing file operations.
+- **[SFTP](packages/sftp/README.md)** [![SFTP Tests](https://github.com/hpcc-systems/MAF/actions/workflows/package-sftp.yml/badge.svg)](https://github.com/hpcc-systems/MAF/actions/workflows/package-sftp.yml) - SFTP file transfer capabilities for testing file operations.
 
 - **[Preprocessor](packages/preprocessor/README.md)** [![Preprocessor Tests](https://github.com/hpcc-systems/MAF/actions/workflows/package-preprocessor.yml/badge.svg)](https://github.com/hpcc-systems/MAF/actions/workflows/package-preprocessor.yml) - Feature file preprocessing that adds information to feature files before execution.
 

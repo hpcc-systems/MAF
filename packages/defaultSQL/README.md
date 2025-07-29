@@ -237,7 +237,5 @@ This package supports three methods for storing database credentials:
 
 See `KEYTAR_MIGRATION.md` for detailed migration information.
 
-[npm-image]:https://img.shields.io/npm/v/@ln-maf/default-sql.svg
-[npm-url]:https://www.npmjs.com/package/@ln-maf/default-sql
-[dep-image]:https://david-dm.org/hpcc-systems/MAF.svg?path=packages%2FdefaultSQL
-[dep-url]:https://david-dm.org/hpcc-systems/MAF?path=packages%2FdefaultSQL
+[npm-image]: https://img.shields.io/npm/v/@ln-maf/default-sql.svg
+[npm-url]: https://www.npmjs.com/package/@ln-maf/default-sql
