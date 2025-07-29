@@ -10,7 +10,6 @@
     "test": "echo 'defaultSQL is a utility package used by postgresql, mysql, and other database packages. Run tests in those packages instead.'",
     "test:unit": "node test/unit-tests.js"
   },
-  "author": "",
   "license": "Apache-2.0",
   "dependencies": {
     "chai": "^4.3.6",
@@ -34,9 +33,8 @@
     "@ln-maf/core": "file:../core",
     "@ln-maf/validations": "file:../validations",
     "multiple-cucumber-html-reporter": "3.7.0",
-    "nyc": "^15.1.0"
+    "nyc": "^17.0.0"
   },
-  "gitHead": "9bf55a2c86fa17707fabfb4320c3d722e270f9e6",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hpcc-systems/MAF.git"
@@ -47,6 +45,5 @@
   ],
   "bugs": {
     "url": "https://github.com/hpcc-systems/MAF/issues"
-  },
-  "homepage": "https://github.com/hpcc-systems/MAF#readme"
+  }
 }

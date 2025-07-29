@@ -1,25 +1,13 @@
 {
   "name": "ln-maf",
-  "private": true,
-  "version": "4.0.0-beta.1",
+  "version": "4.0.0",
   "description": "Modular Automation Framework",
-  "main": "index.js",
-  "prepare": "cd packages",
   "scripts": {
-    "codecov": "nyc --reporter=lcov --reporter=text cucumber-js test",
+    "test:coverage": "lerna run test:coverage",
     "test": "lerna run test"
   },
-  "postpublish": "PACKAGE_VERSION=$(cat package.json | grep \\\"version\\\" | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]') && git tag v$PACKAGE_VERSION && git push --tags",
   "workspaces": [
-    "packages/api",
-    "packages/aws",
-    "packages/core",
-    "packages/defaultSQL",
-    "packages/postgresql",
-    "packages/mysql",
-    "packages/sftp",
-    "packages/preprocessor",
-    "packages/validations"
+    "packages/*"
   ],
   "contributors": [
     {
@@ -43,7 +31,6 @@
   "bugs": {
     "url": "https://github.com/hpcc-systems/MAF/issues"
   },
-  "homepage": "https://github.com/hpcc-systems/MAF#readme",
   "devDependencies": {
     "@cucumber/cucumber": "^12.0.0",
     "@eslint/js": "^9.31.0",
