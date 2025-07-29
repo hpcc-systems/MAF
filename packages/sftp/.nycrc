@@ -1,0 +1,14 @@
+{
+    "all": true,
+    "reporter": [
+        "lcov",
+        "text"
+    ],
+    "report-dir": "../../coverage",
+    "include": [
+        "stepDefinitions/**/*.js"
+    ],
+    "exclude": [
+        "stepDefinitions/**/imports.js"
+    ]
+}

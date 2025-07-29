@@ -7,8 +7,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "bash runFeature.sh",
-    "test:coverage": "TEST_COVERAGE=1 bash runFeature.sh"
+    "test": "npm run sftp:start && (npm run test:run; npm run sftp:stop)",
+    "test:coverage": "npm run sftp:start && (npm run test:run:coverage; npm run sftp:stop)",
+    "test:run": "wait-on tcp:localhost:2222 && mkdir -p test/report && npm run cucumber:exec && npm run test:finalize",
+    "test:run:coverage": "wait-on tcp:localhost:2222 && mkdir -p test/report && npm run cucumber:exec:coverage && npm run test:finalize",
+    "cucumber:exec": "HOSTNAME=localhost USERNAME=testuser SFTP_PORT=2222 SFTP_PASS=testpass npx cucumber-js -f json:test/report/sftp.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE",
+    "cucumber:exec:coverage": "HOSTNAME=localhost USERNAME=testuser SFTP_PORT=2222 SFTP_PASS=testpass npx nyc --reporter=lcov --reporter=text --report-dir=../../coverage npx cucumber-js -f json:test/report/sftp.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE",
+    "test:finalize": "npx multiReport && mkdir -p ../../test/report && cp -r test/report/* ../../test/report",
+    "sftp:start": "docker-compose up -d",
+    "sftp:stop": "docker-compose down",
+    "sftp:logs": "docker logs sftp-test-server || true",
+    "sftp:shell": "docker exec -it sftp-test-server /bin/bash || true"
   },
   "author": "",
   "license": "Apache-2.0",
@@ -22,7 +31,10 @@
   "devDependencies": {
     "@cucumber/cucumber": "^12.0.0",
     "@ln-maf/core": "file:../core",
-    "multiple-cucumber-html-reporter": "3.7.0"
+    "@ln-maf/validations": "file:../validations",
+    "multiple-cucumber-html-reporter": "3.7.0",
+    "nyc": "^15.1.0",
+    "wait-on": "^7.2.0"
   },
   "gitHead": "9bf55a2c86fa17707fabfb4320c3d722e270f9e6",
   "repository": {

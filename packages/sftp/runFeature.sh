@@ -1,4 +1,3 @@
-npx multiReport
 # Create the report directory if it doesn't exist
 mkdir -p test/report
 
