@@ -1,0 +1,2 @@
+Test file content for SFTP operations
+This file is used for testing SFTP upload and download functionality.
