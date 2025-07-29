@@ -1,0 +1,7 @@
+{
+  "host": "localhost",
+  "port": 3307,
+  "database": "testdb",
+  "multipleStatements": true,
+  "connectTimeout": 30000
+}

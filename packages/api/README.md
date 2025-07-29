@@ -36,30 +36,6 @@ require('@ln-maf/api')
 
 ## Step Definitions
 
-### `Given url {string}`
-
-Deprecated: Set the item 'url' instead
-
-Assigns a string to the url item
-
-### `Given api {string}`
-
-Deprecated: Set the item 'api' instead
-
-Assigns a string to the api item
-
-### `Given body {string}`
-
-Deprecated: Set the item 'body' instead
-
-Defines the body for a given request
-
-### `Given headers {string}`
-
-Deprecated: Set the item 'headers' instead
-
-Takes a string of headers.  These should represent a json object. Note that the default headers are removed if this is used. The default headers are documented here in the [node-fetch](https://www.npmjs.com/package/node-fetch#default-headers) documentation.
-
 ### `When api request from`[{jsonObject}](../validations/JSONObject.md)`is performed`
 
 Performs a request based on the json file and given values.  An example json file would be:
@@ -154,45 +130,15 @@ An example would be:
 }
 ```
 
-### `When method post`
-
-Deprecated: Set the item 'method' to 'POST' and call the method 'api request is performed' instead
-
-Performs a post using the defined values listed above and stores the result in `this.results.lastRun` which can be accessed with `${lastRun}`
-
-### `When method get`
-
-Deprecated: Set the item 'method' to 'GET' and call the method 'api request is performed' instead
-
-Performs a post using the defined values listed above and stores the result in `this.results.lastRun` which can be accessed with `${lastRun}`
-
 ### `Then the status is ok`
 
 Makes sure that `response.status` is between 200 and 299.
-
-### `Then status ok`
-
-Deprecated: Use the status is ok, the status is {int} or the status is not ok instead
-
-Makes sure that `response` is between 200 and 299.
 
 ### `Then the status is not ok`
 
 Makes sure that `response.status` is not between 200 and 299.
 
-### `Then status not ok`
-
-Deprecated: Use the status is ok, the status is {int} or the status is not ok instead
-
-Makes sure that `response.status` is not between 200 and 299.
-
 ### `Then the status is {int}`
-
-Makes sure that `response.status` is equal to the integer specified.
-
-### `Then status {int}`
-
-Deprecated: Use the status is ok, the status is {int} or the status is not ok instead
 
 Makes sure that `response.status` is equal to the integer specified.
 

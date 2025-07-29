@@ -1,2 +1,2 @@
-node_modules
-test/report
+# MySQL package specific ignores
+# (common patterns are handled by root .gitignore)

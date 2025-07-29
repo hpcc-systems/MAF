@@ -1,25 +1,13 @@
 {
   "name": "ln-maf",
-  "private": true,
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "Modular Automation Framework",
-  "main": "index.js",
-  "prepare": "cd packages",
   "scripts": {
-    "codecov": "nyc --reporter=lcov --reporter=text cucumber-js test",
+    "test:coverage": "lerna run test:coverage",
     "test": "lerna run test"
   },
-  "postpublish" : "PACKAGE_VERSION=$(cat package.json | grep \\\"version\\\" | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]') && git tag v$PACKAGE_VERSION && git push --tags",
   "workspaces": [
-    "packages/api",
-    "packages/aws",
-    "packages/core",
-    "packages/defaultSQL",
-    "packages/postgresql",
-    "packages/mysql",
-    "packages/sftp",
-    "packages/preprocessor",
-    "packages/validations"
+    "packages/*"
   ],
   "contributors": [
     {
@@ -43,17 +31,13 @@
   "bugs": {
     "url": "https://github.com/hpcc-systems/MAF/issues"
   },
-  "homepage": "https://github.com/hpcc-systems/MAF#readme",
-  "dependencies": {},
   "devDependencies": {
-    "@cucumber/cucumber": "^11.0.0",
-    "lerna": "^8.1.9",
-    "multiple-cucumber-html-reporter": "3.8.0",
-    "eslint": "^8.32.0",
-    "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-n": "^15.6.1",
-    "eslint-plugin-promise": "^6.1.1",
+    "@cucumber/cucumber": "^12.0.0",
+    "@eslint/js": "^9.31.0",
+    "eslint": "^9.31.0",
+    "globals": "^16.3.0",
+    "lerna": "^8.0.0",
+    "multiple-cucumber-html-reporter": "3.7.0",
     "nyc": "^15.1.0"
   }
 }

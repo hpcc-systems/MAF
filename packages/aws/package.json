@@ -3,13 +3,13 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "AWS steps for MAF. This contains S3, DynamoDB, SQS, ECS, Cloudwatch, and Lambda stepDefinitions",
   "main": "index.js",
   "scripts": {
-    "test": "bash runFeature.sh"
+    "test": "bash runFeature.sh",
+    "test:coverage": "TEST_COVERAGE=1 bash runFeature.sh"
   },
-  "author": "Dominick Martelly",
   "license": "Apache-2.0",
   "dependencies": {
     "@aws-sdk/client-cloudwatch-logs": "^3.430.0",
@@ -20,22 +20,29 @@
     "@aws-sdk/client-sqs": "^3.430.0",
     "@aws-sdk/client-ssm": "^3.430.0",
     "chai": "^4.0.0",
-    "luxon": "^2.4.0"
+    "luxon": "^3.0.0"
   },
   "peerDependencies": {
-    "@cucumber/cucumber": ">= 11.0.0",
-    "@ln-maf/core": ">= 3.0.0"
+    "@cucumber/cucumber": ">= 12.0.0",
+    "@ln-maf/core": ">= 4.0.0-beta.1"
   },
   "devDependencies": {
-    "@cucumber/cucumber": "^11.0.0",
     "@ln-maf/core": "file:../core",
     "@ln-maf/validations": "file:../validations",
-    "eslint": "^8.51.0",
-    "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.28.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6.0.0",
-    "multiple-cucumber-html-reporter": "3.8.0",
-    "nyc": "^15.1.0"
+    "multiple-cucumber-html-reporter": "3.7.0",
+    "nyc": "^17.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hpcc-systems/MAF.git"
+  },
+  "keywords": [
+    "cucumber-js",
+    "testing",
+    "gherkin",
+    "cucumber-steps"
+  ],
+  "bugs": {
+    "url": "https://github.com/hpcc-systems/MAF/issues"
   }
 }

@@ -1,0 +1,15 @@
+services:
+  sftp-test:
+    image: atmoz/sftp
+    platform: linux/amd64
+    container_name: sftp-test-server
+    ports:
+      - "2222:22"
+    command: testuser:testpass:::upload
+    environment:
+      - SFTP_USERS=testuser:testpass:::upload
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 22"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

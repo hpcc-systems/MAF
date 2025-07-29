@@ -1,3 +1,47 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+# [4.0.0](https://github.com/hpcc-systems/MAF/compare/@ln-maf/core@4.0.0-beta.4...@ln-maf/core@4.0.0) (2025-07-29)
+
+
+### Bug Fixes
+
+* Add validation to prevent assignment of invalid keys in MAFSave function ([ede0ab1](https://github.com/hpcc-systems/MAF/commit/ede0ab12c5b1c29d6189e62f6822c1e09b4781ab))
+* Update package.json files to remove author fields, update versioning, and improve descriptions ([e276aaf](https://github.com/hpcc-systems/MAF/commit/e276aaf6c53bd1edb83193f148261070bc292277))
+
+
+
+
+
+# [4.0.0-beta.4](https://github.com/hpcc-systems/MAF/compare/@ln-maf/core@4.0.0-beta.3...@ln-maf/core@4.0.0-beta.4) (2025-07-24)
+
+
+### Features
+
+* enhance parameter types and response handling for large API responses ([b620524](https://github.com/hpcc-systems/MAF/commit/b62052470df7c7742360e4ac87586a546ed277b5))
+
+
+
+
+
+# [4.0.0-beta.3](https://github.com/hpcc-systems/MAF/compare/@ln-maf/core@4.0.0-beta.2...@ln-maf/core@4.0.0-beta.3) (2025-07-23)
+
+**Note:** Version bump only for package @ln-maf/core
+
+
+
+
+
+# [4.0.0-beta.2](https://github.com/hpcc-systems/MAF/compare/@ln-maf/core@4.0.0-beta.1...@ln-maf/core@4.0.0-beta.2) (2025-07-23)
+
+**Note:** Version bump only for package @ln-maf/core
+
+
+
+
+
 # Changelog
 All notable changes to this project will be documented in this file.
 

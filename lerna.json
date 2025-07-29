@@ -3,5 +3,29 @@
     "packages/*"
   ],
   "useNx": false,
-  "version": "independent"
+  "version": "independent",
+  "npmClient": "npm",
+  "command": {
+    "publish": {
+      "conventionalCommits": true,
+      "message": "chore(release): publish",
+      "registry": "https://registry.npmjs.org/"
+    },
+    "version": {
+      "conventionalCommits": true,
+      "message": "chore(release): version packages"
+    },
+    "bootstrap": {
+      "ignore": "component-*",
+      "npmClientArgs": ["--no-package-lock"]
+    }
+  },
+  "ignoreChanges": [
+    "**/*.spec.js",
+    "**/*.test.js",
+    "**/*.md",
+    "**/test/**",
+    "**/features/**",
+    "package-lock.json"
+  ]
 }

@@ -1,167 +1,310 @@
-# Validation Cucumber Steps
-This module is created to allow other projects to easily validate JSON utilizing a set of steps.
 
-[![npm package][npm-image]][npm-url] 
+# Validation Cucumber Steps
+
+This module allows other projects to easily validate JSON using a set of Cucumber step definitions.
+
+[![npm package][npm-image]][npm-url]
 [![GitHub Actions](https://github.com/hpcc-systems/MAF/workflows/Build/badge.svg)](https://github.com/hpcc-systems/MAF/actions)
 [![Dependencies][dep-image]][dep-url]
 
-## Set up
-Install with `npm i @ln-maf/validations`
-Add a step file with the following code:
-```
-require('cucumber-validations')
+## Table of Contents
+
+- [Setup](#setup)
+- [Step Definitions](#step-definitions)
+  - [Data Setting Steps](#data-setting-steps)
+  - [Assertion Steps](#assertion-steps)
+  - [JSON Manipulation Steps](#json-manipulation-steps)
+  - [File Operation Steps](#file-operation-steps)
+  - [Encoding and Crypto Steps](#encoding-and-crypto-steps)
+  - [XML Processing Steps](#xml-processing-steps)
+  - [Blob Operation Steps](#blob-operation-steps)
+  - [Set Comparison Steps](#set-comparison-steps)
+  - [Utility Steps](#utility-steps)
+
+[![npm package][npm-image]][npm-url]
+[![GitHub Actions](https://github.com/hpcc-systems/MAF/workflows/Build/badge.svg)](https://github.com/hpcc-systems/MAF/actions)
+[![Dependencies][dep-image]][dep-url]
+
+## Setup
+
+Install:
+
+```sh
+npm i @ln-maf/validations
 ```
 
-Cucumber autocompletion
-Add the following in to `.vscode/settings.json` to get autocomplete for the steps.
+Add a step file with:
+
+```js
+require('cucumber-validations');
 ```
+
+### Cucumber Autocompletion
+
+Add the following to `.vscode/settings.json` for step autocompletion:
+
+```json
 {
-    "cucumberautocomplete.stepsInvariants": true,
-    "cucumberautocomplete.smartSnippets": true,
-    "cucumberautocomplete.customParameters": [
-        {
-            "parameter": "{jsonObject}",
-            "value": "(it|item {string}|file {string}|{string})"
-        }
-    ],
-    "cucumberautocomplete.steps": [
-            "node_modules/cucumber-validations/features/stepDefinitions/steps.js",
-    ]
+  "cucumberautocomplete.stepsInvariants": true,
+  "cucumberautocomplete.smartSnippets": true,
+  "cucumberautocomplete.customParameters": [
+    {
+      "parameter": "{jsonObject}",
+      "value": "(it|item {string}|file {string}|{string})"
+    }
+  ],
+  "cucumberautocomplete.steps": [
+    "node_modules/cucumber-validations/features/stepDefinitions/steps.js"
+  ]
 }
 ```
 
-# Step Definitions
-This library implements some step definitions and adheres to the global cucumber implementation for various internals.
-## `When set {string} to `[{jsonObject}](./JSONObject.md)
-This will set an item to a json object.  This will be stored in `this.results.${itemName}` and will be accessible in other global cucumber project steps through `${itemName}`
-Examples:
-config.json contains:
-```
+## Step Definitions
+
+This library implements step definitions and adheres to the global cucumber implementation for various internals.
+
+### Data Setting Steps
+
+## `When set {string} to` [{jsonObject}](./JSONObject.md)
+
+Sets an item to a JSON object. The object is stored in `this.results.${itemName}` and accessible in other global Cucumber steps as `${itemName}`.
+
+**Example:**
+`config.json` contains:
+
+```json
 {
   "url" : "http://google.com",
   "meh": "Test"
 }
 ```
-After running one of the following: 
 
-`When set "hello" to file "config.json"`
+After running one of the following:
 
-`When set "hello" to '{"url":"http://google.com", "meh":"Test"}'`
-
-```
+```feature
+When set "hello" to file "config.json"
+When set "hello" to '{"url":"http://google.com", "meh":"Test"}'
 When set "lastRun" to:
 """
 {
-  "url" : "http://google.com",
+  "url": "http://google.com",
   "meh": "Test"
 }
 """
-And set "hello" to it 
-```
-
-or
-
-```
+And set "hello" to it
 When set "jsonItem" to:
 """
 {
-  "url" : "http://google.com",
+  "url": "http://google.com",
   "meh": "Test"
 }
 """
 And set "hello" to item "jsonItem"
 ```
 
-Then `${hello}` will equal the JSON object:
-```
+Then `${hello}` will equal:
+
+```json
 {
-  "url" : "http://google.com",
+  "url": "http://google.com",
   "meh": "Test"
 }
 ```
 
 ## `When set {string} to {int}`
-This will set an item to the integer associated with it.  The object will then be stored in `this.results.${itemName}` and will be accessible in other global cucumber projects steps through `${itemName}`
-For example:
-```
+
+Sets an item to the given integer. The value is stored in `this.results.${itemName}` and accessible as `${itemName}`.
+
+**Example:**
+
+```feature
 When set "hi" to 3
 Then item "hi" is equal to 3
 ```
 
 ## `When set {string} to: {docString}`
-Sets an item to a doc string.
-For example:
-```
+
+Sets an item to a doc string value.
+
+**Example:**
+
+```feature
 When set "a" to "3"
 And set "item" to:
 """
-{ 
-"a": ${a}
+{
+  "a": ${a}
 }
 """
 Then item "item" is equal to:
 """
 {
-"a":3
+  "a": 3
 }
 """
 ```
 
+## `When set config from json {jsonObject}`
 
-## `When wait {int} milliseconds`
-Waits the provided number of milliscends.
+Sets config from a JSON object. If the object contains keys, all keys are stored as individual variables.
 
+**Example:**
+
+```feature
+When set config from json file "config.json"
+Then "${meh}" is equal to "Test"
+```
+
+Where `config.json` is:
+
+```json
+{
+  "url": "http://google.com",
+  "meh": "Test"
+}
+```
+
+## `When set:`
+
+Takes in a datatable object and sets all values. If the datatable has multiple values, it is treated as an array; otherwise, as a single object.
+
+**Example:**
+
+```feature
+When set:
+|username|pass|
+|User|Pass|
+|User2|2Pass|
+Then "${username[0]}" is equal to "User"
+Then "${username[1]}" is equal to "User2"
+```
+
+Or:
+
+```feature
+|username|pass|
+|User|Pass|
+Then "${username}" is equal to "User"
+```
+
+## `When parameters are:`
+
+Sets parameters from a docString for testing command line arguments.
+
+**Example:**
+
+```feature
+When parameters are:
+"""
+{
+  "testParam": "testValue"
+}
+"""
+```
+
+### Assertion Steps
+
+## `Then {jsonObject} {validationsEquivalence} {jsonObject}`
+
+Compares two numeric values using comparison operators like `is greater than`, `is less than`, etc.
+
+**Example:**
+
+```feature
+When set "a" to 5
+And set "b" to 3
+Then item "a" is greater than item "b"
+```
 
 ## `Then {string} is {when} now`
-The type when supports two values: (before)|(after).  The string value accepts utc timestamp or a string with the date and attempts to parse it using Date.parse(string) https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse for more information.
+
+Checks if the string is before or after the current time. The `when` parameter supports `before` or `after`. The string value accepts UTC timestamp or a date string and uses [Date.parse](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse).
 
 ## `Then {string} is {when} {string}`
-The type when supports two values: (before)|(after).  The string values accepts utc timestamp or a string with the date and attempts to parse it using Date.parse(string) https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse for more information.
-An example would be
-```
+
+Checks if one date string is before or after another.
+
+**Example:**
+
+```feature
 Then "11/11/2019" is before "11/12/2019"
 ```
 
 ## `Then it is equal to {string}`
-Equivalent to 'Then "${lastRun}" is equal to {string}
+
+Equivalent to `Then "${lastRun}" is equal to {string}`.
 
 ## `Then item {string} is equal to: {docString}`
+
 Checks if an item is equal to a docString.
-For Example:
-```
+
+**Example:**
+
+```feature
 When set "a" to "3"
 And set "item" to:
 """
 {
-"a": ${a}
+  "a": ${a}
 }
 """
 Then item "item" is equal to:
 """
 {
-"a":3
+  "a": 3
 }
 """
 ```
 
-
 ## `Then {string} is equal to {string}`
-Confirms that two strings when analyzed are equal.
-Example:
-```
- Given set "item" to "hi"
- Then "${item}" is equal to "hi"
-```
-or
-```
+
+Confirms that two strings are equal.
+
+**Example:**
+
+```feature
+Given set "item" to "hi"
+Then "${item}" is equal to "hi"
 Then "hi" is equal to "hi"
 ```
-NOTE:  You can also use "it" to reference the item: "${lastRun}"
+
+You can also use "it" to reference the item: `${lastRun}`.
+
+## `Then {jsonObject} is not equal to:`
+
+Checks if a JSON object is not equal to a docString.
+
+**Example:**
+
+```feature
+When set "item" to "different value"
+Then item "item" is not equal to:
+"""
+expected value
+"""
+```
+
+## `Then {jsonObject} is equal to:`
+
+Checks if a JSON object is equal to a docString.
+
+**Example:**
+
+```feature
+When set "item" to "expected value"
+Then item "item" is equal to:
+"""
+expected value
+"""
+```
 
 ## `Then item {string} is equal to {int}`
-Confirms that json item is equal to the specified integer. 
-Example:
-```
+
+Confirms that a JSON item is equal to the specified integer.
+
+**Example:**
+
+```feature
 When set "a" to "3"
 Then item "a" is equal to 3
 When set "a" to 3
@@ -169,23 +312,50 @@ Then item "a" is equal to 3
 ```
 
 ## `Then it is not equal to {string}`
-Checks that "lastRun" is not the supplied item
+
+Checks that `lastRun` is not equal to the supplied item.
+
+## `Then {jsonObject} is null`
+
+Checks that the JSON object is null.
+
+**Example:**
+
+```feature
+Then item "emptyItem" is null
+```
+
+## `Then {jsonObject} is not null`
+
+Checks that the JSON object is not null.
+
+**Example:**
+
+```feature
+Then item "dataItem" is not null
+```
 
 ## `Then item {string} is not equal to null`
-Checks that supplied item is not null
+
+Checks that the supplied item is not null.
 
 ## `Then {string} is not equal to {string}`
+
 Checks that two items are not equal.
 
+### JSON Manipulation Steps
 
 ## `When run json path {string} on item {string}`
-Runs a [json path](https://github.com/json-path/JsonPath) on a defined variable.  It then stores the result in `this.results.lastRun`.  This can be used as `${lastRun}`.
+
+Runs a [JSONPath](https://github.com/json-path/JsonPath) on a defined variable and stores the result in `this.results.lastRun`.
 
 ## `When JSON key {string} is removed from {string}`
-Removes the JSON key/value from the JSON Object provided.
 
-Example:
-```
+Removes the JSON key/value from the provided JSON object.
+
+**Example:**
+
+```feature
 When set "Data" to
 """
 {
@@ -199,14 +369,16 @@ And element "a" does not exist in item "Data"
 ```
 
 ## `When JSON key {string} is removed from it`
-Removes the JSON key from the JSON Object contained in lastRun. Similar to `JSON key {string} is removed from {string}`
-but the variable used to delete from is `lastRun`
+
+Removes the JSON key from the JSON object in `lastRun`. Similar to above, but uses `lastRun`.
 
 ## `When JSON key {string} is extracted from {string}`
-Returns the JSON key from a variable to `lastRun`
 
-Example:
-```
+Extracts the JSON key from a variable and stores it in `lastRun`.
+
+**Example:**
+
+```feature
 When set "Data" to
 """
 {
@@ -219,16 +391,16 @@ Then it is equal to "apple"
 ```
 
 ## `When JSON key {string} is extracted from it`
-Returns the JSON key from the JSON Object in lastRun as lastRun.
-Similar to `When JSON key {string} is extracted from {string}`
-but the variable used to extract from is `lastRun`
+
+Extracts the JSON key from the JSON object in `lastRun` and stores it in `lastRun`.
 
 ## `When JSON keys {string} are extracted from {string}`
-Returns the JSON keys from a variable to `lastRun`.  The keys are supplied as a JSON Array of strings.  Scoping into arrays is not supported.
-For example `[ "arrayTest[0]" ]` will not work.
 
-Example:
-```
+Extracts multiple JSON keys from a variable and stores them in `lastRun`. Keys are supplied as a JSON array of strings. Scoping into arrays is not supported (e.g., `["arrayTest[0]"]` will not work).
+
+**Example:**
+
+```feature
 When set "TestJSON" to
 """
 {
@@ -272,16 +444,17 @@ And set "expected" to:
 Then item "expected" is equal to item "lastRun"
 ```
 
-
 ## `When JSON keys {string} are extracted from it`
-Returns the JSON keys from the JSON Object in lastRun as lastRun. Similar to `JSON keys {string} are extracted from {string}`
-but the variable used to extract from is `lastRun`
+
+Extracts multiple JSON keys from the JSON object in `lastRun` and stores them in `lastRun`.
 
 ## `Then element {string} exists in item {string}`
-Validates if the element exists in the item.
 
-Example:
-```
+Validates that the element exists in the item.
+
+**Example:**
+
+```feature
 When set "TestJSON" to
 """
 {
@@ -293,13 +466,16 @@ Then element "a" exists in item "TestJSON"
 ```
 
 ## `Then element {string} does not exist in item {string}`
-Validates if the element does not exist in the item. The opposite of `Then element {string} exists in item {string}`
+
+Validates that the element does not exist in the item (opposite of above).
 
 ## `Then elements {string} exist in item {string}`
-Validates if all the elements exists in the item. Each element should be comma separated (`,`). Brackets (`[]`) are optional 
 
-Example:
-```
+Validates that all elements exist in the item. Elements should be comma-separated; brackets (`[]`) are optional.
+
+**Example:**
+
+```feature
 When set "TestJSON" to
 """
 {
@@ -312,45 +488,116 @@ Then elements "[a,b,c]" exist in item "TestJSON"
 ```
 
 ## `Then elements {string} do not exist in item {string}`
-Will pass if all the elements do not exist in the item. The opposite of `Then elements {string} exist in item {string}`
+
+Passes if all elements do not exist in the item (opposite of above).
+
+### Blob Operation Steps
+
+## `When blob is read from file {string}`
+
+Reads binary data (blob) from a file.
+
+**Example:**
+
+```feature
+When blob is read from file "image.png"
+And set "imageData" to it
+```
+
+## `When blob item {string} is written to file {string}`
+
+Writes blob data to a file.
+
+**Example:**
+
+```feature
+When blob item "imageData" is written to file "output.png"
+```
+
+## `When blob item {string} is attached`
+
+Attaches blob data to the test report (for visual validation).
+
+**Example:**
+
+```feature
+When blob item "screenshot" is attached
+```
+
+## `Then blob item {string} is equal to file {string}`
+
+Compares blob data with the contents of a file.
+
+**Example:**
+
+```feature
+Then blob item "actualImage" is equal to file "expected.png"
+```
+
+### Set Comparison Steps
 
 ## `Then it matches the set {string}`
-Equivalent to 'Then the set "lastRun" matches the set {string}'
+
+Equivalent to `Then the set "lastRun" matches the set {string}`.
 
 ## `Then the set {string} matches the set {string}`
-Validates that two arrays defined at the given strings have all of the same values in any order and removing all duplicates.
+
+Validates that two arrays have the same values (any order, duplicates removed).
+
+## `Then it matches the set from file {string}`
+
+Equivalent to `Then the set "lastRun" matches the set from file {string}`.
 
 ## `Then the set {string} matches the set from file {string}`
-Validates that two arrays defined at the given strings have all of the same values in any order and removing all duplicates.
-Obtains one of the arrays through a file.
+
+Validates that two arrays have the same values (any order, duplicates removed). One array is loaded from a file.
+
+### XML Processing Steps
 
 ## `Given xPath namespace is {string}`
+
 Sets the xPath namespace to the provided string.
 
-Example:
-```
+**Example:**
+
+```feature
 Given xPath namespace is '{ "soap": "http://schemas.xmlsoap.org/soap/envelope/", "ln":"http://ln-maf.com" }'
 ```
 
 ## `Given xPath namespace is {docString}`
-Same as above but uses a doc string
 
-Example:
-```
+Same as above, but uses a doc string.
+
+**Example:**
+
+```feature
 Given xPath namespace is
 """
 { "soap": "http://schemas.xmlsoap.org/soap/envelope/", "ln":"http://ln-maf.com" }
 """
 ```
 
+## `When add xPath namespace {string} = {string}`
+
+Adds a single xPath namespace mapping.
+
+**Example:**
+
+```feature
+When add xPath namespace "custom" = "http://example.com/namespace"
+```
+
 ## `When run xPath {string} on item {string}`
-Runs an xPath on the defined item.  Utilizes the above specified xPath namespaces.  Runs a json path on a defined variable.  It then stores the result in this.results.lastRun.  This can be used as ${lastRun}.
+
+Runs an xPath on the defined item using the specified xPath namespaces. Stores the result in `this.results.lastRun`.
 
 ## `When {string} is applied to item {string} on JSON path {string}`
-Replaces the values of all found JSON keys in a item, using the JSON path to identify the keys.
 
-Example:
-```
+Replaces the values of all found JSON keys in an item, using the JSON path to identify the keys.
+
+**Example:**
+
+```feature
 Given set "meh" to:
 """
 {
@@ -377,23 +624,28 @@ When "null" is applied to item "meh" on JSON path "$.url"
 Then item "expected" is equal to item "meh"
 ```
 
+### File Operation Steps
+
 ## `When {string} is written to file {string} on JSON path {string}`
 
 Replaces the values of all found JSON keys in a file, using the JSON path to identify the keys.
 
-Example:
+**Example:**
 
 file.json contains:
-```
+
+```json
 {
   "url": "http://google.com",
   "meh": "Test"
 }
 ```
+
 After running: `When "SomethingElse" is written to file "file.json" on JSON path "$.meh"`
 
 file.json will now contain
-```
+
+```json
 {
   "url": "http://google.com",
   "meh": "SomethingElse"
@@ -401,47 +653,141 @@ file.json will now contain
 ```
 
 ## `When item {string} is written to file {string}`
+
 Writes an item to a file.
 
-## `When it is written to file {string}`
-Is equivalent to 'When item "lastRun" is written to file {string}'
+## `When {jsonObject} is written to file {string}`
 
-## `When set:`
-Takes in a datatable object and sets all of the values.  If the datatable has multiple values it will be treated as an array, otherwise it will be treated as just a single object
-Example:
+Writes a JSON object to a file. If the object is a JavaScript object, it will be stringified.
+
+**Example:**
+
+```feature
+When set "data" to:
+"""
+{
+  "name": "test",
+  "value": 123
+}
+"""
+When item "data" is written to file "output.json"
 ```
-When set:
-|username|pass|
-|User|Pass|
-|User2|2Pass|
-Then "${username[0]}" is equal to "User"
-Then "${username[1]}" is equal to "User2"
+
+## `When {jsonObject} is written in json line delimited format to file {string}`
+
+Writes a JSON array to a file in JSON Line Delimited format (each array item on a separate line).
+
+**Example:**
+
+```feature
+When set "data" to:
+"""
+[
+  {"name": "item1"},
+  {"name": "item2"}
+]
+"""
+When item "data" is written in json line delimited format to file "output.jsonl"
 ```
-or
+
+## `When the file {string} is gzipped`
+
+Compresses a file using gzip compression.
+
+**Example:**
+
+```feature
+When the file "large-data.txt" is gzipped
 ```
-|username|pass|
-|User|Pass|
-Then "${username}" is equal to "User"
+
+## `When file {string} is gzip unzipped to file {string}`
+
+Decompresses a gzipped file to a new file.
+
+**Example:**
+
+```feature
+When file "compressed.gz" is gzip unzipped to file "uncompressed.txt"
 ```
+
+## `When it is written to file {string}`
+
+Equivalent to `When item "lastRun" is written to file {string}`.
 
 ## `When set config from json file {string}`
-Sets a config from a json file.  If the json file is just a json object, it will iterate through all of the keys and store them.
-Example:
-```
+
+Sets config from a JSON file. If the file contains a JSON object, all keys are stored.
+
+**Example:**
+
+```feature
 When set config from json file "config.json"
 Then "${meh}" is equal to "Test"
 ```
-Where config.json is equal to:
-```
+
+Where `config.json` is:
+
+```json
 {
-  "url" : "http://google.com",
+  "url": "http://google.com",
   "meh": "Test"
 }
 ```
-## `When sign using jwt: {docstring}`
-Requires a header and private key to be set (unless using an algorithm that doesn't require a private key)
-Example:
+
+### Encoding and Crypto Steps
+
+## `When {jsonObject} is base64 encoded`
+
+Encodes a JSON object or string to base64 format.
+
+**Example:**
+
+```feature
+When set "data" to "Hello World"
+When item "data" is base64 encoded
+And set "encodedData" to it
 ```
+
+## `When {jsonObject} is base64 decoded`
+
+Decodes a base64 encoded string back to its original format.
+
+**Example:**
+
+```feature
+When item "encodedData" is base64 decoded
+And set "decodedData" to it
+```
+
+## `When the value {string} is base64 decoded and resaved`
+
+Decodes a base64 value and saves it back to the same variable.
+
+**Example:**
+
+```feature
+When set "encoded" to "SGVsbG8gV29ybGQ="
+When the value "encoded" is base64 decoded and resaved
+```
+
+## `When generate rsa key`
+
+Generates an RSA private key for JWT signing.
+
+**Example:**
+
+```feature
+When generate rsa key
+And set "privateKey" to it
+```
+
+## `When sign using jwt: {docstring}`
+
+Requires a header and private key to be set (unless using an algorithm that doesn't require a private key).
+
+**Example:**
+
+```feature
    When generate rsa key
    And set "privateKey" to it
    And set "header" to
@@ -459,13 +805,16 @@ When sign using jwt:
 ```
 
 ## `When sign item {string} using jwt`
-Encrypts a provided item using jwt.  Exactly like the doc string encryption above but does the item instead.
+
+Encrypts a provided item using JWT. Same as above, but operates on the item.
 
 ## `When make json keys for item {string} lower case`
-Makes all the JSON keys in the item lowercase letters
 
-Example:
-```
+Makes all JSON keys in the item lowercase.
+
+**Example:**
+
+```feature
 When set "data" to:
 """
 {
@@ -487,10 +836,11 @@ Then item "data" is equal to:
 
 ## `When json item {string} is flattened`
 
-Flattens the JSON object, removing root keys with losing any values
+Flattens the JSON object, removing root keys without losing any values.
 
-Example:
-```
+**Example:**
+
+```feature
 When set "data" to:
 """
 {
@@ -522,11 +872,13 @@ Then item "data" is equal to:
 """
 ```
 
-## `When json item {string} is numberifyed`
-Converts any numbers in string format into number format
+## `When json item {string} is numberified`
 
-Example:
-```
+Converts any numbers in string format into number format.
+
+**Example:**
+
+```feature
 When set "data" to:
 """
 {
@@ -561,11 +913,12 @@ Then item "data" is equal to:
 ```
 
 ## `When json item {string} is trimmed`
-Trims the string of all string values in the JSON.
-Trimming includes removing leftover whitespace and newlines
 
-Example:
-```
+Trims all string values in the JSON (removes whitespace and newlines).
+
+**Example:**
+
+```feature
 When set "data" to:
 """
 {
@@ -597,14 +950,29 @@ Then item "data" is equal to:
 """
 ```
 
-## When apply parameters
-Allows usage of the cucumber-js commandline arguments specifically related to the cli option `--world-parameters`.  You can read more at: https://github.com/cucumber/cucumber-js/blob/master/docs/cli.md
+### Utility Steps
 
-## When set examples
-Will set the examples from a scenario outline.  Will not be able to set items that use other examples in them.  Additionally this will read the feature file associated every time and can be somewhat slow if the file is large.
-In the below example, the "Expected" column would not be set as part of the examples.
-Example:
+## `When wait {int} milliseconds`
+
+Waits the provided number of milliseconds.
+
+**Example:**
+
+```feature
+When wait 5000 milliseconds
 ```
+
+## `When apply parameters`
+
+Allows usage of the cucumber-js CLI option `--world-parameters`. See [docs](https://github.com/cucumber/cucumber-js/blob/master/docs/cli.md).
+
+## `Given set examples`
+
+Sets the examples from a scenario outline. Items using other examples cannot be set. Reads the feature file each time (may be slow for large files).
+
+**Example:**
+
+```feature
     Scenario Outline: Testing
         When set examples
         Then "<Expected>" is equal to "<ExpectedResult>"
@@ -618,8 +986,10 @@ Example:
             | Next | Expected | ExpectedResult |
             | 2    | ${Next}  | 2              |
 ```
+
 Result:
-```
+
+```feature
 @phone
 Scenario: Testing
 When set examples
@@ -630,9 +1000,7 @@ When set examples
 }
 """
 Then "${Phone}" is equal to "1"
-```
-and
-```
+
 @next
 Scenario: Testing
 When set examples
@@ -645,18 +1013,20 @@ When set examples
 Then "${Next}" is equal to "2"
 ```
 
-### Then [{jsonObject}](./JSONObject.md) contains {string}
-Checks if the `jsonObject` contains the string anywhere. The jsonObject is turned into one string and performs an include on the entire string
+## `Then [{jsonObject}](./JSONObject.md) contains {string}`
 
-For example:
-```
+Checks if the `jsonObject` contains the string anywhere. The object is converted to a string and checked for inclusion.
+
+**Example:**
+
+```feature
 Given set "test1" to "the quick brown fox jumped over the lazy dog"
 Then item "test1" contains "quick brown"
 Given set "test2" to:
 """
 {
-  "firstname" : "Robert",
-  "lastname" : "Paulson"
+  "firstname": "Robert",
+  "lastname": "Paulson"
 }
 """
 Then item "test2" contains "Robert"
@@ -672,10 +1042,9 @@ Given set "test3" to:
 Then item "test3" contains "Oran"
 ```
 
-### Then [{jsonObject}](../validations/JSONObject.md) does not contain {string}
-Checks if the `jsonObject`  does not contain the string. The opposite of `Then {jsonObject} contains {string}`
+## `Then [{jsonObject}](../validations/JSONObject.md) does not contain {string}`
 
-[npm-image]:https://img.shields.io/npm/v/@ln-maf/validations.svg
-[npm-url]:https://www.npmjs.com/package/@ln-maf/validations
-[dep-image]:https://david-dm.org/hpcc-systems/MAF.svg?path=packages%2Fvalidations
-[dep-url]:https://david-dm.org/hpcc-systems/MAF?path=packages%2Fvalidations
+Checks if the `jsonObject` does not contain the string (opposite of above).
+
+[npm-image]: https://img.shields.io/npm/v/@ln-maf/validations.svg
+[npm-url]: https://www.npmjs.com/package/@ln-maf/validations

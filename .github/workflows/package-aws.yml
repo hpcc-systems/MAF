@@ -10,6 +10,10 @@ on:
     paths:
       - 'packages/aws/**'
 
+permissions:
+  contents: read
+  statuses: write
+
 jobs:
   MAF-AWS:
     runs-on: ubuntu-latest
@@ -22,7 +26,7 @@ jobs:
     - uses: actions/checkout@v4.2.2
     - uses: LocalStack/setup-localstack@v0.2.3
       with:
-        image-tag: '3.7.2'
+        image-tag: '4.6.0'
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4.4.0
       with:
@@ -30,14 +34,13 @@ jobs:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3.1.2
     - run: mkdir ~/.aws/
-    - run: echo -e "[default]\noutput = json\nregion = us-east-1\naws_access_key_id = foo\naws_secret_access_key = bar" > ~/.aws/credentials
     - run: npm ci
     - name: Terraform - apply to localstack
       run: |
         terraform init
         terraform plan
         terraform apply -auto-approve
-    - run: npm test -w packages/aws
+    - run: npm run test -w packages/aws
       env: 
        ENVIRONMENT: CI
        USE_ENV_VARIABLES: "TRUE"

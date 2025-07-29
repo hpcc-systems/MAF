@@ -1,5 +1,5 @@
 global.fetch = require('node-fetch')
-const { MAFWhen, MAFSave, performJSONObjectTransform, fillTemplate, canAttach, getFilePath } = require('@ln-maf/core')
+const { MAFWhen, MAFSave, performJSONObjectTransform, fillTemplate, canAttach } = require('@ln-maf/core')
 const { setDefaultTimeout, Then } = require('@cucumber/cucumber')
 
 const FormData = require('form-data')
@@ -8,62 +8,6 @@ const assert = require('chai').assert
 const { fetchToCurl } = require('fetch-to-curl')
 
 setDefaultTimeout(30 * 1000)
-
-/**
- * @deprecated Set the item 'url' instead
- */
-MAFWhen('url {string}', function (url) {
-    fillTemplate(url, this.results)
-    // Remove trailing slash
-    url = url.replace(/\/$/, '')
-    MAFSave.call(this, 'url', url)
-})
-
-/**
- * @deprecated Set the item 'api' instead
- */
-MAFWhen('api {string}', function (api) {
-    fillTemplate(api, this.results)
-    // Remove leading slash
-    api = api.replace(/^\//, '')
-    MAFSave.call(this, 'api', api)
-})
-
-/**
- * @deprecated Set the item 'body' instead
- */
-MAFWhen('body {string}', function (body) {
-    fillTemplate(body, this.results)
-    MAFSave.call(this, 'body', body)
-})
-
-/**
- * @deprecated Set the item 'headers' instead
- */
-MAFWhen('headers {string}', function (headers) {
-    fillTemplate(headers, this.results)
-    MAFSave.call(this, 'headers', headers)
-})
-
-/**
- * @deprecated Set the item 'method' to 'POST' and call the method 'api request is performed' instead
- */
-MAFWhen('method post', async function () {
-    MAFSave.call(this, 'method', 'POST')
-    const results = await requestBuilder.call(this, {})
-    MAFSave.call(this, 'response', results.response)
-    return results
-})
-
-/**
- * @deprecated Set the item 'method' to 'GET' and call the method 'api request is performed' instead
- */
-MAFWhen('method get', async function () {
-    MAFSave.call(this, 'method', 'GET')
-    const results = await requestBuilder.call(this, {})
-    MAFSave.call(this, 'response', results.response)
-    return results
-})
 
 // Builds a request object from the given request, populating any missing fields using the results object
 async function requestBuilder(request) {
@@ -94,7 +38,7 @@ async function requestBuilder(request) {
     if (request.jsonBody && typeof request.jsonBody !== 'object') {
         try {
             request.jsonBody = JSON.parse(request.jsonBody)
-        } catch (err) {
+        } catch {
             throw new Error('The jsonBody could not be parsed as a JSON object')
         }
     }
@@ -107,32 +51,61 @@ async function requestBuilder(request) {
         request.urlEncodedBody = this.results.urlEncodedBody
     }
     if (request.urlEncodedBody) {
-        const urlEncodedBody = []
         const details = request.urlEncodedBody
-        for (const property in details) {
+        const urlEncodedBody = Object.entries(details).map(([property, value]) => {
             const encodedKey = encodeURIComponent(property)
-            const encodedValue = encodeURIComponent(details[property])
-            urlEncodedBody.push(encodedKey + '=' + encodedValue)
-        }
-        request.api = request.api + '?' + urlEncodedBody.join('&')
+            const encodedValue = encodeURIComponent(value)
+            return encodedKey + '=' + encodedValue
+        }).join('&')
+        request.api = request.api + '?' + urlEncodedBody
     }
     const formBodyMap = function (item) {
-        switch (item.type) {
-        case 'file':
-            return fs.createReadStream(getFilePath(item.fileName, this))
-        case 'base64blob':
-            return Buffer.from(item.base64blob, 'base64')
-        default:
+        if (item && item.type === 'file') {
+            let filePath = item.fileName
+            const path = require('path')
+            if (!filePath.startsWith('/')) {
+                // Try to resolve relative to the test directory
+                const testPath = path.join(__dirname, '../test', filePath)
+                if (fs.existsSync(testPath)) {
+                    filePath = testPath
+                } else {
+                    // Fallback to local directory if not found in test
+                    const localPath = path.join(__dirname, filePath)
+                    if (fs.existsSync(localPath)) {
+                        filePath = localPath
+                    } else {
+                        throw new Error(`File for upload not found: ${item.fileName}`)
+                    }
+                }
+            } else if (!fs.existsSync(filePath)) {
+                throw new Error(`File for upload not found: ${filePath}`)
+            }
+            try {
+                return fs.createReadStream(filePath)
+            } catch (err) {
+                throw new Error(`Failed to create read stream for file: ${filePath}. Error: ${err.message}`)
+            }
+        } else if (item && item.type === 'base64blob') {
+            try {
+                return Buffer.from(item.base64blob, 'base64')
+            } catch {
+                throw new Error('Invalid base64blob provided in formBody')
+            }
+        } else {
             return item
         }
     }
+    if (!request.formBody && this.results && this.results.formBody) {
+        request.formBody = this.results.formBody
+    }
+
     if (request.formBody) {
         const data = new FormData()
         const details = request.formBody
         for (const property in details) {
             if (Array.isArray(details[property])) {
-                details[property].map(formBodyMap.bind(this)).forEach(i => {
-                    data.append(property + '[]', i)
+                details[property].map(formBodyMap.bind(this)).forEach(item => {
+                    data.append(property + '[]', item)
                 })
             } else {
                 data.append(property, formBodyMap.call(this, details[property]))
@@ -158,64 +131,111 @@ async function requestBuilder(request) {
         request.apiParams = this.results.apiParams
     }
     if (request.apiParams) {
-        let formBody = []
         const details = request.apiParams
-        for (const property in details) {
+        const formBody = Object.entries(details).map(([property, value]) => {
             const encodedKey = encodeURIComponent(property)
-            const encodedValue = encodeURIComponent(details[property])
-            formBody.push(encodedKey + '=' + encodedValue)
-        }
-        formBody = formBody.join('&')
+            // Handle nested objects by JSON stringifying them
+            const processedValue = typeof value === 'object' && value !== null
+                ? JSON.stringify(value)
+                : value
+            const encodedValue = encodeURIComponent(processedValue)
+            return encodedKey + '=' + encodedValue
+        }).join('&')
         request.api = request.api + '?' + formBody
     }
-    let additionalParams = {}
-    if (this.results && this.results.api) {
-        additionalParams = this.results.api.additionalParams
-    }
-    return await performRequest.call(this, request, additionalParams)
+    return await performRequest.call(this, request, this.results?.api?.additionalParams || {})
 }
 
 // Performs the given request, returning the response
 async function performRequest(request, additionalParams = {}) {
-    if (typeof request.body === 'object') {
-        request.body = JSON.stringify(request.body)
+    // Pre-build URL to avoid array operations
+    const absoluteUrl = request.api ? `${request.url}/${request.api}` : request.url
+    
+    // Optimize body handling
+    let body = request.body
+    if (body && typeof body === 'object' && !Buffer.isBuffer(body) && !(body instanceof FormData)) {
+        body = JSON.stringify(body)
     }
+    
     const parameters = {
         method: request.method,
         headers: request.headers,
-        body: request.body,
+        body,
         ...additionalParams
     }
-    const url = [request.url]
-    if (request.api) {
-        url.push(request.api)
-    }
-    const absoluteUrl = url.join('/')
 
     let response = await fetch(absoluteUrl, parameters)
     const curlCommand = fetchToCurl(absoluteUrl, parameters)
 
-    const headers = await response.clone().headers.raw()
-    Object.keys(headers).forEach(header => {
-        headers[header] = headers[header][0]
-    })
-    const ok = response.ok
-    const status = response.status
+    // Extract headers more efficiently
+    const headers = Object.fromEntries(response.headers.entries())
+    
+    // Check content-length to determine if response is large
+    const contentLength = headers['content-length'] ? parseInt(headers['content-length']) : null
+    const maxResponseSize = 10 * 1024 * 1024 // 10MB threshold
+    const isLargeResponse = contentLength && contentLength > maxResponseSize
+    
+    let processedResponse
     if (this.results.apiRetrieveType) {
-        response = await (response[this.results.apiRetrieveType])()
-    } else if (headers['content-type'] && headers['content-type'].includes('image')) {
-        response = await response.blob()
-        try {
-            if (canAttach.call(this)) {
-                const tmpBlob = Buffer.from(await response.arrayBuffer())
-                this.attach(tmpBlob, 'image/png')
-            }
-        } catch (err) { }
+        processedResponse = await (response[this.results.apiRetrieveType])()
     } else {
-        try {
-            response = await response.text()
-            response = JSON.parse(response)
-        } catch (err) { }
+        const contentType = headers['content-type'] || ''
+        
+        if (contentType.includes('image')) {
+            // Process all images regardless of size
+            processedResponse = await response.blob()
+            try {
+                if (canAttach.call(this)) {
+                    const tmpBlob = Buffer.from(await processedResponse.arrayBuffer())
+                    this.attach(tmpBlob, 'image/png')
+                }
+            } catch { /* empty */ }
+            
+            // Add size information for large images
+            if (isLargeResponse) {
+                processedResponse.sizeInfo = {
+                    size: contentLength,
+                    isLarge: true,
+                    message: `Large image processed (${contentLength} bytes)`
+                }
+            }
+        } else {
+            try {
+                if (isLargeResponse) {
+                    // For large text responses, read only the first chunk
+                    const reader = response.body.getReader()
+                    const decoder = new TextDecoder()
+                    try {
+                        const { value } = await reader.read()
+                        const partialText = decoder.decode(value || new Uint8Array())
+                        const truncatedText = partialText.substring(0, 1000) // First 1000 chars
+                        
+                        processedResponse = {
+                            type: 'large_response',
+                            size: contentLength,
+                            contentType,
+                            truncated: true,
+                            preview: truncatedText,
+                            message: `Response too large (${contentLength} bytes) - only preview shown`
+                        }
+                    } finally {
+                        reader.releaseLock()
+                    }
+                } else {
+                    const text = await response.text()
+                    try {
+                        processedResponse = JSON.parse(text)
+                    } catch {
+                        processedResponse = text
+                    }
+                }
+            } catch (error) {
+                processedResponse = {
+                    error: 'Failed to process response',
+                    message: error.message
+                }
+            }
+        }
     }
     const results = {
         request: {
@@ -223,9 +243,9 @@ async function performRequest(request, additionalParams = {}) {
             ...parameters
         },
         curlCommand,
-        ok,
-        status,
-        response,
+        ok: response.ok,
+        status: response.status,
+        response: processedResponse,
         headers
     }
     return results
@@ -251,18 +271,6 @@ MAFWhen('perform api request:', async function (string) {
     return results
 })
 
-/**
- * @deprecated Use the status is ok, the status is {int} or the status is not ok instead
-*/
-Then('status not ok', function () {
-    assert(!this.results.lastRun.ok, `The status ${this.results.lastRun.status} was in the range of valid http response codes 200-299`)
-})
-/**
- * @deprecated Use the status is ok, the status is {int} or the status is not ok instead
-*/
-Then('status ok', function () {
-    assert(this.results.lastRun.ok, `The status ${this.results.lastRun.status} was not in the range of valid http response codes 200-299`)
-})
 Then('the status is ok', function () {
     assert(this.results.lastRun.ok, `The status ${this.results.lastRun.status} was not in the range of valid http response codes 200-299`)
 })
@@ -270,12 +278,6 @@ Then('the status is not ok', function () {
     assert(!this.results.lastRun.ok, `The status ${this.results.lastRun.status} was in the range of valid http response codes 200-299`)
 })
 
-/**
- * @deprecated Use the status is ok, the status is {int} or the status is not ok instead
- */
-Then('status {int}', function (int) {
-    assert(this.results.lastRun.status === int, `The status ${this.results.lastRun.status} was not ${int}`)
-})
 Then('the status is {int}', function (int) {
     assert(this.results.lastRun.status === int, `The status ${this.results.lastRun.status} was not ${int}`)
 })

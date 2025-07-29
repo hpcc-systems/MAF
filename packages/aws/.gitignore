@@ -1,4 +1,6 @@
-node_modules
-package-lock.json
-test/report/
-test/hello.txt
+# AWS package specific ignores
+# Allow specific test files
+!test/test1.txt
+!test/test2.abc
+!test/test2.txt
+!test/test3.txt

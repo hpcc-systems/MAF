@@ -1,10 +1,57 @@
-# Changelog
+# Change Log
+
 All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+# [4.0.0](https://github.com/hpcc-systems/MAF/compare/@ln-maf/aws@4.0.0-beta.6...@ln-maf/aws@4.0.0) (2025-07-29)
 
-## [Unreleased in Git]
+
+### Bug Fixes
+
+* Update package.json files to remove author fields, update versioning, and improve descriptions ([e276aaf](https://github.com/hpcc-systems/MAF/commit/e276aaf6c53bd1edb83193f148261070bc292277))
+
+
+
+
+
+# [4.0.0-beta.6](https://github.com/hpcc-systems/MAF/compare/@ln-maf/aws@4.0.0-beta.5...@ln-maf/aws@4.0.0-beta.6) (2025-07-25)
+
+**Note:** Version bump only for package @ln-maf/aws
+
+
+
+
+
+# [4.0.0-beta.5](https://github.com/hpcc-systems/MAF/compare/@ln-maf/aws@4.0.0-beta.4...@ln-maf/aws@4.0.0-beta.5) (2025-07-24)
+
+**Note:** Version bump only for package @ln-maf/aws
+
+
+
+
+
+# [4.0.0-beta.4](https://github.com/hpcc-systems/MAF/compare/@ln-maf/aws@4.0.0-beta.3...@ln-maf/aws@4.0.0-beta.4) (2025-07-23)
+
+
+### Features
+
+* remove allowed directories check for file path traversal ([dfa20d3](https://github.com/hpcc-systems/MAF/commit/dfa20d3f04c07f399ee43e22d01790804c6a5004))
+
+
+
+
+
+# [4.0.0-beta.3](https://github.com/hpcc-systems/MAF/compare/@ln-maf/aws@4.0.0-beta.2...@ln-maf/aws@4.0.0-beta.3) (2025-07-23)
+
+**Note:** Version bump only for package @ln-maf/aws
+
+
+
+
+
+# [4.0.0-beta.2](https://github.com/hpcc-systems/MAF/compare/@ln-maf/aws@4.0.0-beta.1...@ln-maf/aws@4.0.0-beta.2) (2025-07-23)
+
+**Note:** Version bump only for package @ln-maf/aws
 
 ## [1.2.0] (2020-02-03)
 ### Added

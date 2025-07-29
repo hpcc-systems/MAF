@@ -1,18 +1,75 @@
-testItem.txt
-coverage
-.nyc_output
-node_modules
-/test/
-.git.bfg-report/
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Testing & Coverage
+coverage/
+.nyc_output/
+test/report/
+/packages/*/report/
+
+# Build outputs
+dist/
+build/
+tmp/
+*.tgz
+
+# Environment & Config
+.env
+.env.*
 *.sqlConfig.json
+
+# Security - prevent committing sensitive files
+*.pem
+*.key
+*private*key*
+secrets.*
+credential*
 passwords.txt
-/image2.png
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Terraform
+.terraform/
 .terraform.*
-
-# Local .terraform directories
-**/.terraform/*
-
-# .tfstate files
 *.tfstate
 *.tfstate.*
+terraform.tfvars
+
+# Logs
 *.log
+logs/
+
+# Runtime
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Git
+.git.bfg-report/
+
+# Package-specific test files (allow specific test files)
+test/
+*/*/test/
+!*/*/test/test*.json
+!*/*/test/test*.txt
+!*/*/test/test*.abc
+!*/*/test/unit-tests.js

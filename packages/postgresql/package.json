@@ -3,38 +3,44 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "PostgreSQL support / step definitions for MAF",
   "main": "index.js",
   "scripts": {
-    "test": "sh runFeature.sh"
+    "test": "npm run postgres:start && npm run test:run && npm run postgres:stop",
+    "test:coverage": "npm run postgres:start && npm run test:run:coverage && npm run postgres:stop",
+    "test:run": "wait-on tcp:localhost:5433 && sleep 5 && mkdir -p test/report && npm run cucumber:exec && npm run test:finalize",
+    "test:run:coverage": "wait-on tcp:localhost:5433 && sleep 5 && mkdir -p test/report && npm run cucumber:exec:coverage && npm run test:finalize",
+    "cucumber:exec": "USE_ENV_VARIABLES=TRUE POSTGRESQL_SQL_USERNAME=postgres POSTGRESQL_SQL_PASSWORD=testpassword npx cucumber-js -f json:test/report/postgresql.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE",
+    "cucumber:exec:coverage": "USE_ENV_VARIABLES=TRUE POSTGRESQL_SQL_USERNAME=postgres POSTGRESQL_SQL_PASSWORD=testpassword npx nyc --reporter=lcov --reporter=text --report-dir=../../coverage npx cucumber-js -f json:test/report/postgresql.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE",
+    "test:finalize": "npx multiReport && mkdir -p ../../test/report && cp -r test/report/* ../../test/report",
+    "postgres:start": "docker-compose up -d && echo 'Waiting for PostgreSQL to be ready...' && sleep 10",
+    "postgres:stop": "docker-compose down",
+    "postgres:logs": "docker-compose logs postgres-test",
+    "postgres:shell": "docker exec -it postgres-test psql -U postgres -d testdb"
   },
   "bin": {
     "postgresql-configure": "./config.js"
   },
-  "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ln-maf/default-sql": "^3.0.0",
+    "@ln-maf/default-sql": "^4.0.0",
     "keytar": "^7.9.0",
     "pg": "^8.0.0"
   },
   "peerDependencies": {
-    "@cucumber/cucumber": ">= 11.0.0",
-    "@ln-maf/core": "*"
+    "@cucumber/cucumber": ">= 12.0.0",
+    "@ln-maf/core": ">= 4.0.0-beta.1"
   },
   "devDependencies": {
-    "@cucumber/cucumber": "^11.0.0",
+    "@cucumber/cucumber": "^12.0.0",
     "@ln-maf/core": "file:../core",
     "@ln-maf/validations": "file:../validations",
-    "eslint": "^8.0.0",
-    "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6.0.0",
-    "nyc": "^15.1.0"
+    "concurrently": "^8.2.2",
+    "multiple-cucumber-html-reporter": "3.7.0",
+    "nyc": "^17.0.0",
+    "wait-on": "^7.2.0"
   },
-  "gitHead": "2a575448a74cfaee5ec68fa10db24cf4ccade849",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hpcc-systems/MAF.git"
@@ -47,6 +53,5 @@
   ],
   "bugs": {
     "url": "https://github.com/hpcc-systems/MAF/issues"
-  },
-  "homepage": "https://github.com/hpcc-systems/MAF#readme"
+  }
 }

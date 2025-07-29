@@ -1,6 +1,6 @@
-const create = require('@ln-maf/default-sql')
+const setupDatabaseStepDefinitions = require('@ln-maf/default-sql')
 const mysql = require('mysql2/promise')
-create({
+setupDatabaseStepDefinitions({
     name: 'mysql',
     connect: async (connectionInfo, username, password) => {
         const dets = {

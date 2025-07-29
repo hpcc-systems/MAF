@@ -1,29 +1,83 @@
-const { Given } = require('@cucumber/cucumber')
-const { readFile } = require('@ln-maf/core')
+const { readFile, MAFSave } = require('@ln-maf/core')
 const { MAFWhen, performJSONObjectTransform } = require('@ln-maf/core')
+const CredentialManager = require('./credentialManager')
+const configureDatabase = require('./config')
+const connect = require('./connect')
 
-/*
- * To set this up we need to be able to run a query
-*/
-const setItUp = function (moduleInfo) {
+/**
+ * Sets up database step definitions for a given SQL module
+ * @param {Object} moduleInfo - Module configuration
+ * @param {string} moduleInfo.name - Name of the database module (e.g., 'postgresql', 'mysql')
+ * @param {Function} moduleInfo.runQuery - Function to execute SQL queries
+ * @param {Function} moduleInfo.connect - Function to establish database connection
+ * @param {Function} moduleInfo.disconnect - Function to close database connection
+ */
+const setupDatabaseStepDefinitions = function (moduleInfo) {
     const { name, runQuery, connect, disconnect } = moduleInfo
-    MAFWhen(name + ' query from {jsonObject} is run', async function (query) {
-        let connectionInfo = eval(`this.results.${name}` + 'ConnectionInfo')
-        if (!connectionInfo) {
-            connectionInfo = JSON.parse(readFile(name + '.sqlConfig.json', this))
+
+    if (!name || !runQuery || !connect || !disconnect) {
+        throw new Error('moduleInfo must contain name, runQuery, connect, and disconnect functions')
+    }
+
+    // Step definition: Execute a database query
+    MAFWhen(`${name} query from {jsonObject} is run`, async function (query) {
+        try {
+            // Get connection info from context or config file
+            let connectionInfo = this.results?.[`${name}ConnectionInfo`]
+            if (!connectionInfo) {
+                const configFile = `${name}.sqlConfig.json`
+                connectionInfo = JSON.parse(readFile(configFile, this))
+            }
+
+            // Transform the query with context variables
+            const transformedQuery = performJSONObjectTransform.call(this, query)
+
+            // Get user credentials
+            const environment = `${name}.${connectionInfo.host}.${connectionInfo.database}`
+            const credentials = await CredentialManager.getCredentials(environment)
+
+            if (!credentials.username) {
+                throw new Error(`No username found for environment: ${environment}`)
+            }
+
+            // Execute query
+            const connection = await connect(connectionInfo, credentials.username, credentials.password)
+            const result = await runQuery(connection, transformedQuery)
+            await disconnect(connection)
+
+            // Store result in context for further use
+            this.results = this.results || {}
+            this.results.lastRun = result
+
+            return result
+        } catch (error) {
+            throw new Error(`Failed to execute ${name} query: ${error.message}`)
         }
-        const q = performJSONObjectTransform.call(this, query)
-        const userInfoObtainer = require('./userInfo')
-        const userInfo = await userInfoObtainer(`${name}.${connectionInfo.host}.${connectionInfo.database}`)
-        const connection = await connect(connectionInfo, userInfo.username, userInfo.password)
-        const res = await runQuery(connection, q)
-        await disconnect(connection)
-        return res
     })
 
-    Given(name + ' config from {jsonObject}', function (string) {
-        string = performJSONObjectTransform.call(this, string)
-        eval(`this.results.${name}ConnectionInfo=string`)
+    // Step definition: Set database configuration
+    MAFWhen(`${name} config from {jsonObject}`, function (configString) {
+        try {
+            const config = performJSONObjectTransform.call(this, configString)
+
+            // Validate config has required properties
+            if (!config.host || !config.database) {
+                throw new Error('Database config must contain "host" and "database" properties')
+            }
+
+            // Store config in test context
+            MAFSave.call(this, `${name}ConnectionInfo`, config)
+            return config
+        } catch (error) {
+            throw new Error(`Failed to set ${name} config: ${error.message}`)
+        }
     })
 }
-module.exports = setItUp
+
+// Export the main function and utility modules
+module.exports = setupDatabaseStepDefinitions
+
+// Export additional utilities for advanced usage
+module.exports.CredentialManager = CredentialManager
+module.exports.configureDatabase = configureDatabase
+module.exports.connect = connect

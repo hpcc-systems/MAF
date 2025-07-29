@@ -10,6 +10,10 @@ on:
     paths:
       - 'packages/api/**'
 
+permissions:
+  contents: read
+  statuses: write
+  
 jobs:
   MAF-API:
     runs-on: ubuntu-latest
@@ -28,7 +32,7 @@ jobs:
       
       - run: npm ci
       
-      - run: npm test -w packages/api
+      - run: npm run test -w packages/api
         env: 
           ENVIRONMENT: CI
       
