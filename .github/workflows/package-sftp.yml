@@ -50,14 +50,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
       
-      - name: Wait for SFTP to be ready
-        run: |
-          until nc -z localhost 2222; do
-            echo "Waiting for SFTP server..."
-            sleep 2
-          done
-          echo "SFTP server is ready!"
-      
       - name: Test SFTP Package
         run: npm run test:run -w packages/sftp
         env: 
