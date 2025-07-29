@@ -51,7 +51,8 @@ export default [
                     'named': 'never',
                     'asyncArrow': 'always'
                 }
-            ]
+            ],
+            'semi': ['error', 'never']
         }
     }
 ]
