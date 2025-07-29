@@ -218,10 +218,16 @@ function MAFSave(item, itemValue) {
         } else {
             // Malformed bracket notation, treat as regular key
             currentItem[finalKey] = itemValue
+            if (finalKey === '__proto__' || finalKey === 'constructor' || finalKey === 'prototype') {
+                throw new Error('Invalid key detected during final assignment')
+            }
         }
     } else {
         // Regular property assignment
         currentItem[finalKey] = itemValue
+        if (finalKey === '__proto__' || finalKey === 'constructor' || finalKey === 'prototype') {
+            throw new Error('Invalid key detected during final assignment')
+        }
     }
 
     tryAttach.call(this, { [resultKey]: this.results[resultKey] })
