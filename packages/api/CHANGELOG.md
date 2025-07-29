@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0](https://github.com/hpcc-systems/MAF/compare/@ln-maf/api@4.0.0-beta.6...@ln-maf/api@4.0.0) (2025-07-29)
+
+
+### Bug Fixes
+
+* Add missing initial test_file.txt ([8a9fbbb](https://github.com/hpcc-systems/MAF/commit/8a9fbbb31f24d9efd6d109f8231b60f93593c653))
+* Update package.json files to remove author fields, update versioning, and improve descriptions ([e276aaf](https://github.com/hpcc-systems/MAF/commit/e276aaf6c53bd1edb83193f148261070bc292277))
+
+
+
+
+
 # [4.0.0-beta.6](https://github.com/hpcc-systems/MAF/compare/@ln-maf/api@4.0.0-beta.5...@ln-maf/api@4.0.0-beta.6) (2025-07-25)
 
 

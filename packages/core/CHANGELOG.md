@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0](https://github.com/hpcc-systems/MAF/compare/@ln-maf/core@4.0.0-beta.4...@ln-maf/core@4.0.0) (2025-07-29)
+
+
+### Bug Fixes
+
+* Add validation to prevent assignment of invalid keys in MAFSave function ([ede0ab1](https://github.com/hpcc-systems/MAF/commit/ede0ab12c5b1c29d6189e62f6822c1e09b4781ab))
+* Update package.json files to remove author fields, update versioning, and improve descriptions ([e276aaf](https://github.com/hpcc-systems/MAF/commit/e276aaf6c53bd1edb83193f148261070bc292277))
+
+
+
+
+
 # [4.0.0-beta.4](https://github.com/hpcc-systems/MAF/compare/@ln-maf/core@4.0.0-beta.3...@ln-maf/core@4.0.0-beta.4) (2025-07-24)
 
 
