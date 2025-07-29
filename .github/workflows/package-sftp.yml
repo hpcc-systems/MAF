@@ -25,10 +25,8 @@ jobs:
           - 2222:22
         env:
           SFTP_USERS: testuser:testpass:::upload
-        volumes:
-          - ./upload:/home/testuser/upload
         options: >-
-          --health-cmd="nc -z localhost 22"
+          --health-cmd="ps aux | grep -v grep | grep sshd"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
