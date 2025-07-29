@@ -1,0 +1,79 @@
+name: Test SFTP Package
+
+on:
+  workflow_dispatch: 
+  push:
+    branches: [ main ]
+    paths:
+      - 'packages/sftp/**'
+  pull_request:
+    paths:
+      - 'packages/sftp/**'
+
+permissions:
+  contents: read
+  statuses: write
+
+jobs:
+  MAF-SFTP:
+    runs-on: ubuntu-latest
+    
+    services:
+      sftp:
+        image: atmoz/sftp
+        ports:
+          - 2222:22
+        env:
+          SFTP_USERS: testuser:testpass:::upload
+        options: >-
+          --health-cmd="nc -z localhost 22"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+          --health-start-period=30s
+    
+    strategy:
+      matrix:
+        node-version: [22.x, 24.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/previous-releases
+
+    steps:
+      - uses: actions/checkout@v4.2.2
+    
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4.4.0
+        with:
+          node-version: ${{ matrix.node-version }}
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Wait for SFTP to be ready
+        run: |
+          until nc -z localhost 2222; do
+            echo "Waiting for SFTP server..."
+            sleep 2
+          done
+          echo "SFTP server is ready!"
+      
+      - name: Test SFTP Package
+        run: npm run test:run -w packages/sftp
+        env: 
+          ENVIRONMENT: CI
+          USE_ENV_VARIABLES: "TRUE"
+          HOSTNAME: localhost
+          USERNAME: testuser  # Test credentials for SFTP server
+          SFTP_PORT: 2222
+          SFTP_PASS: testpass  # Test credentials for SFTP server
+      
+      - name: Status Create Action
+        if: ${{ always() }}
+        uses: hkusu/status-create-action@v1.0.1
+        id: status-create
+        with:
+          state: ${{ job.status }} 
+          sha: ${{ github.sha }}
+    
+      - name: Show result
+        if: always()
+        run: echo '${{ steps.status-create.outputs.result }}'
