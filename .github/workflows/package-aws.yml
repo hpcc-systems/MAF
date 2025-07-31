@@ -37,6 +37,7 @@ jobs:
     - run: npm ci
     - name: Terraform - apply to localstack
       run: |
+        cd packages/aws/terraform
         terraform init
         terraform plan
         terraform apply -auto-approve
