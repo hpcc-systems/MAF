@@ -3,6 +3,106 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 4.1.0 (2025-07-31)
+
+
+### Bug Fixes
+
+* update peer dependency for @ln-maf/core to version 4.0.0 across multiple packages ([f6a05f9](https://github.com/hpcc-systems/MAF/commit/f6a05f91ed564be6ba3874a3c9ad89cd4c58f6dc))
+
+
+
+# 4.0.0 (2025-07-29)
+
+
+
+# 3.0.0-beta.0 (2024-01-24)
+
+
+
+## 1.6.1 (2022-04-10)
+
+
+
+# 1.6.0 (2022-02-24)
+
+
+
+# 1.5.0 (2021-12-13)
+
+
+### Reverts
+
+* Revert "v1.5.0" ([58f7b56](https://github.com/hpcc-systems/MAF/commit/58f7b56cb9fda278b85a0198bc6265ca2f63b49c))
+
+
+
+## 1.4.4 (2021-05-18)
+
+
+
+## 1.4.3 (2021-04-22)
+
+
+
+## 1.3.11 (2021-03-26)
+
+
+
+## 1.3.10 (2021-03-22)
+
+
+
+## 1.3.2 (2021-02-07)
+
+
+
+## 1.2.4 (2021-02-04)
+
+
+
+## 1.2.3 (2021-02-03)
+
+
+
+## 1.2.2 (2021-02-03)
+
+
+
+## 1.2.1 (2021-02-03)
+
+
+
+# 1.2.0 (2021-02-03)
+
+
+
+## 1.1.7 (2021-02-03)
+
+
+
+## 1.1.5 (2021-02-03)
+
+
+
+## 1.1.4 (2021-02-03)
+
+
+
+## 1.1.3 (2021-02-03)
+
+
+
+## 1.1.1 (2021-02-02)
+
+
+
+# 1.1.0 (2021-02-02)
+
+
+
+
+
 # [4.0.0](https://github.com/hpcc-systems/MAF/compare/@ln-maf/preprocessor@4.0.0-beta.5...@ln-maf/preprocessor@4.0.0) (2025-07-29)
 
 

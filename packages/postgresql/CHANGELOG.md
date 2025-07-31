@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 4.1.0 (2025-07-31)
+
+
+### Bug Fixes
+
+* update peer dependency for @ln-maf/core to version 4.0.0 across multiple packages ([f6a05f9](https://github.com/hpcc-systems/MAF/commit/f6a05f91ed564be6ba3874a3c9ad89cd4c58f6dc))
+
+
+
+# 4.0.0 (2025-07-29)
+
+
+
+# 3.0.0-beta.0 (2024-01-24)
+
+
+
+
+
 # [4.0.0](https://github.com/hpcc-systems/MAF/compare/@ln-maf/postgresql@4.0.0-beta.5...@ln-maf/postgresql@4.0.0) (2025-07-29)
 
 

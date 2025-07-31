@@ -3,6 +3,76 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 4.1.0 (2025-07-31)
+
+
+### Bug Fixes
+
+* update peer dependency for @ln-maf/core to version 4.0.0 across multiple packages ([f6a05f9](https://github.com/hpcc-systems/MAF/commit/f6a05f91ed564be6ba3874a3c9ad89cd4c58f6dc))
+
+
+### Features
+
+* add Docker Compose configuration and Terraform setup for LocalStack integration; update test scripts and remove deprecated runFeature.sh ([ba70084](https://github.com/hpcc-systems/MAF/commit/ba70084c8abf42ee498614c331827305c40ee8c9))
+
+
+
+# 4.0.0 (2025-07-29)
+
+
+### Features
+
+* Added new sqs step difition to check the aproximite number of messages ([74a3b12](https://github.com/hpcc-systems/MAF/commit/74a3b1265925d2efc7518b43ef50400331be493c))
+
+
+
+# 3.0.0-beta.0 (2024-01-24)
+
+
+
+## 1.6.1 (2022-04-10)
+
+
+
+# 1.6.0 (2022-02-24)
+
+
+
+# 1.5.0 (2021-12-13)
+
+
+### Reverts
+
+* Revert "v1.5.0" ([58f7b56](https://github.com/hpcc-systems/MAF/commit/58f7b56cb9fda278b85a0198bc6265ca2f63b49c))
+
+
+
+## 1.4.4 (2021-05-18)
+
+
+
+## 1.4.3 (2021-04-22)
+
+
+
+## 1.3.11 (2021-03-26)
+
+
+
+## 1.3.10 (2021-03-22)
+
+
+
+## 1.3.2 (2021-02-07)
+
+
+
+# 1.3.0 (2021-02-05)
+
+
+
+
+
 # [4.0.0](https://github.com/hpcc-systems/MAF/compare/@ln-maf/aws@4.0.0-beta.6...@ln-maf/aws@4.0.0) (2025-07-29)
 
 
