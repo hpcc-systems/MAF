@@ -7,8 +7,7 @@
   "description": "The core for the MAF framework. Contains helpers to make it easier to use.",
   "main": "index.js",
   "scripts": {
-    "test": "bash runFeature.sh",
-    "test:coverage": "TEST_COVERAGE=1 bash runFeature.sh"
+    "test": "echo 'core is the main package for MAF with no tests'"
   },
   "license": "Apache-2.0",
   "peerDependencies": {

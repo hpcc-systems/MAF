@@ -7,8 +7,8 @@
   "description": "Validation step definitions for MAF",
   "main": "index.js",
   "scripts": {
-    "test": "bash runFeature.sh",
-    "test:coverage": "TEST_COVERAGE=1 bash runFeature.sh"
+    "test": "mkdir -p test/report && npx cucumber-js -f json:test/report/validations.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE && npx multiReport && mkdir -p ../../test/report && cp -r test/report/* ../../test/report",
+    "test:coverage": "mkdir -p test/report && npx nyc --reporter=lcov --reporter=text --report-dir=../../coverage npx cucumber-js -f json:test/report/validations.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE && npx multiReport && mkdir -p ../../test/report && cp -r test/report/* ../../test/report"
   },
   "license": "Apache-2.0",
   "dependencies": {

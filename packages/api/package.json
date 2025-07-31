@@ -8,8 +8,13 @@
   "main": "index.js",
   "scripts": {
     "start:test-server": "node ./test/testApiServer.js",
-    "test": "concurrently -k -s first -n server,test \"npm run start:test-server\" \"wait-on tcp:3001 && bash runFeature.sh\"",
-    "test:coverage": "concurrently -k -s first -n server,test \"npm run start:test-server\" \"wait-on tcp:3001 && TEST_COVERAGE=1 bash runFeature.sh\""
+    "test": "concurrently -k -s first -n server,test \"npm run start:test-server\" \"npm run test:run\"",
+    "test:coverage": "concurrently -k -s first -n server,test \"npm run start:test-server\" \"npm run test:run:coverage\"",
+    "test:run": "wait-on tcp:3001 && mkdir -p test/report && npm run cucumber:exec && npm run test:finalize",
+    "test:run:coverage": "wait-on tcp:3001 && mkdir -p test/report && npm run cucumber:exec:coverage && npm run test:finalize",
+    "cucumber:exec": "npx cucumber-js -f json:test/report/api.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE",
+    "cucumber:exec:coverage": "npx nyc --reporter=lcov --reporter=text --report-dir=../../coverage npx cucumber-js -f json:test/report/api.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE",
+    "test:finalize": "npx multiReport && mkdir -p ../../test/report && cp -r test/report/* ../../test/report"
   },
   "license": "Apache-2.0",
   "dependencies": {
