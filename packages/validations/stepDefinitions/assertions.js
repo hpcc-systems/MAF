@@ -122,6 +122,155 @@ const safeJsonParse = (jsonString) => {
 }
 
 /**
+ * Finds differences between two objects and returns a summary
+ * @param {*} actual - The actual object
+ * @param {*} expected - The expected object
+ * @param {string} path - Current path being compared
+ * @returns {string[]} Array of difference descriptions
+ */
+const findObjectDifferences = (actual, expected, path = '') => {
+    const differences = []
+
+    if (actual === expected) return differences
+
+    // Handle null/undefined cases
+    if (actual == null || expected == null) {
+        differences.push(`${path || 'root'}: actual=${actual}, expected=${expected}`)
+        return differences
+    }
+
+    // Handle type differences
+    if (typeof actual !== typeof expected) {
+        differences.push(`${path || 'root'}: type mismatch - actual=${typeof actual}, expected=${typeof expected}`)
+        return differences
+    }
+
+    // Handle array differences
+    if (Array.isArray(actual) && Array.isArray(expected)) {
+        if (actual.length !== expected.length) {
+            differences.push(`${path || 'root'}: array length - actual=${actual.length}, expected=${expected.length}`)
+        }
+        const maxLength = Math.max(actual.length, expected.length)
+        for (let i = 0; i < maxLength; i++) {
+            const newPath = `${path}[${i}]`
+            if (i >= actual.length) {
+                differences.push(`${newPath}: missing in actual, expected=${JSON.stringify(expected[i])}`)
+            } else if (i >= expected.length) {
+                differences.push(`${newPath}: extra in actual, actual=${JSON.stringify(actual[i])}`)
+            } else {
+                differences.push(...findObjectDifferences(actual[i], expected[i], newPath))
+            }
+        }
+        return differences
+    }
+
+    // Handle object differences
+    if (isObject(actual) && isObject(expected)) {
+        const allKeys = new Set([...Object.keys(actual), ...Object.keys(expected)])
+        
+        for (const key of allKeys) {
+            const newPath = path ? `${path}.${key}` : key
+            
+            if (!(key in actual)) {
+                differences.push(`${newPath}: missing in actual, expected=${JSON.stringify(expected[key])}`)
+            } else if (!(key in expected)) {
+                differences.push(`${newPath}: extra in actual, actual=${JSON.stringify(actual[key])}`)
+            } else {
+                differences.push(...findObjectDifferences(actual[key], expected[key], newPath))
+            }
+        }
+        return differences
+    }
+
+    // Handle primitive differences
+    if (actual !== expected) {
+        differences.push(`${path || 'root'}: actual=${JSON.stringify(actual)}, expected=${JSON.stringify(expected)}`)
+    }
+
+    return differences
+}
+
+/**
+ * Finds differences in long strings and returns a concise summary
+ * @param {string} actual - The actual string
+ * @param {string} expected - The expected string
+ * @returns {string} Formatted difference summary
+ */
+const findStringDifferences = (actual, expected) => {
+    const maxDisplayLength = 200 // Show at most 200 characters of context around differences
+    const contextLength = 50 // Show 50 characters before and after differences
+    
+    if (actual === expected) {
+        return 'Strings are identical'
+    }
+    
+    // For short strings, show them in full
+    if (actual.length <= maxDisplayLength && expected.length <= maxDisplayLength) {
+        return `Actual: "${actual}"\nExpected: "${expected}"`
+    }
+    
+    // Find first difference
+    let firstDiff = 0
+    while (firstDiff < Math.min(actual.length, expected.length) && actual[firstDiff] === expected[firstDiff]) {
+        firstDiff++
+    }
+    
+    // Find last difference (working backwards)
+    let lastDiffActual = actual.length - 1
+    let lastDiffExpected = expected.length - 1
+    while (lastDiffActual >= firstDiff && lastDiffExpected >= firstDiff && 
+           actual[lastDiffActual] === expected[lastDiffExpected]) {
+        lastDiffActual--
+        lastDiffExpected--
+    }
+    
+    // If strings differ only at the end (length difference)
+    if (firstDiff === Math.min(actual.length, expected.length)) {
+        const shorterLength = Math.min(actual.length, expected.length)
+        const longerString = actual.length > expected.length ? actual : expected
+        const extraPart = longerString.substring(shorterLength)
+        const contextStart = Math.max(0, shorterLength - contextLength)
+        const contextBefore = longerString.substring(contextStart, shorterLength)
+        
+        return `Strings differ in length:\n` +
+               `Length: actual=${actual.length}, expected=${expected.length}\n` +
+               `...${contextBefore}[${actual.length > expected.length ? `+${extraPart}` : `missing: ${extraPart}`}]`
+    }
+    
+    // Calculate context boundaries
+    const contextStart = Math.max(0, firstDiff - contextLength)
+    const contextEndActual = Math.min(actual.length, lastDiffActual + contextLength + 1)
+    const contextEndExpected = Math.min(expected.length, lastDiffExpected + contextLength + 1)
+    
+    // Extract context with differences
+    const actualContext = actual.substring(contextStart, contextEndActual)
+    const expectedContext = expected.substring(contextStart, contextEndExpected)
+    
+    // Mark the difference position
+    const diffPosition = firstDiff - contextStart
+    
+    let result = `Strings differ at position ${firstDiff}`
+    if (actual.length !== expected.length) {
+        result += ` (lengths: actual=${actual.length}, expected=${expected.length})`
+    }
+    result += ':\n'
+    
+    // Show context with difference markers
+    const prefix = contextStart > 0 ? '...' : ''
+    const suffixActual = contextEndActual < actual.length ? '...' : ''
+    const suffixExpected = contextEndExpected < expected.length ? '...' : ''
+    
+    result += `Actual:   ${prefix}${actualContext}${suffixActual}\n`
+    result += `Expected: ${prefix}${expectedContext}${suffixExpected}\n`
+    
+    // Add a pointer to show where the difference starts
+    const pointer = ' '.repeat(10 + prefix.length + diffPosition) + '^'
+    result += `${pointer} (first difference)`
+    
+    return result
+}
+
+/**
  * Formats an error message for equality comparisons
  * @param {*} actual - The actual value
  * @param {*} expected - The expected value
@@ -130,17 +279,49 @@ const safeJsonParse = (jsonString) => {
  */
 const formatEqualityError = (actual, expected, shouldEqual = true) => {
     const action = shouldEqual ? 'equal' : 'NOT equal'
-    const expectation = shouldEqual ? '' : ' (should be different)'
 
-    if (isObject(actual) && isObject(expected)) {
-        const actualStr = JSON.stringify(actual, null, 2)
-        const expectedStr = JSON.stringify(expected, null, 2)
-        return `Expected actual value to ${action} expected value:\nActual: ${actualStr}\nExpected${expectation}: ${expectedStr}`
-    } else {
+    // For non-equal case with identical values, show a simple message
+    if (!shouldEqual && performEqualityComparison(actual, expected)) {
+        return `Expected values to be different but they were identical:\nValue: ${JSON.stringify(actual)}`
+    }
+
+    // Handle string comparisons
+    if (typeof actual === 'string' && typeof expected === 'string') {
+        if (shouldEqual) {
+            return `Expected strings to be equal but they differ:\n${findStringDifferences(actual, expected)}`
+        } else {
+            return `Expected strings to be different but they are identical`
+        }
+    }
+
+    // For simple types (non-strings), show the values
+    if (!isObject(actual) || !isObject(expected)) {
         const actualStr = String(actual)
         const expectedStr = String(expected)
         const typeInfo = shouldEqual ? ` (type: ${typeof actual})\nExpected: "${expectedStr}" (type: ${typeof expected})` : ` (should be different): "${expectedStr}"`
         return `Expected actual value to ${action} expected value:\nActual: "${actualStr}"${typeInfo}`
+    }
+
+    // For objects, show only the differences
+    if (shouldEqual) {
+        const differences = findObjectDifferences(actual, expected)
+        if (differences.length === 0) {
+            return `Expected objects to be equal but they differ in structure`
+        }
+        
+        const maxDifferencesToShow = 10
+        const shownDifferences = differences.slice(0, maxDifferencesToShow)
+        let diffMessage = `Expected objects to be equal but found ${differences.length} difference(s):\n`
+        diffMessage += shownDifferences.map(diff => `  • ${diff}`).join('\n')
+        
+        if (differences.length > maxDifferencesToShow) {
+            diffMessage += `\n  ... and ${differences.length - maxDifferencesToShow} more difference(s)`
+        }
+        
+        return diffMessage
+    } else {
+        // For "not equal" case, just confirm they should be different
+        return `Expected objects to be different but they are identical`
     }
 }
 
