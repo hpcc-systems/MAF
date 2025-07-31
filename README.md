@@ -282,7 +282,7 @@ Feature: View the text "Hello World"
 ### Generated Report Example
 
 ```bash
-➜  mafMonoRepo git:(master) bash runFeature.sh helloWorld.feature
+➜  mafMonoRepo git:(master) npm test
 ...
 
 1 scenario (1 passed)
@@ -323,6 +323,11 @@ The framework includes several modules that can be used independently or togethe
 
 ## Developer Notes
 
+### Developer Prerequisites
+
+- Node.js v22 or greater
+- Docker (required for AWS, MySQL, and PostgreSQL module testing)
+
 ### Monorepo Structure
 
 MAF is organized as a monorepo using Lerna for package management. This structure allows for:
@@ -350,13 +355,50 @@ For information on how to add a module, see [AddModule](./AddModule.md). This gu
 
 ### Testing Modules
 
-#### Using npm Workspaces
+#### Using npm Workspaces (Recommended)
 
-- `npm test -w packages/PACKAGE_NAME` - Test a specific package (e.g., `npm test -w packages/api`)
+The easiest way to test individual packages is using npm workspaces:
 
-#### Using Lerna Commands
+```bash
+# Test a specific package
+npm test -w packages/api
+npm test -w packages/aws
+npm test -w packages/mysql
+npm test -w packages/validations
+# etc.
 
-- `npm test` or `lerna run test` - Run tests across all packages in parallel
+# Run all tests across all packages
+npm test
+```
+
+**Advantages of npm workspaces:**
+
+- Faster execution for individual packages
+- Automatic dependency resolution
+- Built-in Docker management for AWS tests
+- No need to manually start/stop services
+
+#### Development Workflow
+
+For quick development and testing:
+
+1. **Make your changes** to any package
+
+2. **Test the specific package** you modified:
+
+   ```bash
+   npm test -w packages/PACKAGE_NAME
+   ```
+
+3. **Test all packages** before committing:
+
+   ```bash
+   npm test
+   ```
+
+#### Using Lerna Commands (Alternative)
+
+- `lerna run test` - Run tests across all packages in parallel
 - `lerna run test --scope=@ln-maf/PACKAGE_NAME` - Test a specific package using Lerna
 - `lerna run test:coverage` - Run coverage tests across all packages (if available)
 - `lerna run test --stream` - Run tests with streaming output for better debugging
@@ -367,38 +409,8 @@ For information on how to add a module, see [AddModule](./AddModule.md). This gu
 - `lerna clean` - Remove node_modules from all packages
 - `lerna ls` - List all packages in the monorepo
 - `lerna changed` - Show packages that have changed since last release
-- `lerna version` - Version packages that have changed
+- `lerna version (prerelease|release|patch|minor|major)` - Version packages that have changed
 - `lerna publish` - Publish packages to npm registry
-
-### Running Localstack
-
-All modules can be tested locally without external dependencies, except for the AWS module. To test AWS locally, you can use a [localstack](https://github.com/localstack/localstack) Docker container.
-
-**Current Version:** 4.6.0
-
-**Note:** The localstack container requires access to the Docker socket to test Lambda functions.
-
-#### Starting Localstack
-
-```bash
-docker run -d --name localstack -p 4566:4566 -v /var/run/docker.sock:/var/run/docker.sock localstack/localstack:4.6.0
-```
-
-**Command explanation:**
-
-- `-d`: Run the container in detached mode
-- `--name localstack`: Name the container "localstack"
-- `-p 4566:4566`: Expose port 4566 of the container to port 4566 of the host
-- `-v /var/run/docker.sock:/var/run/docker.sock`: Mount the Docker socket for Lambda support
-- `localstack/localstack:4.6.0`: The image and version to use
-
-#### Initialize Services
-
-You can initialize or reinitialize services in localstack using the `initLocalstack.tf` file:
-
-```bash
-terraform destroy -auto-approve && terraform apply -auto-approve
-```
 
 ---
 
