@@ -7,20 +7,19 @@ An expandable, fast, and easy-to-use automation framework built with the Cucumbe
 ## Status
 
 [![npm package][npm-image]][npm-url]
-[![Testing Status](https://github.com/hpcc-systems/MAF/actions/workflows/Test.yml/badge.svg)](https://github.com/hpcc-systems/MAF/actions/workflows/Test.yml)
 
 ### Module Test Status
 
 | Module | Status |
 |--------|--------|
-| API | [![API Tests](https://github.com/hpcc-systems/MAF/actions/workflows/package-api.yml/badge.svg)](https://github.com/hpcc-systems/MAF/actions/workflows/package-api.yml) |
-| AWS | [![AWS Tests](https://github.com/hpcc-systems/MAF/actions/workflows/package-aws.yml/badge.svg)](https://github.com/hpcc-systems/MAF/actions/workflows/package-aws.yml) |
-| MySQL | [![MySQL Tests](https://github.com/hpcc-systems/MAF/actions/workflows/package-mysql.yml/badge.svg)](https://github.com/hpcc-systems/MAF/actions/workflows/package-mysql.yml) |
-| SFTP | [![SFTP Tests](https://github.com/hpcc-systems/MAF/actions/workflows/package-sftp.yml/badge.svg)](https://github.com/hpcc-systems/MAF/actions/workflows/package-sftp.yml) |
-| PostgreSQL | [![PostgreSQL Tests](https://github.com/hpcc-systems/MAF/actions/workflows/package-postgresql.yml/badge.svg)](https://github.com/hpcc-systems/MAF/actions/workflows/package-postgresql.yml) |
-| DefaultSQL | [![DefaultSQL Tests](https://github.com/hpcc-systems/MAF/actions/workflows/package-default-sql.yml/badge.svg)](https://github.com/hpcc-systems/MAF/actions/workflows/package-default-sql.yml) |
-| Preprocessor | [![Preprocessor Tests](https://github.com/hpcc-systems/MAF/actions/workflows/package-preprocessor.yml/badge.svg)](https://github.com/hpcc-systems/MAF/actions/workflows/package-preprocessor.yml) |
-| Validations | [![Validations Tests](https://github.com/hpcc-systems/MAF/actions/workflows/package-validations.yml/badge.svg)](https://github.com/hpcc-systems/MAF/actions/workflows/package-validations.yml) |
+| [API](https://www.npmjs.com/package/@ln-maf/api) | [![API Tests](https://github.com/hpcc-systems/MAF/actions/workflows/package-api.yml/badge.svg)](https://github.com/hpcc-systems/MAF/actions/workflows/package-api.yml) |
+| [AWS](https://www.npmjs.com/package/@ln-maf/aws) | [![AWS Tests](https://github.com/hpcc-systems/MAF/actions/workflows/package-aws.yml/badge.svg)](https://github.com/hpcc-systems/MAF/actions/workflows/package-aws.yml) |
+| [MySQL](https://www.npmjs.com/package/@ln-maf/mysql-sql) | [![MySQL Tests](https://github.com/hpcc-systems/MAF/actions/workflows/package-mysql.yml/badge.svg)](https://github.com/hpcc-systems/MAF/actions/workflows/package-mysql.yml) |
+| [SFTP](https://www.npmjs.com/package/@ln-maf/sftp) | [![SFTP Tests](https://github.com/hpcc-systems/MAF/actions/workflows/package-sftp.yml/badge.svg)](https://github.com/hpcc-systems/MAF/actions/workflows/package-sftp.yml) |
+| [PostgreSQL](https://www.npmjs.com/package/@ln-maf/postgresql-sql) | [![PostgreSQL Tests](https://github.com/hpcc-systems/MAF/actions/workflows/package-postgresql.yml/badge.svg)](https://github.com/hpcc-systems/MAF/actions/workflows/package-postgresql.yml) |
+| [DefaultSQL](https://www.npmjs.com/package/@ln-maf/default-sql) | [![DefaultSQL Tests](https://github.com/hpcc-systems/MAF/actions/workflows/package-default-sql.yml/badge.svg)](https://github.com/hpcc-systems/MAF/actions/workflows/package-default-sql.yml) |
+| [Preprocessor](https://www.npmjs.com/package/@ln-maf/preprocessor) | [![Preprocessor Tests](https://github.com/hpcc-systems/MAF/actions/workflows/package-preprocessor.yml/badge.svg)](https://github.com/hpcc-systems/MAF/actions/workflows/package-preprocessor.yml) |
+| [Validations](https://www.npmjs.com/package/@ln-maf/validations) | [![Validations Tests](https://github.com/hpcc-systems/MAF/actions/workflows/package-validations.yml/badge.svg)](https://github.com/hpcc-systems/MAF/actions/workflows/package-validations.yml) |
 
 ## Installation
 
