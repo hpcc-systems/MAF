@@ -28,7 +28,7 @@ function parseArrayString(arrayString) {
 
 /**
  * Removes keys from a JSON object using dot notation
- * @param {string} jsonKey - The key path to remove from the JSON object (supports dot notation)
+ * @param {string} jsonKey - The key path to remove from the JSON object (supports dot notation and array indices)
  * @param {Object} object - A JSON object
  * @returns {boolean} true if the key was successfully removed
  */
@@ -43,20 +43,51 @@ function jsonDeleteKey(jsonKey, object) {
 
     // Navigate to the parent of the key to delete
     for (let i = 0; i < keys.length - 1; i++) {
-        if (!currentItem[keys[i]] || typeof currentItem[keys[i]] !== 'object') {
-            return false // Path doesn't exist or is not an object
+        const key = keys[i]
+        
+        if (key.includes('[') && key.includes(']')) {
+            const match = key.match(/^(.+?)\[(\d+)\]$/)
+            if (!match) {
+                return false
+            }
+            const [, arrayKey, index] = match
+            if (currentItem && currentItem[arrayKey] && Array.isArray(currentItem[arrayKey])) {
+                currentItem = currentItem[arrayKey][parseInt(index, 10)]
+            } else {
+                return false
+            }
+        } else {
+            if (!currentItem[key] || typeof currentItem[key] !== 'object') {
+                return false // Path doesn't exist or is not an object
+            }
+            currentItem = currentItem[key]
         }
-        currentItem = currentItem[keys[i]]
     }
 
-    // Delete the final key
+    // Delete the final key (handle array indexing in final key too)
     const finalKey = keys[keys.length - 1]
-    if (finalKey in currentItem) {
-        delete currentItem[finalKey]
-        assert.notDeepEqual(object, original)
-        return true
+    if (finalKey.includes('[') && finalKey.includes(']')) {
+        const match = finalKey.match(/^(.+?)\[(\d+)\]$/)
+        if (!match) {
+            return false
+        }
+        const [, arrayKey, index] = match
+        if (currentItem && currentItem[arrayKey] && Array.isArray(currentItem[arrayKey])) {
+            if (parseInt(index, 10) < currentItem[arrayKey].length) {
+                currentItem[arrayKey].splice(parseInt(index, 10), 1)
+                assert.notDeepEqual(object, original)
+                return true
+            }
+        }
+        return false
+    } else {
+        if (finalKey in currentItem) {
+            delete currentItem[finalKey]
+            assert.notDeepEqual(object, original)
+            return true
+        }
+        return false
     }
-    return false
 }
 
 /**
@@ -289,16 +320,72 @@ When('json item {string} is trimmed', function (item) {
     tryAttach.call(this, this.results[item])
 })
 
+/**
+ * Checks if a nested path exists in an object (supports dot notation and array indices)
+ * @param {string} path - The path to check (supports dot notation and array indices like key[0])
+ * @param {Object} object - The source object
+ * @returns {boolean} true if the path exists
+ */
+function pathExists(path, object) {
+    if (!object || typeof object !== 'object') {
+        return false
+    }
+
+    // First check if the path exists as a literal key (handles keys with dots/brackets in their names)
+    if (Object.prototype.hasOwnProperty.call(object, path)) {
+        return true
+    }
+
+    // If the path is a simple key without dots or brackets, and we already checked literal existence
+    if (!path.includes('.') && !path.includes('[')) {
+        return false
+    }
+
+    // For nested paths, use the same logic as extractJsonValue
+    let value = object
+    const keys = path.split('.')
+
+    for (const key of keys) {
+        if (key.includes('[') && key.includes(']')) {
+            const match = key.match(/^(.+?)\[(\d+)\]$/)
+            if (!match) {
+                return false
+            }
+            const [, arrayKey, index] = match
+            if (value && value[arrayKey] && Array.isArray(value[arrayKey])) {
+                if (parseInt(index, 10) >= value[arrayKey].length) {
+                    return false
+                }
+                value = value[arrayKey][parseInt(index, 10)]
+            } else {
+                return false
+            }
+        } else {
+            if (value && typeof value === 'object' && Object.prototype.hasOwnProperty.call(value, key)) {
+                value = value[key]
+            } else {
+                return false
+            }
+        }
+
+        if (value === undefined || value === null) {
+            return false
+        }
+    }
+
+    return true
+}
+
 Then('element {string} does not exist in {jsonObject}', function (element, jsonObject) {
     const obj = performJSONObjectTransform.call(this, jsonObject)
     element = fillTemplate(element, this.results)
-    assert.doesNotHaveAnyKeys(obj, [element])
+    assert(!pathExists(element, obj), `Expected path '${element}' to not exist`)
 })
 
 Then('element {string} exists in {jsonObject}', function (element, jsonObject) {
     const obj = performJSONObjectTransform.call(this, jsonObject)
     element = fillTemplate(element, this.results)
-    assert.containsAllKeys(obj, [element])
+    assert(pathExists(element, obj), `Expected path '${element}' to exist`)
 })
 
 Then('elements {string} do not exist in {jsonObject}', function (elementString, jsonObject) {

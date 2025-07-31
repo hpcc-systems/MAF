@@ -513,7 +513,10 @@ Feature: Validations: JSON Manipulation and Processing
                         "type": "number"
                     }
                 },
-                "required": ["name", "age"]
+                "required": [
+                    "name",
+                    "age"
+                ]
             }
             """
         When item "testJsonArray" is validated against schema item "arraySchema"
@@ -535,7 +538,9 @@ Feature: Validations: JSON Manipulation and Processing
                         "type": "string"
                     }
                 },
-                "required": ["name"]
+                "required": [
+                    "name"
+                ]
             }
             """
         When item "simpleJson" is validated against schema item "schemaWithTitle"
@@ -575,7 +580,7 @@ Feature: Validations: JSON Manipulation and Processing
             """
             {
                 "field_1": "value1",
-                "field-2": "value2", 
+                "field-2": "value2",
                 "field.3": "value3",
                 "field 4": "value4",
                 "nested": {
@@ -601,7 +606,7 @@ Feature: Validations: JSON Manipulation and Processing
                 "field-2": "value2"
             }
             """
-        # Test bracket format parsing 
+        # Test bracket format parsing
         When JSON keys '[field_1,field-2]' are extracted from "mixedObject"
         Then it is equal to:
             """
@@ -752,14 +757,21 @@ Feature: Validations: JSON Manipulation and Processing
         Given set "specialTypesData" to:
             """
             {
-                "array_field": [1, 2, 3],
+                "array_field": [
+                    1,
+                    2,
+                    3
+                ],
                 "null_field": null,
                 "boolean_field": true,
                 "number_field": 42,
                 "string_field": "text",
                 "empty_object": {},
                 "nested_mixed": {
-                    "array_in_object": ["a", "b"],
+                    "array_in_object": [
+                        "a",
+                        "b"
+                    ],
                     "null_in_object": null,
                     "nested_empty": {}
                 }
@@ -789,7 +801,7 @@ Feature: Validations: JSON Manipulation and Processing
                         },
                         {
                             "category": "fiction",
-                            "author": "Evelyn Waugh", 
+                            "author": "Evelyn Waugh",
                             "title": "Sword of Honour",
                             "price": 12.99
                         }
@@ -797,7 +809,7 @@ Feature: Validations: JSON Manipulation and Processing
                 }
             }
             """
-        # Test simple JSONPath queries  
+        # Test simple JSONPath queries
         When run json path '$.store.book[0].author' on item "pathTestData"
         Then "${lastRun[0]}" is equal to "Nigel Rees"
         When run json path '$.store.book[1].title' on item "pathTestData"
@@ -807,9 +819,9 @@ Feature: Validations: JSON Manipulation and Processing
         Given set "specialKeysData" to:
             """
             {
-                "": "empty_key_value",
                 "0": "zero_key",
-                "null": "null_key", 
+                "": "empty_key_value",
+                "null": "null_key",
                 "undefined": "undefined_key",
                 "false": "false_key",
                 "spaces here": "spaced_key",
@@ -835,7 +847,7 @@ Feature: Validations: JSON Manipulation and Processing
         And set "arrayValue" to "[1, 2, 3]"
         # Test transformation functions with non-object inputs (should not crash)
         When make json keys for item "nullValue" lower case
-        And make json keys for item "stringValue" lower case  
+        And make json keys for item "stringValue" lower case
         And make json keys for item "arrayValue" lower case
         And json item "nullValue" is flattened
         And json item "stringValue" is flattened
@@ -970,13 +982,17 @@ Feature: Validations: JSON Manipulation and Processing
                 }
             }
             """
-        
+
     Scenario: JSON whitelist with arrays and edge case values
         Given set "arrayEdgeCaseData" to:
             """
             {
                 "arrays": {
-                    "numbers": [1, 2, 3]
+                    "numbers": [
+                        1,
+                        2,
+                        3
+                    ]
                 },
                 "edgeCases": {
                     "nullValue": null,
@@ -990,10 +1006,36 @@ Feature: Validations: JSON Manipulation and Processing
             """
             {
                 "arrays": {
-                    "numbers": [1, 2, 3]
+                    "numbers": [
+                        1,
+                        2,
+                        3
+                    ]
                 },
                 "edgeCases": {
                     "nullValue": null
                 }
             }
             """
+
+    Scenario: JSON key deletion
+        Given set "driverData" to:
+            """
+            {
+                "driver": {
+                    "firstName": "John",
+                    "lastName": "Smith",
+                    "vehicles": [
+                        {
+                            "externalReferenceVehicleId": "ABC123",
+                            "vin": "ABC00000000000001"
+                        }
+                    ]
+                }
+            }
+            """
+        # Test deletion of non-existent paths
+        When JSON key "driver.vehicles[0].externalReferenceVehicleId" is removed from item "driverData"
+        Then element "driver.vehicles[0].externalReferenceVehicleId" does not exist in item "driverData"
+        And element "driver" exists in item "driverData"
+        And element "driver.vehicles[0].vin" exists in item "driverData"
