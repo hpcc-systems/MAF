@@ -1,0 +1,19 @@
+services:
+  localstack-aws:
+    container_name: maf-localstack-aws-${MAF_AWS_INSTANCE:-default}
+    image: localstack/localstack:4.6.0
+    ports:
+      - "${LOCALSTACK_PORT:-4566}:4566"
+      - "${LOCALSTACK_EDGE_PORT:-4510}:4510"
+    environment:
+      - SERVICES=s3,dynamodb,sqs,lambda,logs,ssm,ecs
+      - DEBUG=1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

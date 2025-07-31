@@ -1,3 +1,24 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+}
+
+variable "localstack_port" {
+  description = "Port for LocalStack endpoint"
+  type        = string
+  default     = "4566"
+}
+
+variable "localstack_host" {
+  description = "Host for LocalStack endpoint"
+  type        = string
+  default     = "localhost"
+}
+
 provider "aws" {
   region                      = "us-east-1"
   access_key                  = "test"
@@ -8,12 +29,13 @@ provider "aws" {
   s3_use_path_style           = true
 
   endpoints {
-    dynamodb       = "http://localhost:4566"
-    s3             = "http://localhost:4566"
-    sqs            = "http://localhost:4566"
-    lambda         = "http://localhost:4566"
-    logs           = "http://localhost:4566"
-    ssm            = "http://localhost:4566"
+    dynamodb = "http://${var.localstack_host}:${var.localstack_port}"
+    s3       = "http://${var.localstack_host}:${var.localstack_port}"
+    sqs      = "http://${var.localstack_host}:${var.localstack_port}"
+    lambda   = "http://${var.localstack_host}:${var.localstack_port}"
+    logs     = "http://${var.localstack_host}:${var.localstack_port}"
+    ssm      = "http://${var.localstack_host}:${var.localstack_port}"
+    ecs      = "http://${var.localstack_host}:${var.localstack_port}"
   }
 }
 
@@ -59,12 +81,12 @@ resource "aws_sqs_queue" "testQueueBeta" {
 
 # Lambda functions for testing - using a dummy role ARN for LocalStack
 resource "aws_lambda_function" "test_lambda_function" {
-  filename         = "packages/aws/lambda-functions/lambda-function.zip"
+  filename         = "../lambda-functions/lambda-function.zip"
   function_name    = "test-lambda-function"
   role            = "arn:aws:iam::000000000000:role/lambda-role"
   handler         = "index.handler"
   runtime         = "nodejs20.x"
-  source_code_hash = filebase64sha256("packages/aws/lambda-functions/lambda-function.zip")
+  source_code_hash = filebase64sha256("../lambda-functions/lambda-function.zip")
 }
 
 # CloudWatch Log Groups for testing

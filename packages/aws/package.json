@@ -7,8 +7,21 @@
   "description": "AWS steps for MAF. This contains S3, DynamoDB, SQS, ECS, Cloudwatch, and Lambda stepDefinitions",
   "main": "index.js",
   "scripts": {
-    "test": "bash runFeature.sh",
-    "test:coverage": "TEST_COVERAGE=1 bash runFeature.sh"
+    "test": "npm run localstack:start && npm run test:run && npm run localstack:stop",
+    "test:coverage": "npm run localstack:start && npm run test:run:coverage && npm run localstack:stop",
+    "test:run": "wait-on tcp:localhost:${LOCALSTACK_PORT:-4566} && mkdir -p test/report && npm run terraform:apply && npm run cucumber:exec && npm run test:finalize",
+    "test:run:coverage": "wait-on tcp:localhost:${LOCALSTACK_PORT:-4566} && mkdir -p test/report && npm run terraform:apply && npm run cucumber:exec:coverage && npm run test:finalize",
+    "cucumber:exec": "AWSENV=LOCALSTACK npx cucumber-js -f json:test/report/aws.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE",
+    "cucumber:exec:coverage": "AWSENV=LOCALSTACK npx nyc --reporter=lcov --reporter=text --report-dir=../../coverage npx cucumber-js -f json:test/report/aws.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE",
+    "test:finalize": "npx multiReport && mkdir -p ../../test/report && cp -r test/report/* ../../test/report",
+    "localstack:start": "export MAF_AWS_INSTANCE=${MAF_AWS_INSTANCE:-$(date +%s)} && export LOCALSTACK_PORT=${LOCALSTACK_PORT:-4566} && docker-compose up -d",
+    "localstack:stop": "docker-compose down",
+    "localstack:logs": "docker-compose logs localstack-aws",
+    "localstack:status": "docker-compose ps",
+    "terraform:init": "cd terraform && terraform init",
+    "terraform:plan": "cd terraform && terraform plan -var=\"localstack_port=${LOCALSTACK_PORT:-4566}\"",
+    "terraform:apply": "cd terraform && terraform init -upgrade && terraform apply -auto-approve -var=\"localstack_port=${LOCALSTACK_PORT:-4566}\"",
+    "terraform:destroy": "cd terraform && terraform destroy -auto-approve -var=\"localstack_port=${LOCALSTACK_PORT:-4566}\""
   },
   "license": "Apache-2.0",
   "dependencies": {
@@ -31,7 +44,8 @@
     "@ln-maf/core": "file:../core",
     "@ln-maf/validations": "file:../validations",
     "multiple-cucumber-html-reporter": "3.7.0",
-    "nyc": "^17.0.0"
+    "nyc": "^17.0.0",
+    "wait-on": "^7.2.0"
   },
   "repository": {
     "type": "git",

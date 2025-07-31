@@ -4,3 +4,12 @@
 !test/test2.abc
 !test/test2.txt
 !test/test3.txt
+
+# Terraform files
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/terraform.tfstate*
+terraform/terraform.tfplan
+
+# Environment files
+.env
