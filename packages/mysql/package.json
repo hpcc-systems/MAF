@@ -9,11 +9,11 @@
   "scripts": {
     "test": "npm run mysql:start && npm run test:run && npm run mysql:stop",
     "test:coverage": "npm run mysql:start && npm run test:run:coverage && npm run mysql:stop",
-    "test:run": "wait-on tcp:localhost:3307 && sleep 5 && mkdir -p test/report && npm run cucumber:exec && npm run test:finalize",
-    "test:run:coverage": "wait-on tcp:localhost:3307 && sleep 5 && mkdir -p test/report && npm run cucumber:exec:coverage && npm run test:finalize",
-    "cucumber:exec": "USE_ENV_VARIABLES=TRUE MYSQL_SQL_USERNAME=root MYSQL_SQL_PASSWORD=testpassword npx cucumber-js -f json:test/report/mysql.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE",
-    "cucumber:exec:coverage": "USE_ENV_VARIABLES=TRUE MYSQL_SQL_USERNAME=root MYSQL_SQL_PASSWORD=testpassword npx nyc --reporter=lcov --reporter=text --report-dir=../../coverage npx cucumber-js -f json:test/report/mysql.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE",
-    "test:finalize": "npx multiReport && mkdir -p ../../test/report && cp -r test/report/* ../../test/report",
+    "test:run": "wait-on tcp:localhost:3307 && sleep 5 && mkdir -p ../../test/report && npm run cucumber:exec && npm run test:finalize",
+    "test:run:coverage": "wait-on tcp:localhost:3307 && sleep 5 && mkdir -p ../../test/report && npm run cucumber:exec:coverage && npm run test:finalize",
+    "cucumber:exec": "USE_ENV_VARIABLES=TRUE MYSQL_SQL_USERNAME=root MYSQL_SQL_PASSWORD=testpassword npx cucumber-js -f json:../../test/report/mysql.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE",
+    "cucumber:exec:coverage": "USE_ENV_VARIABLES=TRUE MYSQL_SQL_USERNAME=root MYSQL_SQL_PASSWORD=testpassword npx nyc --reporter=lcov --reporter=text --report-dir=../../coverage npx cucumber-js -f json:../../test/report/mysql.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE",
+    "test:finalize": "echo 'MySQL tests completed'",
     "mysql:start": "docker-compose up -d && echo 'Waiting for MySQL to be ready...' && sleep 5",
     "mysql:stop": "docker-compose down",
     "mysql:logs": "docker-compose logs mysql-test",
@@ -34,8 +34,8 @@
   },
   "devDependencies": {
     "@cucumber/cucumber": "^12.0.0",
-    "@ln-maf/core": "file:../core",
-    "@ln-maf/validations": "file:../validations",
+    "@ln-maf/core": "^4.1.0",
+    "@ln-maf/validations": "^4.1.0",
     "concurrently": "^8.2.2",
     "multiple-cucumber-html-reporter": "3.7.0",
     "nyc": "^17.0.0",
@@ -53,5 +53,6 @@
   ],
   "bugs": {
     "url": "https://github.com/hpcc-systems/MAF/issues"
-  }
+  },
+  "gitHead": "1b3bf8c441e8de94216e2f3c8638a172a0697148"
 }

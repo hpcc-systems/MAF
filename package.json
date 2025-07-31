@@ -3,8 +3,9 @@
   "version": "4.0.0",
   "description": "Modular Automation Framework",
   "scripts": {
-    "test:coverage": "lerna run test:coverage",
-    "test": "lerna run test"
+    "test:coverage": "lerna run test:coverage && npx multiReport",
+    "test": "lerna run test && npx multiReport",
+    "test:report": "npx multiReport"
   },
   "workspaces": [
     "packages/*"

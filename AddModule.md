@@ -42,8 +42,8 @@ packages/your-module/
      "description": "Description of your MAF module",
      "main": "index.js",
      "scripts": {
-       "test": "mkdir -p test/report && npx cucumber-js -f json:test/report/your-module.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE && npx multiReport && mkdir -p ../../test/report && cp -r test/report/* ../../test/report",
-       "test:coverage": "mkdir -p test/report && npx nyc --reporter=lcov --reporter=text --report-dir=../../coverage npx cucumber-js -f json:test/report/your-module.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE && npx multiReport && mkdir -p ../../test/report && cp -r test/report/* ../../test/report"
+       "test": "mkdir -p ../../test/report && npx cucumber-js -f json:../../test/report/your-module.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE",
+       "test:coverage": "mkdir -p ../../test/report && npx nyc --reporter=lcov --reporter=text --report-dir=../../coverage npx cucumber-js -f json:../../test/report/your-module.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE"
      },
      "license": "Apache-2.0",
      "dependencies": {
@@ -226,10 +226,6 @@ Feature: Example Usage
     }
     """
     Then item "lastRun.success" is equal to true
-```
-
-[npm-image]: https://img.shields.io/npm/v/@ln-maf/your-module.svg
-[npm-url]: https://www.npmjs.com/package/@ln-maf/your-module
 ```
 
 ## Best Practices
