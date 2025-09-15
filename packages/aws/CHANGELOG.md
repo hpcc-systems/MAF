@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.2](https://github.com/hpcc-systems/MAF/compare/@ln-maf/aws@4.1.1...@ln-maf/aws@4.1.2) (2025-09-15)
+
+
+### Features
+
+* add support for limit parameter in DynamoDB queries and update related scenarios ([7c93088](https://github.com/hpcc-systems/MAF/commit/7c930885b9cd912249ca5ce4de87a8e67f27ebff))
+
+
+
+
+
 ## [4.1.1](https://github.com/hpcc-systems/MAF/compare/@ln-maf/aws@4.1.0...@ln-maf/aws@4.1.1) (2025-07-31)
 
 **Note:** Version bump only for package @ln-maf/aws
