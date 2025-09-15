@@ -153,11 +153,11 @@ Feature: AWS: DynamoDB
 
   Scenario: Test dynamodb put-item from jsonObject
     Given table "testtable" exists on dynamo
-    When dynamodb put-item from '{"tableName":"testtable","item":{"label":{"S":"_JsonTest"},"value":{"S":"test"}}}' is performed
+    When dynamodb put-item from '{"tableName":"testtable","item":{"label":{"S":"_JsonTest"},"testValue":{"S":"test"}}}' is performed
 
   Scenario: Test dynamodb update-item from jsonObject
     Given table "testtable" exists on dynamo
-    When dynamodb update-item from '{"tableName":"testtable","key":{"label":{"S":"_JsonTest"}},"updateExpression":"SET #v = :val","expressionAttributeNames":{"#v":"value"},"expressionAttributeValues":{":val":{"S":"updated"}}}' is performed
+    When dynamodb update-item from '{"tableName":"testtable","key":{"label":{"S":"_JsonTest"}},"updateExpression":"SET #v = :val","expressionAttributeNames":{"#v":"testValue"},"expressionAttributeValues":{":val":{"S":"updated"}}}' is performed
 
   Scenario: Test dynamodb delete-item from jsonObject
     Given table "testtable" exists on dynamo
@@ -397,3 +397,178 @@ Feature: AWS: DynamoDB
     When '{"label":"_UndefinedTest","stringUndefined":"undefined","stringFunction":"function(){}"}' is converted to dynamo
     Then it contains "stringUndefined"
     And it contains "stringFunction"
+
+  # Test cases for Limit parameter functionality
+  Scenario: Test limit parameter with simple query
+    Given table "testtable" exists on dynamo
+    # First, add multiple items to test against
+    When '{"label":"_LimitTest1","testValue":"item1"}' is converted to dynamo
+    And set "item" to it
+    And set "tableName" to "testtable"
+    And dynamodb put-item is performed
+    When '{"label":"_LimitTest2","testValue":"item2"}' is converted to dynamo
+    And set "item" to it
+    And dynamodb put-item is performed
+    When '{"label":"_LimitTest3","testValue":"item3"}' is converted to dynamo
+    And set "item" to it
+    And dynamodb put-item is performed
+    # Test query with limit
+    And set "keyConditionExpression" to "label = :label"
+    And set "limit" to "1"
+    And set "expressionAttributeValues" to:
+      """
+      {
+        ":label": {"S": "_LimitTest1"}
+      }
+      """
+    And dynamodb query is performed
+    Then "${lastRun.length}" is equal to "1"
+
+  Scenario: Test limit parameter with docstring query
+    Given table "testtable" exists on dynamo
+    When perform dynamodb query:
+      """
+      {
+        "tableName": "testtable",
+        "keyConditionExpression": "label = :label",
+        "limit": "2",
+        "expressionAttributeValues": {
+          ":label": {"S": "_LimitTest1"}
+        }
+      }
+      """
+    Then "${lastRun.length}" is equal to "1"
+
+  Scenario: Test limit parameter with jsonObject query
+    Given table "testtable" exists on dynamo
+    When dynamodb query from '{"tableName":"testtable","keyConditionExpression":"label = :label","limit":"1","expressionAttributeValues":{":label":{"S":"_LimitTest2"}}}' is performed
+    Then "${lastRun.length}" is equal to "1"
+
+  Scenario: Test limit parameter with zero value
+    Given table "testtable" exists on dynamo
+    And set "tableName" to "testtable"
+    And set "keyConditionExpression" to "label = :label"
+    And set "limit" to "0"
+    And set "expressionAttributeValues" to:
+      """
+      {
+        ":label": {"S": "_LimitTest1"}
+      }
+      """
+    And dynamodb query is performed
+    Then "${lastRun.length}" is equal to "0"
+
+  Scenario: Test limit parameter with large number
+    Given table "testtable" exists on dynamo
+    And set "tableName" to "testtable"
+    And set "keyConditionExpression" to "label = :label"
+    And set "limit" to "1000"
+    And set "expressionAttributeValues" to:
+      """
+      {
+        ":label": {"S": "_LimitTest3"}
+      }
+      """
+    And dynamodb query is performed
+    Then "${lastRun.length}" is equal to "1"
+
+  Scenario: Test query without limit parameter (should return all items)
+    Given table "testtable" exists on dynamo
+    # Use existing items from earlier tests - _LimitTest1, _LimitTest2, _LimitTest3
+    # Query for _LimitTest1 and _LimitTest2 separately to verify no limit behavior
+    And set "tableName" to "testtable"
+    And set "keyConditionExpression" to "label = :label"
+    And set "expressionAttributeValues" to:
+      """
+      {
+        ":label": {"S": "_LimitTest1"}
+      }
+      """
+    And dynamodb query is performed
+    # Should return 1 item for _LimitTest1
+    Then "${lastRun.length}" is equal to "1"
+    # Now query for _LimitTest2
+    And set "expressionAttributeValues" to:
+      """
+      {
+        ":label": {"S": "_LimitTest2"}
+      }
+      """
+    And dynamodb query is performed
+    # Should return 1 item for _LimitTest2
+    Then "${lastRun.length}" is equal to "1"
+
+  Scenario: Test limit parameter combined with projectionExpression
+    Given table "testtable" exists on dynamo
+    And set "tableName" to "testtable"
+    And set "keyConditionExpression" to "label = :label"
+    And set "limit" to "1"
+    And set "projectionExpression" to "label,testValue"
+    And set "expressionAttributeValues" to:
+      """
+      {
+        ":label": {"S": "_LimitTest1"}
+      }
+      """
+    And dynamodb query is performed
+    And it is cleaned
+    Then it contains "_LimitTest1"
+    And it contains "item1"
+    And "${lastRun.length}" is equal to "1"
+
+  Scenario: Test limit parameter combined with filterExpression
+    Given table "testtable" exists on dynamo
+    # Add an item that will be filtered out
+    When '{"label":"_FilterTest","testValue":"filterme","score":50}' is converted to dynamo
+    And set "item" to it
+    And set "tableName" to "testtable"
+    And dynamodb put-item is performed
+    When '{"label":"_FilterTest","testValue":"keepme","score":100}' is converted to dynamo
+    And set "item" to it
+    And dynamodb put-item is performed
+    # Query with both limit and filter
+    And set "keyConditionExpression" to "label = :label"
+    And set "filterExpression" to "score > :minScore"
+    And set "limit" to "5"
+    And set "expressionAttributeValues" to:
+      """
+      {
+        ":label": {"S": "_FilterTest"},
+        ":minScore": {"N": "75"}
+      }
+      """
+    And dynamodb query is performed
+    And it is cleaned
+    Then it contains "keepme"
+    And "${lastRun.length}" is equal to "1"
+
+  Scenario: Test limit parameter with string number
+    Given table "testtable" exists on dynamo
+    And set "tableName" to "testtable"
+    And set "keyConditionExpression" to "label = :label"
+    And set "limit" to "2"
+    And set "expressionAttributeValues" to:
+      """
+      {
+        ":label": {"S": "_LimitTest1"}
+      }
+      """
+    And dynamodb query is performed
+    Then "${lastRun.length}" is equal to "1"
+
+  # Clean up test items
+  Scenario: Clean up limit test items
+    Given table "testtable" exists on dynamo
+    When '{"label":"_LimitTest1"}' is converted to dynamo
+    And set "key" to it
+    And set "tableName" to "testtable"
+    And dynamodb delete-item is performed
+    When '{"label":"_LimitTest2"}' is converted to dynamo
+    And set "key" to it
+    And dynamodb delete-item is performed
+    When '{"label":"_LimitTest3"}' is converted to dynamo
+    And set "key" to it
+    And dynamodb delete-item is performed
+    When '{"label":"_FilterTest"}' is converted to dynamo
+    And set "key" to it
+    And dynamodb delete-item is performed

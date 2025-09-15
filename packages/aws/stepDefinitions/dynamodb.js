@@ -228,6 +228,7 @@ MAFWhen('table {string} exists on dynamo', async function (tableName) {
  * - projectionExpression: Attributes to retrieve
  * - scanIndexForward: Sort order for results
  * - indexName: Global secondary index name
+ * - limit: Maximum number of items to return
  *
  * @param {Object} activeArgs Supported arguments for the AWS QueryCommand
  * @param {Object} additionalArgs Additional arguments for AWS QueryCommand
@@ -254,9 +255,21 @@ async function dynamoQuery(activeArgs = {}, additionalArgs = {}) {
 
     let lastEvaluatedKey
     let allResults = []
+    const userLimit = dynamoQueryArgs.limit ? parseInt(dynamoQueryArgs.limit) : null
 
     do {
         const queryParameters = buildQueryParameters(dynamoQueryArgs, additionalArgs, lastEvaluatedKey)
+        
+        // If we have a user-specified limit, adjust the DynamoDB Limit parameter
+        // to avoid fetching more items than needed
+        if (userLimit !== null) {
+            const remainingItems = userLimit - allResults.length
+            if (remainingItems <= 0) {
+                break
+            }
+            // Set DynamoDB's Limit to the minimum of what's remaining and what's requested
+            queryParameters.Limit = Math.min(remainingItems, queryParameters.Limit || remainingItems)
+        }
 
         // Log parameters on first iteration only
         if (!lastEvaluatedKey) {
@@ -264,7 +277,21 @@ async function dynamoQuery(activeArgs = {}, additionalArgs = {}) {
         }
 
         const queryResults = await dbClient.send(new QueryCommand(queryParameters))
-        allResults = allResults.concat(queryResults.Items || [])
+        const newItems = queryResults.Items || []
+        
+        // If we have a user limit, only add items up to that limit
+        if (userLimit !== null) {
+            const itemsToAdd = newItems.slice(0, userLimit - allResults.length)
+            allResults = allResults.concat(itemsToAdd)
+            
+            // Stop if we've reached the user-specified limit
+            if (allResults.length >= userLimit) {
+                break
+            }
+        } else {
+            allResults = allResults.concat(newItems)
+        }
+        
         lastEvaluatedKey = queryResults.LastEvaluatedKey
     } while (lastEvaluatedKey)
 
@@ -289,7 +316,8 @@ function buildQueryParameters(queryArgs, additionalArgs, lastEvaluatedKey) {
         'filterExpression',
         'projectionExpression',
         'scanIndexForward',
-        'indexName'
+        'indexName',
+        'limit'
     ]
 
     optionalParams.forEach(param => {
@@ -348,6 +376,7 @@ async function performDynamoDBQueryFromJSON(payload) {
         case 'filterExpression':
         case 'keyConditionExpression':
         case 'expressionAttributeNames':
+        case 'limit':
             activeArgs[key] = payload[key]
             break
         case 'expressionAttributeValues':
