@@ -268,7 +268,7 @@ async function dynamoQuery(activeArgs = {}, additionalArgs = {}) {
                 break
             }
             // Set DynamoDB's Limit to the minimum of what's remaining and what's requested
-            queryParameters.Limit = Math.min(remainingItems, queryParameters.Limit || remainingItems)
+            queryParameters.Limit = queryParameters.Limit ? Math.min(remainingItems, queryParameters.Limit) : remainingItems
         }
 
         // Log parameters on first iteration only
