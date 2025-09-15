@@ -255,7 +255,7 @@ async function dynamoQuery(activeArgs = {}, additionalArgs = {}) {
 
     let lastEvaluatedKey
     let allResults = []
-    const userLimit = dynamoQueryArgs.limit ? parseInt(dynamoQueryArgs.limit) : null
+    const userLimit = dynamoQueryArgs.limit ? parseInt(dynamoQueryArgs.limit, 10) : null
 
     do {
         const queryParameters = buildQueryParameters(dynamoQueryArgs, additionalArgs, lastEvaluatedKey)
