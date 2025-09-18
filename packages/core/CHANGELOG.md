@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.4](https://github.com/hpcc-systems/MAF/compare/@ln-maf/core@4.1.3...@ln-maf/core@4.1.4) (2025-09-18)
+
+
+### Bug Fixes
+
+* update multiple-cucumber-html-reporter dependency to version 3.9.3 ([dd027fe](https://github.com/hpcc-systems/MAF/commit/dd027fe1f3206099f82dfb07b25e4fc2dab2a318))
+
+
+
+
+
 ## [4.1.3](https://github.com/hpcc-systems/MAF/compare/@ln-maf/core@4.1.1...@ln-maf/core@4.1.3) (2025-09-18)
 
 **Note:** Version bump only for package @ln-maf/core
