@@ -1,4 +1,57 @@
+# Development and build artifacts
 *.png
+*.log
+*.tmp
 .gitignore
-coverage
-tmp
+coverage/
+tmp/
+.nyc_output/
+report/
+reports/
+test-results/
+dist/
+build/
+
+# Environment and configuration files
+.env
+.env.*
+!.env.example
+docker-compose.yml
+docker-compose.*.yml
+
+# Testing and feature files (not needed for consumers)
+test/
+tests/
+features/
+__tests__/
+spec/
+
+# Platform-specific files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Terraform (causing 600MB+ installations)
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfplan
+.terraform.lock.hcl
+
+# SQL initialization files (not needed for consumers)
+init-db.sql
+
+# IDE and editor files
+.vscode/
+.idea/
+*.sublime-*
+.editorconfig
+
+# CI/CD files
+.github/
+.gitlab-ci.yml
+.travis.yml
+Jenkinsfile

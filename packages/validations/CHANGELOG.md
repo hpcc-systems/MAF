@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.2](https://github.com/hpcc-systems/MAF/compare/@ln-maf/validations@4.1.1...@ln-maf/validations@4.1.2) (2025-09-18)
+
+**Note:** Version bump only for package @ln-maf/validations
+
+
+
+
+
 ## [4.1.1](https://github.com/hpcc-systems/MAF/compare/@ln-maf/validations@4.1.0...@ln-maf/validations@4.1.1) (2025-07-31)
 
 **Note:** Version bump only for package @ln-maf/validations
