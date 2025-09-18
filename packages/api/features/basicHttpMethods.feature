@@ -13,7 +13,7 @@ Feature: API - Basic HTTP Methods
         And "${response.customHeaders}" is equal to:
             """
             {
-                "accept-encoding": "gzip,deflate"
+                "accept-encoding": "gzip, deflate, br"
             }
             """
 
