@@ -31,9 +31,11 @@
   "bugs": {
     "url": "https://github.com/hpcc-systems/MAF/issues"
   },
+  "dependencies": {
+    "multiple-cucumber-html-reporter": "3.9.3"
+  },
   "devDependencies": {
     "@cucumber/cucumber": "^12.0.0",
-    "multiple-cucumber-html-reporter": "3.7.0",
     "nyc": "^17.0.0"
   },
   "gitHead": "1b3bf8c441e8de94216e2f3c8638a172a0697148"
