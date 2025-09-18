@@ -12,8 +12,6 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "chai": "^4.3.6",
-    "fstream": "^1.0.12",
     "prompt": "^1.2.2"
   },
   "peerDependencies": {
