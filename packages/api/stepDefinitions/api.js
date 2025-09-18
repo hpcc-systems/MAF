@@ -1,22 +1,30 @@
 // Initialize fetch and Blob globally for compatibility
 let fetch, Blob, FormData
+let initializeFetchPromise
 const initializeFetch = async () => {
-    if (!fetch) {
-        const nodeFetch = await import('node-fetch')
-        fetch = nodeFetch.default
-        global.fetch = fetch
-        
-        // Import fetch-blob for better blob support
-        const fetchBlob = await import('fetch-blob')
-        Blob = fetchBlob.Blob
-        global.Blob = Blob
-        
-        // Import formdata-polyfill for proper FormData support
-        const formDataPolyfill = await import('formdata-polyfill/esm.min.js')
-        FormData = formDataPolyfill.FormData
-        global.FormData = FormData
+    if (initializeFetchPromise) {
+        await initializeFetchPromise
+        return fetch
     }
-    return fetch
+    initializeFetchPromise = (async () => {
+        if (!fetch) {
+            const nodeFetch = await import('node-fetch')
+            fetch = nodeFetch.default
+            global.fetch = fetch
+            
+            // Import fetch-blob for better blob support
+            const fetchBlob = await import('fetch-blob')
+            Blob = fetchBlob.Blob
+            global.Blob = Blob
+            
+            // Import formdata-polyfill for proper FormData support
+            const formDataPolyfill = await import('formdata-polyfill/esm.min.js')
+            FormData = formDataPolyfill.FormData
+            global.FormData = FormData
+        }
+        return fetch
+    })()
+    return initializeFetchPromise
 }
 
 const { MAFWhen, MAFSave, performJSONObjectTransform, fillTemplate, canAttach } = require('@ln-maf/core')
