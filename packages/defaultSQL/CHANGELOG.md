@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.5](https://github.com/hpcc-systems/MAF/compare/@ln-maf/default-sql@4.1.4...@ln-maf/default-sql@4.1.5) (2025-09-18)
+
+
+### Bug Fixes
+
+* remove deprecated dependencies from package.json and package-lock.json ([342e167](https://github.com/hpcc-systems/MAF/commit/342e167d39ea76b6c0b64b442f2699671b5323af))
+
+
+
+
+
 ## [4.1.4](https://github.com/hpcc-systems/MAF/compare/@ln-maf/default-sql@4.1.3...@ln-maf/default-sql@4.1.4) (2025-09-18)
 
 **Note:** Version bump only for package @ln-maf/default-sql
