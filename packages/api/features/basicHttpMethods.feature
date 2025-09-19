@@ -13,7 +13,9 @@ Feature: API - Basic HTTP Methods
         And "${response.customHeaders}" is equal to:
             """
             {
-                "accept-encoding": "gzip, deflate, br"
+                "accept-language": "*",
+                "sec-fetch-mode": "cors",
+                "accept-encoding": "gzip, deflate"
             }
             """
 

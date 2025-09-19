@@ -1,32 +1,3 @@
-// Initialize fetch and Blob globally for compatibility
-let fetch, Blob, FormData
-let initializeFetchPromise
-const initializeFetch = async () => {
-    if (initializeFetchPromise) {
-        await initializeFetchPromise
-        return fetch
-    }
-    initializeFetchPromise = (async () => {
-        if (!fetch) {
-            const nodeFetch = await import('node-fetch')
-            fetch = nodeFetch.default
-            global.fetch = fetch
-            
-            // Import fetch-blob for better blob support
-            const fetchBlob = await import('fetch-blob')
-            Blob = fetchBlob.Blob
-            global.Blob = Blob
-            
-            // Import formdata-polyfill for proper FormData support
-            const formDataPolyfill = await import('formdata-polyfill/esm.min.js')
-            FormData = formDataPolyfill.FormData
-            global.FormData = FormData
-        }
-        return fetch
-    })()
-    return initializeFetchPromise
-}
-
 const { MAFWhen, MAFSave, performJSONObjectTransform, fillTemplate, canAttach } = require('@ln-maf/core')
 const { setDefaultTimeout, Then } = require('@cucumber/cucumber')
 
@@ -38,9 +9,6 @@ setDefaultTimeout(30 * 1000)
 
 // Builds a request object from the given request, populating any missing fields using the results object
 async function requestBuilder(request) {
-    // Ensure fetch and related APIs are initialized
-    await initializeFetch()
-    
     if (!request.url && this.results && this.results.url) {
         request.url = this.results.url
     }
@@ -178,9 +146,6 @@ async function requestBuilder(request) {
 
 // Performs the given request, returning the response
 async function performRequest(request, additionalParams = {}) {
-    // Ensure fetch is initialized
-    await initializeFetch()
-    
     // Pre-build URL to avoid array operations
     const absoluteUrl = request.api ? `${request.url}/${request.api}` : request.url
     

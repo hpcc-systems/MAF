@@ -22,7 +22,9 @@ Feature: API - Request Body Types
             """
             {
                 "a": "header",
-                "accept-encoding": "gzip, deflate, br"
+                "accept-language": "*",
+                "sec-fetch-mode": "cors",
+                "accept-encoding": "gzip, deflate"
             }
             """
         And "${response.body}" is equal to ""
