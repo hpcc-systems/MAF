@@ -6,6 +6,7 @@
 coverage/
 tmp/
 .nyc_output/
+.nycrc
 report/
 reports/
 test-results/
