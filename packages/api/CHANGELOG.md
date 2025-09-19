@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.2.0](https://github.com/hpcc-systems/MAF/compare/@ln-maf/api@4.1.6...@ln-maf/api@4.2.0) (2025-09-19)
+
+
+### Features
+
+* update custom headers in API feature files and remove fetch initialization from step definitions ([f9a1e3a](https://github.com/hpcc-systems/MAF/commit/f9a1e3a11c8985c28d2bde9b5231439ef1c66be0))
+
+
+
+
+
 ## [4.1.6](https://github.com/hpcc-systems/MAF/compare/@ln-maf/api@4.1.5...@ln-maf/api@4.1.6) (2025-09-19)
 
 **Note:** Version bump only for package @ln-maf/api
