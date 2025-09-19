@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.6](https://github.com/hpcc-systems/MAF/compare/@ln-maf/mysql@4.1.5...@ln-maf/mysql@4.1.6) (2025-09-19)
+
+**Note:** Version bump only for package @ln-maf/mysql
+
+
+
+
+
 ## [4.1.5](https://github.com/hpcc-systems/MAF/compare/@ln-maf/mysql@4.1.4...@ln-maf/mysql@4.1.5) (2025-09-18)
 
 **Note:** Version bump only for package @ln-maf/mysql
