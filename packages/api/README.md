@@ -5,13 +5,14 @@ This module is created to allow other projects to easily perform API requests, u
 [![npm package][npm-image]][npm-url]
 [![GitHub Actions](https://github.com/hpcc-systems/MAF/workflows/Build/badge.svg)](https://github.com/hpcc-systems/MAF/actions)
 
+## Requirements
+
+- **Node.js 18.0.0 or higher** (for native `fetch`, `Blob`, and `FormData` support)
+
 ## Dependencies
 
 This module is dependent on the following npm modules:
 
-- fetch-blob
-- node-fetch
-- form-data
 - fetch-to-curl
 
 ## Set up
@@ -31,7 +32,7 @@ require('@ln-maf/api')
 - body: The body to use for the api request. Should be a string.
 - jsonBody: The json body to use for the api request. It must be in a valid JSON object format
 - urlEncodedBody: The url encoded body to use for the api request. It will be appended to the url
-- headers: The headers to use for the api request. Should be a JSON object. Note that the default headers are remove if this is used. The default headers are documented here in the [node-fetch](https://www.npmjs.com/package/node-fetch#default-headers) documentation.
+- headers: The headers to use for the api request. Should be a JSON object. Note that default headers are automatically added by the native `fetch` API (such as `accept-encoding`, `accept-language`, etc.).
 - method: The method to use for the api request. Should be a string. ex: 'GET', 'POST', 'PUT', 'DELETE'
 
 ## Step Definitions
