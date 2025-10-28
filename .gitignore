@@ -65,6 +65,7 @@ pids/
 
 # Git
 .git.bfg-report/
+.secrets.baseline
 
 # Package-specific test files (allow specific test files)
 test/

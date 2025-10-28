@@ -270,7 +270,7 @@ Feature: View the text "Hello World"
     """
     {
       "url": "http://www.mocky.io/v2/",
-      "api": "5ec540242f00004cb1dc30dd",
+      "api": "some/api/here",
       "method": "GET"
     }
     """
