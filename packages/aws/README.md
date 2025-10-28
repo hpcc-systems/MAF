@@ -4,12 +4,44 @@
 This module provides Cucumber step definitions for AWS services, making it easy to write Gherkin scenarios that interact with AWS resources.
 
 [![npm package][npm-image]][npm-url]
-[![GitHub Actions](https://github.com/hpcc-systems/MAF/workflows/Build/badge.svg)](https:**Note:** This is a duplicate of the above step and will be deprecated. Use `{jsonObject} is sent to queue {string}` instead.
-
-Sends a JSON object message to the SQS queue using the full queue URL. `${lastRun}` will contain the message ID and message.
-
-- `When {string} message is sent to queue {string}`thub.com/hpcc-systems/MAF/actions)
+[![GitHub Actions](https://github.com/hpcc-systems/MAF/workflows/Build/badge.svg)](https://github.com/hpcc-systems/MAF/actions)
 [![Dependencies][dep-image]][dep-url]
+
+---
+
+## Table of Contents
+
+- [Quick Start](#quick-start)
+- [AWS Credentials & Configuration](#aws-credentials--configuration)
+- [Step Definitions Overview](#step-definitions-overview)
+  - [Example Usage](#example-usage)
+- [S3 Step Definitions](#s3-step-definitions)
+  - [Bucket Operations](#bucket-operations)
+  - [File Listing and Checking](#file-listing-and-checking)
+  - [File Upload and Download](#file-upload-and-download)
+  - [File Deletion](#file-deletion)
+- [Lambda Step Definitions](#lambda-step-definitions)
+- [DynamoDB Step Definitions](#dynamodb-step-definitions)
+  - [Table Validation](#table-validation)
+  - [Data Conversion Utilities](#data-conversion-utilities)
+  - [Query Operations](#query-operations)
+  - [Put Item Operations](#put-item-operations)
+  - [Update Item Operations](#update-item-operations)
+  - [Delete Item Operations](#delete-item-operations)
+- [SQS Step Definitions](#sqs-step-definitions)
+  - [Queue Validation](#queue-validation)
+  - [Queue State Checks](#queue-state-checks)
+  - [Queue Management](#queue-management)
+  - [Message Operations](#message-operations)
+- [ECS Step Definitions](#ecs-step-definitions)
+  - [Task Definition Management](#task-definition-management)
+  - [Cluster Management](#cluster-management)
+  - [Service Operations](#service-operations)
+  - [Task Execution](#task-execution)
+- [CloudWatch and SSM Step Definitions](#cloudwatch-and-ssm-step-definitions)
+  - [CloudWatch Logs](#cloudwatch-logs)
+  - [SSM Parameter Store](#ssm-parameter-store)
+- [Local AWS Testing (Localstack)](#local-aws-testing-localstack)
 
 ---
 
@@ -79,7 +111,7 @@ Feature: AWS Integration Example
 
 ### S3 Step Definitions
 
-**Bucket Operations:**
+#### Bucket Operations
 
 - `When bucket {string} exists on S3`
 
@@ -93,7 +125,7 @@ Verifies that a bucket with the given name does NOT exist on S3. Fails if the bu
 
 Alias for `bucket {string} exists on S3`. Verifies that a bucket exists.
 
-**File Listing and Checking:**
+#### File Listing and Checking
 
 - `When file list of bucket {string} on path {string} is retrieved`
 
@@ -115,7 +147,7 @@ Gets a list of all files in the bucket as an array. The file list is stored in `
 
 Checks if a file exists at the specified path in the bucket. Fails if the file does not exist.
 
-**File Upload and Download:**
+#### File Upload and Download
 
 - `When file {string} is uploaded to bucket {string} as key {string}`
 
@@ -137,7 +169,7 @@ Gets the contents of the file from S3 at s3://[bucket]/[path]/[file] and stores 
 
 Downloads a file from S3 and writes it to a local file path.
 
-**File Deletion:**
+#### File Deletion
 
 - `When file {string} is deleted from bucket {string} at path {string}`
 
@@ -172,13 +204,13 @@ Invokes a Lambda function on AWS. The {jsonObject} is the payload and {string} i
 
 ### DynamoDB Step Definitions
 
-**Table Validation:**
+#### Table Validation
 
 - `When table {string} exists on dynamo`
 
 Checks that the table exists in DynamoDB. Fails if it does not exist.
 
-**Data Conversion Utilities:**
+#### Data Conversion Utilities
 
 - `When {jsonObject} is cleaned`
 
@@ -189,7 +221,7 @@ Cleans a JSON object that came from a DynamoDB query. It extracts "S", "N", "B" 
 Converts a JSON object into a DynamoDB JSON item format, ready for DynamoDB operations. The conversion is stored in `${lastRun}`.
 Note: This will not work with JSON values that have arrays, and base64 strings will be stored as binary in AWS.
 
-**Query Operations:**
+#### Query Operations
 
 - `When perform dynamodb query: {docString}`
 - `When dynamodb query from {jsonObject} is performed`
@@ -210,7 +242,7 @@ Optional variables:
 - `expressionAttributeNames`
 - `expressionAttributeValues` (must be a JSON object)
 
-**Put Item Operations:**
+#### Put Item Operations
 
 - `When perform dynamodb put-item: {docString}`
 - `When dynamodb put-item from {jsonObject} is performed`
@@ -221,7 +253,9 @@ Places an item in the DynamoDB table. Similar to [Put-Item](https://docs.aws.ama
 Required variables:
 
 - `tableName` (required)
-- `item` (required, must be a JSON object in DynamoDB format)**Update Item Operations:**
+- `item` (required, must be a JSON object in DynamoDB format)
+
+#### Update Item Operations
 
 - `When perform dynamodb update-item: {docString}`
 - `When dynamodb update-item from {jsonObject} is performed`
@@ -240,7 +274,7 @@ Optional variables:
 - `expressionAttributeNames`
 - `expressionAttributeValues` (must be a JSON object)
 
-**Delete Item Operations:**
+#### Delete Item Operations
 
 - `When perform dynamodb delete-item: {docString}`
 - `When dynamodb delete-item from {jsonObject} is performed`
@@ -255,14 +289,14 @@ Required variables:
 
 ### SQS Step Definitions
 
-**Queue Validation:**
+#### Queue Validation
 
 - `When queue {string} exists on SQS`
 
 Verifies that the queue can be found on AWS. The string can be the URL or the queue name.
 If a queue name is used, a regex search will be done to find the queue.
 
-**Queue State Checks:**
+#### Queue State Checks
 
 - `When queue {string} is empty within {int} second(s)`
 
@@ -272,7 +306,7 @@ Checks if the queue is empty within the specified time. The string can be the UR
 
 Checks if the queue has the specified number of messages within the specified time. The string can be the URL or the queue name.
 
-**Queue Management:**
+#### Queue Management
 
 - `When attributes of queue {string} are received`
 
@@ -284,7 +318,7 @@ Attributes included: VisibilityTimeout, DelaySeconds, ReceiveMessageWaitTimeSeco
 
 Removes all messages from the SQS queue. The string can be the URL or the queue name.
 
-**Message Operations:**
+#### Message Operations
 
 - `When {jsonObject} is sent to queue {string}`
 - `When {string} message is sent to queue {string}`
@@ -318,14 +352,14 @@ Then it is equal to:
 
 ### ECS Step Definitions
 
-**Task Definition Management:**
+#### Task Definition Management
 
 - `When ecs taskDefinition {string} exists`
 - `When ecs taskDefinition {string} does not exist`
 
 Checks if the task definition exists on ECS.
 
-**Cluster Management:**
+#### Cluster Management
 
 - `When ecs clusters from AWS are retrieved`
 
@@ -344,7 +378,7 @@ Gets the ARN of the specified ECS cluster and stores it in `${lastRun}`.
 
 Retrieves detailed information about the ECS cluster and stores it in `${lastRun}`.
 
-**Service Operations:**
+#### Service Operations
 
 - `When at least one task is running for service {string} in cluster {string}`
 
@@ -354,7 +388,7 @@ Checks if the service in an AWS cluster has at least one task running on ECS. Re
 
 Retrieves the task definition image name/version of the running service in the cluster and sets it to `${lastRun}`. Fails if the service is not running or if there are no tasks running.
 
-**Task Execution:**
+#### Task Execution
 
 - `When ecs run-task from {jsonObject} is performed`
 - `When perform ecs run-task: {docString}`
@@ -378,13 +412,13 @@ Optional variables:
 
 ### CloudWatch and SSM Step Definitions
 
-**CloudWatch Logs:**
+#### CloudWatch Logs
 
 - `When cloudwatch logs from log group {string} from {int} minutes ago to now are retrieved`
 
 Gets the CloudWatch logs from a specific log group and time frame, storing them in `${lastRun}`.
 
-**SSM Parameter Store:**
+#### SSM Parameter Store
 
 - `When parameter {string} value is retrieved from the parameter store`
 
@@ -420,3 +454,5 @@ Set the environment variable `AWSENV=LOCALSTACK` to use localstack instead of re
 
 [npm-image]:https://img.shields.io/npm/v/@ln-maf/aws.svg
 [npm-url]:https://www.npmjs.com/package/@ln-maf/aws
+[dep-image]:https://img.shields.io/david/hpcc-systems/MAF.svg
+[dep-url]:https://david-dm.org/hpcc-systems/MAF
