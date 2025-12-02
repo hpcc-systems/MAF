@@ -4,8 +4,8 @@ Feature: Validations: File Operations and I/O
 
   Scenario: Basic file writing and reading
     When set:
-      | item          | externalReferenceId |
-      | hello.json    | hello              |
+      | item       | externalReferenceId |
+      | hello.json | hello               |
     When set "item" to file "hello.json"
     And item "item" is written in json line delimited format to file "hello2.json"
 
@@ -17,8 +17,8 @@ Feature: Validations: File Operations and I/O
 
   Scenario: String to file operations
     When set:
-      | item          | externalReferenceId |
-      | hello.json    | hello              |
+      | item       | externalReferenceId |
+      | hello.json | hello               |
     And string "${externalReferenceId}" is written to file "helloWERAWE.txt"
 
   Scenario: Multi-line string to file
@@ -104,3 +104,23 @@ Feature: Validations: File Operations and I/O
     When set result to "17"
     And it is written to file "hello.txt"
     And item "lastRun" is written to file "hello2.txt"
+
+  Scenario: Append JSON items as line-delimited to file
+    When set:
+      | name  | value |
+      | item1 | data1 |
+      | item2 | data2 |
+    And set "batch1" to "${name.map((n, i) => ({name: n, value: value[i]}))}"
+    And item "batch1" is written in json line delimited format to file "appendTest2.json"
+    And set "existingData" to file "appendTest2.json"
+    And set:
+      | name  | value |
+      | item3 | data3 |
+      | item4 | data4 |
+    And set "batch2" to "${name.map((n, i) => ({name: n, value: value[i]}))}"
+    And set "combined" to "${[...existingData, ...batch2]}"
+    And item "combined" is written in json line delimited format to file "appendTest2.json"
+    Then file "appendTest2.json" contains "item1"
+    And file "appendTest2.json" contains "item2"
+    And file "appendTest2.json" contains "item3"
+    And file "appendTest2.json" contains "item4"
