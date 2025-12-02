@@ -30,8 +30,6 @@ const s3Client = new S3Client(S3ClientConfig)
 
 /**
  * Normalizes S3 path by removing duplicate slashes and ensuring trailing slash
- * @param {string} path - The path to normalize
- * @returns {string} Normalized path
  */
 function normalizePath(path) {
     if (!path || typeof path !== 'string') return ''
@@ -40,81 +38,57 @@ function normalizePath(path) {
 
 /**
  * Validates bucket name format and security
- * @param {string} bucketName - The bucket name to validate
- * @throws {Error} If bucket name is invalid or insecure
  */
 function validateBucketName(bucketName) {
-    if (!bucketName || typeof bucketName !== 'string' || !bucketName.trim()) {
-        throw new Error('Bucket name cannot be empty')
+    if (!bucketName || typeof bucketName !== 'string') {
+        throw new Error(`Bucket name cannot be empty or null`)
     }
-
-    // AWS S3 bucket name validation rules
     const bucketNameRegex = /^[a-z0-9.-]{3,63}$/
-    if (!bucketNameRegex.test(bucketName.trim())) {
-        throw new Error('Invalid bucket name format')
-    }
-
-    // Prevent potential injection attacks
-    if (bucketName.includes('..') || bucketName.includes('//')) {
-        throw new Error('Bucket name contains invalid characters')
+    if (!bucketNameRegex.test(bucketName.trim()) || bucketName.includes('..') || bucketName.includes('//')) {
+        throw new Error(`Invalid bucket name format: ${bucketName}`)
     }
 }
 
 /**
  * Validates and sanitizes S3 key
- * @param {string} key - The S3 key to validate
- * @returns {string} Sanitized key
- * @throws {Error} If key is invalid
  */
 function validateAndSanitizeKey(key) {
     if (!key || typeof key !== 'string') {
-        throw new Error('S3 key cannot be empty')
+        throw new Error(`S3 key cannot be empty or null`)
     }
-
-    // Remove any path traversal attempts
     const sanitized = key.replace(/\.\./g, '').replace(/\/+/g, '/').replace(/^\//, '')
-
     if (sanitized.length === 0) {
-        throw new Error('Invalid S3 key')
+        throw new Error(`Invalid S3 key after sanitization: ${key}`)
     }
-
     return sanitized
 }
 
 /**
  * Validates file path for security
- * @param {string} filePath - The file path to validate
- * @throws {Error} If path is potentially dangerous
  */
 function validateFilePath(filePath) {
     if (!filePath || typeof filePath !== 'string') {
-        throw new Error(`File path cannot be empty. Received: ${filePath}`)
+        throw new Error(`File path cannot be empty or null. Received: ${filePath}`)
     }
-
-    // Check for path traversal attempts
-    if (filePath.includes('..')) {
-        throw new Error(`File path contains invalid characters ('..'): ${filePath}`)
-    }
-    if (filePath.includes('~')) {
-        throw new Error(`File path contains invalid characters ('~'): ${filePath}`)
+    if (filePath.includes('..') || filePath.includes('~')) {
+        throw new Error(`File path contains invalid characters: ${filePath}`)
     }
 }
 
 /**
- * Handles AWS SDK errors with more descriptive messages (without exposing sensitive info)
- * @param {Error} error - The original error
- * @param {string} operation - The operation that failed
- * @throws {Error} Enhanced error with context
+ * Process template values for S3 operations
  */
-function handleS3Error(error, operation) {
-    throw new Error(`S3 ${operation} failed: ${error.message}`)
+function processTemplates(context, bucketName, key = '', path = '', localFilePath = '') {
+    return {
+        bucketName: fillTemplate(bucketName, context.results),
+        key: fillTemplate(key, context.results),
+        path: normalizePath(fillTemplate(path, context.results)),
+        localFilePath: fillTemplate(localFilePath, context.results)
+    }
 }
 
 /**
  * Creates an S3 URL
- * @param {string} bucket - The name of the bucket
- * @param {string} path - The directory path of the S3 bucket
- * @returns {string} The S3 URL
  */
 function s3URL(bucket, path) {
     return `s3://${bucket}/${path}`
@@ -125,102 +99,70 @@ function s3URL(bucket, path) {
 // ================================
 
 /**
- * Returns true if the bucket exists on AWS S3. User must have s3:ListAllMyBuckets permission on AWS
- * @param {string} bucketName - The name of the bucket
- * @returns {Promise<boolean>} true if the bucket exists on S3
- * @throws {Error} If AWS operation fails
-*/
+ * Returns true if the bucket exists on AWS S3
+ */
 async function bucketExists(bucketName) {
-    try {
-        validateBucketName(bucketName)
-        const res = await s3Client.send(new ListBucketsCommand({}))
-        return res.Buckets && res.Buckets.some(bucket => bucket.Name === bucketName.trim())
-    } catch (error) {
-        handleS3Error(error, 'bucket existence check')
-    }
-}
-
-/**
- * Gets the file names in the bucket and path. User must have READ access to the bucket
- * @param {string} bucketName - The name of the bucket to search
- * @param {string} path - The path of the bucket to search on
- * @param {boolean} all - true if you want to get all files from the bucket
- * @returns {Promise<string[]>} the files on the bucket and path
- * @throws {Error} If AWS operation fails
-*/
-async function listS3Files(bucketName, path, all = false) {
-    try {
-        validateBucketName(bucketName)
-        let queryResults = {}
-        let files = []
-        let itemCount = 0
-        const MAX_ITEMS = 10000 // Prevent excessive memory usage
-
-        do {
-            const queryParameters = {
-                Bucket: bucketName.trim()
-            }
-            if (!all) {
-                queryParameters.Delimiter = PATH_DELIMITER
-            }
-            if (path && path.length > 0) {
-                queryParameters.Prefix = path.trim()
-            }
-            if (queryResults.IsTruncated) {
-                queryParameters.ContinuationToken = queryResults.NextContinuationToken
-            }
-            queryResults = await s3Client.send(new ListObjectsV2Command(queryParameters))
-            if (queryResults.Contents) {
-                const newFiles = queryResults.Contents.map(element => element.Key)
-                files = files.concat(newFiles)
-                itemCount += newFiles.length
-
-                // Prevent excessive memory usage
-                if (itemCount > MAX_ITEMS) {
-                    console.warn(`S3 list operation limited to ${MAX_ITEMS} items`)
-                    break
-                }
-            }
-        } while (queryResults.IsTruncated)
-        return files
-    } catch (error) {
-        handleS3Error(error, 'list files operation')
-    }
-}
-
-/**
-     * Uploads a file to S3 bucket using streams for memory efficiency
-     * @param {object} context - The Cucumber World context
-     * @param {string} file - The file path to upload
-     * @param {string} bucketName - The name of the bucket
-     * @param {string} key - The S3 key (path + filename)
-     * @returns {Promise<Object>} AWS S3 response
-    */
-async function uploadFileToS3(context, file, bucketName, key) {
-    file = fillTemplate(file, context.results)
-    bucketName = fillTemplate(bucketName, context.results)
-    key = fillTemplate(key, context.results).replace(/\/{2,}/g, PATH_DELIMITER)
-
     validateBucketName(bucketName)
+    const res = await s3Client.send(new ListBucketsCommand({}))
+    return res.Buckets && res.Buckets.some(bucket => bucket.Name === bucketName.trim())
+}
+
+/**
+ * Gets the file names in the bucket and path
+ */
+async function listS3Files(bucketName, path, all = false) {
+    validateBucketName(bucketName)
+    let queryResults = {}
+    let files = []
+    let itemCount = 0
+    const MAX_ITEMS = 10000
+
+    do {
+        const queryParameters = { Bucket: bucketName.trim() }
+        if (!all) queryParameters.Delimiter = PATH_DELIMITER
+        if (path && path.length > 0) queryParameters.Prefix = path.trim()
+        if (queryResults.IsTruncated) queryParameters.ContinuationToken = queryResults.NextContinuationToken
+        
+        queryResults = await s3Client.send(new ListObjectsV2Command(queryParameters))
+        if (queryResults.Contents) {
+            const newFiles = queryResults.Contents.map(element => element.Key)
+            files = files.concat(newFiles)
+            itemCount += newFiles.length
+
+            if (itemCount > MAX_ITEMS) {
+                console.warn(`S3 list operation limited to ${MAX_ITEMS} items`)
+                break
+            }
+        }
+    } while (queryResults.IsTruncated)
+    return files
+}
+
+/**
+ * Uploads a file to S3 bucket using streams
+ */
+async function uploadFileToS3(context, file, bucketName, key) {
+    const templates = processTemplates(context, bucketName, key, '', file)
+    key = templates.key.replace(/\/{2,}/g, PATH_DELIMITER)
+    
+    validateBucketName(templates.bucketName)
     key = validateAndSanitizeKey(key)
-
-    const filePath = getFilePath(file, context)
+    
+    const filePath = getFilePath(templates.localFilePath, context)
     validateFilePath(filePath)
-
+    
     if (!fs.existsSync(filePath)) {
-        throw new Error('File does not exist')
+        throw new Error(`File does not exist: ${filePath}`)
     }
-
-    // Check file size
+    
     const stats = fs.statSync(filePath)
     if (stats.size > MAX_UPLOAD_SIZE) {
-        throw new Error(`File size exceeds maximum allowed size of ${MAX_UPLOAD_SIZE} bytes`)
+        throw new Error(`File size (${stats.size} bytes) exceeds maximum allowed size of ${MAX_UPLOAD_SIZE} bytes`)
     }
-
-    // Use createReadStream for memory-efficient streaming
+    
     const Body = fs.createReadStream(filePath)
     const queryParameters = {
-        Bucket: bucketName.trim(),
+        Bucket: templates.bucketName.trim(),
         Body,
         Key: key
     }
@@ -229,31 +171,20 @@ async function uploadFileToS3(context, file, bucketName, key) {
 
 /**
  * Downloads a file from S3 and writes it to a local file
- * @param {object} context - The Cucumber World context (for fillTemplate/getFilePath)
- * @param {string} key - The filename to retrieve from S3
- * @param {string} bucketName - The name of the S3 bucket
- * @param {string} path - The path within the bucket
- * @param {string} localFilePath - The local file path to write to
- * @returns {Promise<void>} Resolves when the file is written
-*/
+ */
 async function downloadS3FileToLocal(context, key, bucketName, path, localFilePath) {
-    key = fillTemplate(key, context.results)
-    bucketName = fillTemplate(bucketName, context.results)
-    path = normalizePath(fillTemplate(path, context.results))
-    localFilePath = fillTemplate(localFilePath, context.results)
-    const resolvedLocalFilePath = getFilePath(localFilePath, context)
+    const templates = processTemplates(context, bucketName, key, path, localFilePath)
+    const resolvedLocalFilePath = getFilePath(templates.localFilePath, context)
 
-    validateBucketName(bucketName)
-    key = validateAndSanitizeKey(path + key)
+    validateBucketName(templates.bucketName)
+    const fullKey = validateAndSanitizeKey(templates.path + templates.key)
     validateFilePath(resolvedLocalFilePath)
 
     const queryParameters = {
-        Bucket: bucketName.trim(),
-        Key: key
+        Bucket: templates.bucketName.trim(),
+        Key: fullKey
     }
-
     const { Body } = await s3Client.send(new GetObjectCommand(queryParameters))
-    // Use stream pipeline for file writing
     const writeStream = fs.createWriteStream(resolvedLocalFilePath)
     return new Promise((resolve, reject) => {
         Body.pipe(writeStream)
@@ -265,27 +196,19 @@ async function downloadS3FileToLocal(context, key, bucketName, path, localFilePa
 
 /**
  * Downloads a file from S3 and returns its content as a string
- * @param {object} context - The Cucumber World context (for fillTemplate)
- * @param {string} key - The filename to retrieve from S3
- * @param {string} bucketName - The name of the S3 bucket
- * @param {string} path - The path within the bucket
- * @returns {Promise<string>} File content as string
-*/
+ */
 async function downloadS3FileToMemory(context, key, bucketName, path) {
-    key = fillTemplate(key, context.results)
-    bucketName = fillTemplate(bucketName, context.results)
-    path = normalizePath(fillTemplate(path, context.results))
-
-    validateBucketName(bucketName)
-    key = validateAndSanitizeKey(path + key)
+    const templates = processTemplates(context, bucketName, key, path)
+    
+    validateBucketName(templates.bucketName)
+    const fullKey = validateAndSanitizeKey(templates.path + templates.key)
 
     const queryParameters = {
-        Bucket: bucketName.trim(),
-        Key: key
+        Bucket: templates.bucketName.trim(),
+        Key: fullKey
     }
 
     const { Body } = await s3Client.send(new GetObjectCommand(queryParameters))
-    // Convert stream to string with size limit
     const chunks = []
     let totalSize = 0
 
@@ -293,7 +216,7 @@ async function downloadS3FileToMemory(context, key, bucketName, path) {
         Body.on('data', (chunk) => {
             totalSize += chunk.length
             if (totalSize > MAX_FILE_SIZE) {
-                reject(new Error('File too large for memory download'))
+                reject(new Error(`File size (${totalSize} bytes) exceeds maximum allowed size for memory download (${MAX_FILE_SIZE} bytes)`))
                 return
             }
             chunks.push(chunk)
@@ -308,9 +231,8 @@ async function downloadS3FileToMemory(context, key, bucketName, path) {
 // ================================
 
 MAFWhen('file list of bucket {string} on path {string} is retrieved', async function (bucketName, path) {
-    bucketName = fillTemplate(bucketName, this.results)
-    path = normalizePath(fillTemplate(path, this.results))
-    return await listS3Files(bucketName, path)
+    const templates = processTemplates(this, bucketName, '', path)
+    return await listS3Files(templates.bucketName, templates.path)
 })
 
 MAFWhen('all files of bucket {string} is retrieved', async function (bucketName) {
@@ -319,16 +241,13 @@ MAFWhen('all files of bucket {string} is retrieved', async function (bucketName)
 })
 
 MAFWhen('file exists with name {string} at path {string} in bucket {string}', async function (key, path, bucketName) {
-    key = fillTemplate(key, this.results)
-    bucketName = fillTemplate(bucketName, this.results)
-    path = normalizePath(fillTemplate(path, this.results))
+    const templates = processTemplates(this, bucketName, key, path)
+    validateBucketName(templates.bucketName)
+    const fullKey = validateAndSanitizeKey(templates.path + templates.key)
 
-    validateBucketName(bucketName)
-    const fullKey = validateAndSanitizeKey(path + key)
-
-    const files = await listS3Files(bucketName, path)
+    const files = await listS3Files(templates.bucketName, templates.path)
     if (!files.includes(fullKey)) {
-        throw new Error(`File '${key}' does not exist in ${s3URL(bucketName, path)}`)
+        throw new Error(`File '${templates.key}' does not exist in ${s3URL(templates.bucketName, templates.path)}. Available files: ${files.length > 0 ? files.slice(0, 5).join(', ') + (files.length > 5 ? '...' : '') : 'none'}`)
     }
 })
 
@@ -354,52 +273,25 @@ MAFWhen('bucket {string} exists', async function (bucketName) {
 })
 
 MAFWhen('file {string} is uploaded to bucket {string} as key {string}', async function (file, bucketName, key) {
-    try {
-        return await uploadFileToS3(this, file, bucketName, key)
-    } catch (error) {
-        handleS3Error(error, 'file upload')
-    }
+    return await uploadFileToS3(this, file, bucketName, key)
 })
 
 MAFWhen('S3 file {string} from bucket {string} at path {string} is written to file {string}', async function (key, bucketName, path, localFilePath) {
-    try {
-        await downloadS3FileToLocal(this, key, bucketName, path, localFilePath)
-    } catch (error) {
-        handleS3Error(error, 'file retrieval')
-    }
+    await downloadS3FileToLocal(this, key, bucketName, path, localFilePath)
 })
 
 MAFWhen('file {string} from bucket {string} at path {string} is retrieved', async function (key, bucketName, path) {
-    try {
-        return await downloadS3FileToMemory(this, key, bucketName, path)
-    } catch (error) {
-        handleS3Error(error, 'file retrieval')
-    }
+    return await downloadS3FileToMemory(this, key, bucketName, path)
 })
 
-/**
- * Deletes a file from S3 bucket
- * @param {string} key - The filename to delete
- * @param {string} bucketName - The name of the bucket
- * @param {string} path - The path within the bucket
- * @returns {Promise<Object>} AWS S3 response
- */
 MAFWhen('file {string} is deleted from bucket {string} at path {string}', async function (key, bucketName, path) {
-    try {
-        key = fillTemplate(key, this.results)
-        bucketName = fillTemplate(bucketName, this.results)
-        path = normalizePath(fillTemplate(path, this.results))
+    const templates = processTemplates(this, bucketName, key, path)
+    validateBucketName(templates.bucketName)
+    const fullKey = validateAndSanitizeKey(templates.path + templates.key)
 
-        validateBucketName(bucketName)
-        const fullKey = validateAndSanitizeKey(path + key)
-
-        const queryParameters = {
-            Bucket: bucketName.trim(),
-            Key: fullKey
-        }
-
-        return await s3Client.send(new DeleteObjectCommand(queryParameters))
-    } catch (error) {
-        handleS3Error(error, 'file deletion')
+    const queryParameters = {
+        Bucket: templates.bucketName.trim(),
+        Key: fullKey
     }
+    return await s3Client.send(new DeleteObjectCommand(queryParameters))
 })
