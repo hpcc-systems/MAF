@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.8](https://github.com/hpcc-systems/MAF/compare/@ln-maf/aws@4.1.7...@ln-maf/aws@4.1.8) (2026-02-03)
+
+**Note:** Version bump only for package @ln-maf/aws
+
+
+
+
+
 ## [4.1.7](https://github.com/hpcc-systems/MAF/compare/@ln-maf/aws@4.1.6...@ln-maf/aws@4.1.7) (2025-12-02)
 
 **Note:** Version bump only for package @ln-maf/aws

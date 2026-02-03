@@ -13,9 +13,17 @@ When('{string} is written to file {string} on JSON path {string}', function (val
     value = fillTemplate(value, this.results)
     fileName = fillTemplate(fileName, this.results)
     jsonPath = fillTemplate(jsonPath, this.results)
-    const jp = require('jsonpath')
+    const { JSONPath } = require('jsonpath-plus')
     const fileContents = JSON.parse(readFile(fileName, this))
-    jp.apply(fileContents, jsonPath, function () { return value })
+    
+    // Get all matching paths with their parent objects and property names
+    const results = JSONPath({ path: jsonPath, json: fileContents, resultType: 'all' })
+    
+    // Apply the value to each matched location
+    results.forEach(result => {
+        result.parent[result.parentProperty] = value
+    })
+    
     writeFile(fileName, JSON.stringify(fileContents), this)
     tryAttach.call(this, fileContents)
 })
@@ -27,7 +35,7 @@ When('{string} is applied to item {string} on JSON path {string}', function (val
     value = fillTemplate(value, this.results)
     item = fillTemplate(item, this.results)
     jsonPath = fillTemplate(jsonPath, this.results)
-    const jp = require('jsonpath')
+    const { JSONPath } = require('jsonpath-plus')
     const fileContents = this.results[item]
     value = fillTemplate(value, this.results)
     if (value.trim() !== '') {
@@ -38,7 +46,15 @@ When('{string} is applied to item {string} on JSON path {string}', function (val
             }
         } catch { /* empty */ }
     }
-    jp.apply(fileContents, jsonPath, function () { return value })
+    
+    // Get all matching paths with their parent objects and property names
+    const results = JSONPath({ path: jsonPath, json: fileContents, resultType: 'all' })
+    
+    // Apply the value to each matched location
+    results.forEach(result => {
+        result.parent[result.parentProperty] = value
+    })
+    
     this.results[item] = fileContents
     tryAttach.call(this, this.results[item])
 })

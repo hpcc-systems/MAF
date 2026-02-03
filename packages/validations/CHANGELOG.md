@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.6](https://github.com/hpcc-systems/MAF/compare/@ln-maf/validations@4.1.5...@ln-maf/validations@4.1.6) (2026-02-03)
+
+
+### Features
+
+* add scenario for appending JSON items as line-delimited to file ([eb5bb44](https://github.com/hpcc-systems/MAF/commit/eb5bb44c3333b427c718f767925cae7bc26ae4d1))
+
+
+
+
+
 ## [4.1.5](https://github.com/hpcc-systems/MAF/compare/@ln-maf/validations@4.1.4...@ln-maf/validations@4.1.5) (2025-10-28)
 
 **Note:** Version bump only for package @ln-maf/validations

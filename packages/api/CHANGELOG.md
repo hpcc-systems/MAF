@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.2](https://github.com/hpcc-systems/MAF/compare/@ln-maf/api@4.2.1...@ln-maf/api@4.2.2) (2026-02-03)
+
+**Note:** Version bump only for package @ln-maf/api
+
+
+
+
+
 ## [4.2.1](https://github.com/hpcc-systems/MAF/compare/@ln-maf/api@4.2.0...@ln-maf/api@4.2.1) (2025-10-28)
 
 **Note:** Version bump only for package @ln-maf/api

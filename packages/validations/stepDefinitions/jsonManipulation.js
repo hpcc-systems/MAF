@@ -213,9 +213,9 @@ MAFWhen('JSON keys {string} are extracted from {jsonObject}', function (array, v
 
 MAFWhen('run json path {string} on {jsonObject}', function (jPath, jsonObject) {
     jPath = fillTemplate(jPath, this.results)
-    const jp = require('jsonpath')
+    const { JSONPath } = require('jsonpath-plus')
     const obj = performJSONObjectTransform.call(this, jsonObject)
-    return jp.query(obj, jPath)
+    return JSONPath({ path: jPath, json: obj })
 })
 
 /**
