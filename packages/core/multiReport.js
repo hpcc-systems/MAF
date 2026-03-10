@@ -15,6 +15,9 @@ if (platformMap[os.platform()]) {
     platformName = platformMap[os.platform()]
 }
 
+// Use REPORT_DIR env var if set, otherwise fall back to default
+const reportDir = process.env.REPORT_DIR || 'test/report'
+
 // Generate the report
 report.generate({
     displayDuration: true,
@@ -31,6 +34,6 @@ report.generate({
             { label: 'Report Generated:', value: `${new Date()}` }
         ]
     },
-    jsonDir: './test/report/',
-    reportPath: 'test/report/'
+    jsonDir: `${reportDir}/`,
+    reportPath: `${reportDir}/`
 })
