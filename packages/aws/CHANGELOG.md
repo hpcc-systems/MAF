@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.9](https://github.com/hpcc-systems/MAF/compare/@ln-maf/aws@4.1.7...@ln-maf/aws@4.1.9) (2026-03-10)
+
+
+### Features
+
+* **validations:** update JSON path handling to use jsonpath-plus ([eabf950](https://github.com/hpcc-systems/MAF/commit/eabf950c8abc93e13b2d398ad5e7c82c4c256ece))
+
+
+
+
+
 ## [4.1.8](https://github.com/hpcc-systems/MAF/compare/@ln-maf/aws@4.1.7...@ln-maf/aws@4.1.8) (2026-02-03)
 
 **Note:** Version bump only for package @ln-maf/aws

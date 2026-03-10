@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.3](https://github.com/hpcc-systems/MAF/compare/@ln-maf/api@4.2.1...@ln-maf/api@4.2.3) (2026-03-10)
+
+
+### Features
+
+* **validations:** update JSON path handling to use jsonpath-plus ([eabf950](https://github.com/hpcc-systems/MAF/commit/eabf950c8abc93e13b2d398ad5e7c82c4c256ece))
+
+
+
+
+
 ## [4.2.2](https://github.com/hpcc-systems/MAF/compare/@ln-maf/api@4.2.1...@ln-maf/api@4.2.2) (2026-02-03)
 
 **Note:** Version bump only for package @ln-maf/api
