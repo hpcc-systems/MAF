@@ -10,7 +10,7 @@ if (process.env.AWSENV && process.env.AWSENV.toUpperCase() === 'LOCALSTACK') {
     lambdaClientConfig.region = 'us-east-1'
     lambdaClientConfig.credentials = {
         accessKeyId: 'test',
-        secretAccessKey: 'test'
+        secretAccessKey: 'test' // pragma: allowlist secret
     }
 }
 const lambdaClient = new LambdaClient(lambdaClientConfig)
