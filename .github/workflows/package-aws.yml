@@ -34,7 +34,7 @@ jobs:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3.1.2
     - run: mkdir ~/.aws/
-    - run: npm ci
+    - run: npm install
     - name: Terraform - apply to localstack
       run: |
         cd packages/aws/terraform

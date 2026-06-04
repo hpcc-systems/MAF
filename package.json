@@ -38,7 +38,7 @@
     "eslint": "^9.31.0",
     "globals": "^16.3.0",
     "lerna": "^9.0.0",
-    "multiple-cucumber-html-reporter": "3.7.0",
-    "nyc": "^17.1.0"
+    "multiple-cucumber-html-reporter": "3.10.0",
+    "nyc": "^18.0.0"
   }
 }

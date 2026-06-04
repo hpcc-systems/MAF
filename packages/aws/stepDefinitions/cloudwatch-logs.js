@@ -12,7 +12,7 @@ if (process.env.AWSENV && process.env.AWSENV.toUpperCase() === 'LOCALSTACK') {
     cloudwatchLogsClientConfig.region = 'us-east-1'
     cloudwatchLogsClientConfig.credentials = {
         accessKeyId: 'test',
-        secretAccessKey: 'test'
+        secretAccessKey: 'test' // pragma: allowlist secret
     }
 }
 const cloudwatchLogsClient = new CloudWatchLogsClient(cloudwatchLogsClientConfig)
@@ -29,7 +29,7 @@ MAFWhen('parameter {string} value is retrieved from the parameter store', async 
         ssmClientConfig.region = 'us-east-1'
         ssmClientConfig.credentials = {
             accessKeyId: 'test',
-            secretAccessKey: 'test'
+            secretAccessKey: 'test' // pragma: allowlist secret
         }
     }
     const ssmClient = new SSMClient(ssmClientConfig)

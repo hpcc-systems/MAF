@@ -10,7 +10,7 @@ if (process.env.AWSENV && process.env.AWSENV.toUpperCase() === 'LOCALSTACK') {
     ecsClientConfig.region = 'us-east-1'
     ecsClientConfig.credentials = {
         accessKeyId: 'test',
-        secretAccessKey: 'test'
+        secretAccessKey: 'test' // pragma: allowlist secret
     }
 }
 const ecsClient = new ECSClient(ecsClientConfig)

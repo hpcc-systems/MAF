@@ -12,7 +12,8 @@ const {
 // Constants
 const TIMEOUT_MINUTES = 15
 const LOCALSTACK_PORT = 4566
-const BASE64_REGEX = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/
+// Requires padding (=) to avoid false positives on plain alphanumeric strings
+const BASE64_REGEX = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)$/
 
 // DynamoDB attribute types
 const DYNAMO_TYPES = {
@@ -42,7 +43,7 @@ if (process.env.AWSENV && process.env.AWSENV.toUpperCase() === 'LOCALSTACK') {
     DynamoDBClientConfig.region = 'us-east-1'
     DynamoDBClientConfig.credentials = {
         accessKeyId: 'test',
-        secretAccessKey: 'test'
+        secretAccessKey: 'test' // pragma: allowlist secret
     }
 }
 
@@ -185,7 +186,7 @@ function convertValueToDynamoType(value) {
 
     // Handle string values
     if (typeof value === 'string') {
-        // Check if it's base64 encoded
+        // Check if it's base64 encoded (requires padding to avoid false positives)
         if (BASE64_REGEX.test(value)) {
             return { [DYNAMO_TYPES.BINARY]: value }
         }
@@ -199,6 +200,28 @@ function convertValueToDynamoType(value) {
 
     // Default to string for other types
     return { [DYNAMO_TYPES.STRING]: String(value) }
+}
+
+/**
+ * Recursively converts DynamoDB Binary (B) attribute values from base64 strings
+ * to Buffers, as required by AWS SDK v3.
+ * @param {Object} item DynamoDB item with attribute type objects
+ * @returns {Object} Item with B values decoded to Buffer
+ */
+function decodeBinaryAttributes(item) {
+    if (!item || typeof item !== 'object') return item
+    if (Array.isArray(item)) return item.map(decodeBinaryAttributes)
+    const result = {}
+    for (const [key, value] of Object.entries(item)) {
+        if (value && typeof value === 'object' && typeof value[DYNAMO_TYPES.BINARY] === 'string') {
+            result[key] = { [DYNAMO_TYPES.BINARY]: Buffer.from(value[DYNAMO_TYPES.BINARY], 'base64') }
+        } else if (value && typeof value === 'object') {
+            result[key] = decodeBinaryAttributes(value)
+        } else {
+            result[key] = value
+        }
+    }
+    return result
 }
 
 MAFWhen('{jsonObject} is converted to dynamo', function (payload) {
@@ -477,7 +500,7 @@ async function putItem(activeArgs = {}, additionalArgs = {}) {
     }
 
     this.attach(JSON.stringify(queryParameters))
-    return await dbClient.send(new PutItemCommand(queryParameters))
+    return await dbClient.send(new PutItemCommand(decodeBinaryAttributes(queryParameters)))
 }
 
 /**

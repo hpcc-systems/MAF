@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "4.1.5",
+  "version": "4.1.6",
   "description": "The core for the MAF framework. Contains helpers to make it easier to use.",
   "main": "index.js",
   "scripts": {
@@ -32,7 +32,7 @@
     "url": "https://github.com/hpcc-systems/MAF/issues"
   },
   "dependencies": {
-    "multiple-cucumber-html-reporter": "3.9.3"
+    "multiple-cucumber-html-reporter": "3.10.0"
   },
   "devDependencies": {
     "@cucumber/cucumber": "^12.0.0",

@@ -19,7 +19,7 @@ if (process.env.AWSENV && process.env.AWSENV.toUpperCase() === 'LOCALSTACK') {
     S3ClientConfig.region = 'us-east-1'
     S3ClientConfig.credentials = {
         accessKeyId: 'test',
-        secretAccessKey: 'test'
+        secretAccessKey: 'test' // pragma: allowlist secret
     }
 }
 const s3Client = new S3Client(S3ClientConfig)
