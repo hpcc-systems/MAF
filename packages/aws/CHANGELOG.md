@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.9](https://github.com/hpcc-systems/MAF/compare/@ln-maf/aws@4.1.7...@ln-maf/aws@4.1.9) (2026-06-04)
+
+
+### Bug Fixes
+
+* add pragma allowlist for secret access keys in AWS configurations ([48e8046](https://github.com/hpcc-systems/MAF/commit/48e80467aead472300038083272d99c3478de1b6))
+
+
+### Features
+
+* enhance base64 handling and add binary attribute decoding ([24a4b75](https://github.com/hpcc-systems/MAF/commit/24a4b75f8727cc09848a7e4d6e88b7c225cc96d3))
+* **validations:** update JSON path handling to use jsonpath-plus ([eabf950](https://github.com/hpcc-systems/MAF/commit/eabf950c8abc93e13b2d398ad5e7c82c4c256ece))
+
+
+
+
+
 ## [4.1.8](https://github.com/hpcc-systems/MAF/compare/@ln-maf/aws@4.1.7...@ln-maf/aws@4.1.8) (2026-02-03)
 
 **Note:** Version bump only for package @ln-maf/aws
