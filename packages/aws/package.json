@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "4.1.10",
+  "version": "4.1.11",
   "description": "AWS steps for MAF. This contains S3, DynamoDB, SQS, ECS, Cloudwatch, and Lambda stepDefinitions",
   "main": "index.js",
   "scripts": {
@@ -32,6 +32,7 @@
     "@aws-sdk/client-s3": "^3.430.0",
     "@aws-sdk/client-sqs": "^3.430.0",
     "@aws-sdk/client-ssm": "^3.430.0",
+    "@smithy/node-http-handler": "^4.0.0",
     "chai": "^4.0.0",
     "luxon": "^3.0.0"
   },
@@ -41,8 +42,8 @@
   },
   "devDependencies": {
     "@cucumber/cucumber": "^12.0.0",
-    "@ln-maf/core": "^4.1.6",
-    "@ln-maf/validations": "^4.1.7",
+    "@ln-maf/core": "^4.1.7",
+    "@ln-maf/validations": "^4.1.8",
     "multiple-cucumber-html-reporter": "3.10.0",
     "nyc": "^17.0.0",
     "wait-on": "^7.2.0"
