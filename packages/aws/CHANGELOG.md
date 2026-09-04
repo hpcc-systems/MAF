@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.11](https://github.com/hpcc-systems/MAF/compare/@ln-maf/aws@4.1.10...@ln-maf/aws@4.1.11) (2026-09-04)
+
+
+### Features
+
+* add scenario for upload success after idle period and enhance S3 client configuration ([1404d67](https://github.com/hpcc-systems/MAF/commit/1404d67d36c374373820fdf46bdc6e87a56294ec))
+
+
+
+
+
 ## [4.1.9](https://github.com/hpcc-systems/MAF/compare/@ln-maf/aws@4.1.7...@ln-maf/aws@4.1.9) (2026-06-04)
 
 

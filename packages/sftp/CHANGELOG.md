@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.8](https://github.com/hpcc-systems/MAF/compare/@ln-maf/sftp@4.1.5...@ln-maf/sftp@4.1.8) (2026-09-04)
+
+
+### Features
+
+* **validations:** update JSON path handling to use jsonpath-plus ([eabf950](https://github.com/hpcc-systems/MAF/commit/eabf950c8abc93e13b2d398ad5e7c82c4c256ece))
+
+
+
+
+
 ## [4.1.7](https://github.com/hpcc-systems/MAF/compare/@ln-maf/sftp@4.1.5...@ln-maf/sftp@4.1.7) (2026-06-04)
 
 
