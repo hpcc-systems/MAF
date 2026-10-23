@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.9](https://github.com/hpcc-systems/MAF/compare/@ln-maf/validations@4.1.8...@ln-maf/validations@4.1.9) (2026-10-23)
+
+
+### Bug Fixes
+
+* patch vulnerable dependencies (nyc 18, overrides for axios, tar, js-yaml, etc.) ([2603060](https://github.com/hpcc-systems/MAF/commit/2603060a3d05633e6a077be57531c11a4a825152))
+
+
+
+
+
 ## [4.1.8](https://github.com/hpcc-systems/MAF/compare/@ln-maf/validations@4.1.5...@ln-maf/validations@4.1.8) (2026-09-04)
 
 
