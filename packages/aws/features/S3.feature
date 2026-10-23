@@ -259,3 +259,13 @@ Feature: AWS: S3 Testing
     And S3 file "db.sql.bz2" from bucket "test-bucket3" at path "backups/" is written to file "./test/downloaded-backup.sql.bz2"
     Then file "./test/downloaded-archive.tar.gz" is equal to "Archive content"
     And file "./test/downloaded-backup.sql.bz2" is equal to "Database backup"
+
+  Scenario: Upload Succeeds After Idle Period Between Requests
+    Given bucket "test-bucket4" exists on S3
+    And "First upload before idle period" is written to file "./test/idle-before.txt"
+    When file "./test/idle-before.txt" is uploaded to bucket "test-bucket4" as key "idle-test/before.txt"
+    Then file exists with name "before.txt" at path "idle-test/" in bucket "test-bucket4"
+    When wait 10000 milliseconds
+    And "Second upload after idle period" is written to file "./test/idle-after.txt"
+    And file "./test/idle-after.txt" is uploaded to bucket "test-bucket4" as key "idle-test/after.txt"
+    Then file exists with name "after.txt" at path "idle-test/" in bucket "test-bucket4"

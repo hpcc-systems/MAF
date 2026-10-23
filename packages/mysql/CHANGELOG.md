@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.11](https://github.com/hpcc-systems/MAF/compare/@ln-maf/mysql@4.1.10...@ln-maf/mysql@4.1.11) (2026-10-23)
+
+
+### Bug Fixes
+
+* patch vulnerable dependencies (nyc 18, overrides for axios, tar, js-yaml, etc.) ([2603060](https://github.com/hpcc-systems/MAF/commit/2603060a3d05633e6a077be57531c11a4a825152))
+
+
+
+
+
+## [4.1.10](https://github.com/hpcc-systems/MAF/compare/@ln-maf/mysql@4.1.7...@ln-maf/mysql@4.1.10) (2026-09-04)
+
+
+### Features
+
+* **validations:** update JSON path handling to use jsonpath-plus ([eabf950](https://github.com/hpcc-systems/MAF/commit/eabf950c8abc93e13b2d398ad5e7c82c4c256ece))
+
+
+
+
+
 ## [4.1.9](https://github.com/hpcc-systems/MAF/compare/@ln-maf/mysql@4.1.7...@ln-maf/mysql@4.1.9) (2026-06-04)
 
 

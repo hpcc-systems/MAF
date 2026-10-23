@@ -13,7 +13,8 @@
     },
     "version": {
       "conventionalCommits": true,
-      "message": "chore(release): version packages"
+      "message": "chore(release): version packages",
+      "granularPathspec": false
     },
     "bootstrap": {
       "ignore": "component-*",

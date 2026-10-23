@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.5](https://github.com/hpcc-systems/MAF/compare/@ln-maf/api@4.2.4...@ln-maf/api@4.2.5) (2026-10-23)
+
+
+### Bug Fixes
+
+* patch vulnerable dependencies (nyc 18, overrides for axios, tar, js-yaml, etc.) ([2603060](https://github.com/hpcc-systems/MAF/commit/2603060a3d05633e6a077be57531c11a4a825152))
+
+
+
+
+
+## [4.2.4](https://github.com/hpcc-systems/MAF/compare/@ln-maf/api@4.2.1...@ln-maf/api@4.2.4) (2026-09-04)
+
+
+### Features
+
+* **validations:** update JSON path handling to use jsonpath-plus ([eabf950](https://github.com/hpcc-systems/MAF/commit/eabf950c8abc93e13b2d398ad5e7c82c4c256ece))
+
+
+
+
+
 ## [4.2.3](https://github.com/hpcc-systems/MAF/compare/@ln-maf/api@4.2.1...@ln-maf/api@4.2.3) (2026-06-04)
 
 

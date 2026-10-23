@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.12](https://github.com/hpcc-systems/MAF/compare/@ln-maf/aws@4.1.11...@ln-maf/aws@4.1.12) (2026-10-23)
+
+
+### Bug Fixes
+
+* patch vulnerable dependencies (nyc 18, overrides for axios, tar, js-yaml, etc.) ([2603060](https://github.com/hpcc-systems/MAF/commit/2603060a3d05633e6a077be57531c11a4a825152))
+
+
+
+
+
+## [4.1.11](https://github.com/hpcc-systems/MAF/compare/@ln-maf/aws@4.1.10...@ln-maf/aws@4.1.11) (2026-09-04)
+
+
+### Features
+
+* add scenario for upload success after idle period and enhance S3 client configuration ([1404d67](https://github.com/hpcc-systems/MAF/commit/1404d67d36c374373820fdf46bdc6e87a56294ec))
+
+
+
+
+
 ## [4.1.9](https://github.com/hpcc-systems/MAF/compare/@ln-maf/aws@4.1.7...@ln-maf/aws@4.1.9) (2026-06-04)
 
 

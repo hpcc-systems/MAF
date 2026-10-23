@@ -1,5 +1,8 @@
 const { setDefaultTimeout } = require('@cucumber/cucumber')
 const fs = require('fs')
+const http = require('http')
+const https = require('https')
+const { NodeHttpHandler } = require('@smithy/node-http-handler')
 const { S3Client, ListBucketsCommand, ListObjectsV2Command, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3')
 const { getFilePath, MAFWhen, fillTemplate } = require('@ln-maf/core')
 
@@ -9,11 +12,23 @@ const LOCALSTACK_PORT = 4566
 const PATH_DELIMITER = '/'
 const MAX_FILE_SIZE = 100 * 1024 * 1024 // 100MB limit for memory operations
 const MAX_UPLOAD_SIZE = 4 * 1024 * 1024 * 1024 // 4GB limit for file uploads
+const BUFFER_UPLOAD_THRESHOLD = 25 * 1024 * 1024 // files at/below this size are buffered so the SDK's own retry can replay the body
+const MAX_UPLOAD_ATTEMPTS = 3
+const UPLOAD_RETRY_DELAY_MS = 250
 
 setDefaultTimeout(DEFAULT_TIMEOUT)
 
 // S3 Client Configuration
-const S3ClientConfig = { maxAttempts: 3, forcePathStyle: true }
+// keepAlive disabled: pooled sockets sitting idle between test steps get silently closed server-side and reused sockets then fail with ECONNRESET
+const agentOptions = { keepAlive: false }
+const S3ClientConfig = {
+    maxAttempts: 3,
+    forcePathStyle: true,
+    requestHandler: new NodeHttpHandler({
+        httpAgent: new http.Agent(agentOptions),
+        httpsAgent: new https.Agent(agentOptions)
+    })
+}
 if (process.env.AWSENV && process.env.AWSENV.toUpperCase() === 'LOCALSTACK') {
     S3ClientConfig.endpoint = process.env.LOCALSTACK_HOSTNAME ? `http://${process.env.LOCALSTACK_HOSTNAME}:${LOCALSTACK_PORT}` : `http://localhost:${LOCALSTACK_PORT}`
     S3ClientConfig.region = 'us-east-1'
@@ -159,14 +174,41 @@ async function uploadFileToS3(context, file, bucketName, key) {
     if (stats.size > MAX_UPLOAD_SIZE) {
         throw new Error(`File size (${stats.size} bytes) exceeds maximum allowed size of ${MAX_UPLOAD_SIZE} bytes`)
     }
-    
-    const Body = fs.createReadStream(filePath)
-    const queryParameters = {
-        Bucket: templates.bucketName.trim(),
-        Body,
-        Key: key
+
+    // Small files: a Buffer body can be replayed as-is, so the client's own maxAttempts retry handles transient errors
+    if (stats.size <= BUFFER_UPLOAD_THRESHOLD) {
+        const queryParameters = {
+            Bucket: templates.bucketName.trim(),
+            Body: fs.readFileSync(filePath),
+            Key: key
+        }
+        return await s3Client.send(new PutObjectCommand(queryParameters))
     }
-    return await s3Client.send(new PutObjectCommand(queryParameters))
+
+    // Large files: stream to avoid buffering the whole file, recreating the stream per attempt since a partially-read stream can't be replayed
+    let lastError
+    for (let attempt = 1; attempt <= MAX_UPLOAD_ATTEMPTS; attempt++) {
+        const Body = fs.createReadStream(filePath)
+        const queryParameters = {
+            Bucket: templates.bucketName.trim(),
+            Body,
+            Key: key
+        }
+
+        try {
+            return await s3Client.send(new PutObjectCommand(queryParameters))
+        } catch (error) {
+            lastError = error
+            if (error.code !== 'ECONNRESET' || attempt === MAX_UPLOAD_ATTEMPTS) {
+                throw error
+            }
+            await new Promise(resolve => setTimeout(resolve, UPLOAD_RETRY_DELAY_MS * attempt))
+        } finally {
+            Body.destroy()
+        }
+    }
+
+    throw lastError
 }
 
 /**
