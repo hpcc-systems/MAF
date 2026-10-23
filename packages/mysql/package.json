@@ -38,7 +38,7 @@
     "@ln-maf/validations": "^4.1.8",
     "concurrently": "^8.2.2",
     "multiple-cucumber-html-reporter": "3.10.0",
-    "nyc": "^17.0.0",
+    "nyc": "^18.0.0",
     "wait-on": "^7.2.0"
   },
   "repository": {

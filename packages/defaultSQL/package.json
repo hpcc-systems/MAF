@@ -31,7 +31,7 @@
     "@ln-maf/core": "^4.1.7",
     "@ln-maf/validations": "^4.1.8",
     "multiple-cucumber-html-reporter": "^3.10.0",
-    "nyc": "^17.0.0"
+    "nyc": "^18.0.0"
   },
   "repository": {
     "type": "git",
