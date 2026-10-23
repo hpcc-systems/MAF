@@ -1,7 +1,7 @@
 services:
   localstack-aws:
     container_name: maf-localstack-aws-${MAF_AWS_INSTANCE:-default}
-    image: localstack/localstack:4.6.0
+    image: localstack/localstack:3.8.1
     ports:
       - "${LOCALSTACK_PORT:-4566}:4566"
       - "${LOCALSTACK_EDGE_PORT:-4510}:4510"
