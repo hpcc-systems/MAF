@@ -24,9 +24,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4.2.2
-    - uses: LocalStack/setup-localstack@v0.2.3
-      with:
-        image-tag: '3.8.1'
+    - name: Start LocalStack
+      run: |
+        docker run -d --name localstack -p 4566:4566 localstack/localstack:3.8.1
+        for i in $(seq 1 30); do
+          curl -sf http://localhost:4566/_localstack/health && break
+          sleep 2
+        done
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4.4.0
       with:
