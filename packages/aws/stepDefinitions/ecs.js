@@ -156,7 +156,10 @@ async function ecsRunTask(activeArgs, additionalArgs) {
     if (additionalArgs) {
         queryParameters = { ...queryParameters, ...additionalArgs }
     }
-    this.attach(JSON.stringify(queryParameters))
+    this.attach(JSON.stringify(queryParameters, null, 2), {
+        mediaType: 'application/json',
+        fileName: 'ECS run-task parameters'
+    })
     return await ecsClient.send(new RunTaskCommand(queryParameters))
 }
 

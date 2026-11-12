@@ -3,12 +3,12 @@
 This project will preprocess feature files to allow more input variables to be supplied.  This can be supplied through javascript, a csv/psv/json array file or a mixture of these.  This will hopefully allow it to be easier to maintain larger test sets.  This requires typescript to install some of the cucumber modules. And to currently run it, you must do `node exec.js` an example command for running a specific feature with this would be:
 
 ```
-mkdir -p test/report
+mkdir -p reports
 npx preprocessor
-npx cucumber-js -f json:test/report/cucumber_report.json --require "features/**/*.js" tmp/features/$*; 
+npx cucumber-js -f @ln-maf/core/jsonFormatter.js:reports/cucumber_report.json --require "features/**/*.js" tmp/features/$*;
 val=$?
 node multiReport.js; 
-openPy $PWD/test/report/undefined/index.html
+openPy $PWD/reports/undefined/index.html
 exit $val
 ```
 

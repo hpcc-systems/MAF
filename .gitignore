@@ -9,6 +9,7 @@ package-lock.json
 coverage/
 .nyc_output/
 test/report/
+/reports/
 /packages/*/report/
 
 # Build outputs

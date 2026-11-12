@@ -34,7 +34,7 @@ When('blob item {string} is attached', async function (blob) {
     blob = fillTemplate(blob, this.results)
     blob = this.results[blob]
     const b = Buffer.from(await blob.arrayBuffer())
-    return this.attach(b, 'image/png')
+    return this.attach(b, { mediaType: 'image/png', fileName: 'Blob image' })
 })
 
 const { Then } = require('@cucumber/cucumber')

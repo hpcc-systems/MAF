@@ -1,4 +1,4 @@
-const { MAFWhen, MAFSave, performJSONObjectTransform, fillTemplate, canAttach } = require('@ln-maf/core')
+const { MAFWhen, MAFSave, performJSONObjectTransform, fillTemplate, canAttach, tryAttach } = require('@ln-maf/core')
 const { setDefaultTimeout, Then } = require('@cucumber/cucumber')
 
 const fs = require('fs')
@@ -162,6 +162,8 @@ async function performRequest(request, additionalParams = {}) {
         ...additionalParams
     }
 
+    const requestDetails = { absoluteUrl, ...parameters }
+    tryAttach.call(this, requestDetails, { fileName: `Request (${request.method})` })
     let response = await fetch(absoluteUrl, parameters)
     const curlCommand = fetchToCurl(absoluteUrl, parameters)
 
@@ -182,12 +184,6 @@ async function performRequest(request, additionalParams = {}) {
         if (contentType.includes('image')) {
             // Process all images regardless of size
             processedResponse = await response.blob()
-            try {
-                if (canAttach.call(this)) {
-                    const tmpBlob = Buffer.from(await processedResponse.arrayBuffer())
-                    this.attach(tmpBlob, 'image/png')
-                }
-            } catch { /* empty */ }
             
             // Add size information for large images
             if (isLargeResponse) {
@@ -236,38 +232,49 @@ async function performRequest(request, additionalParams = {}) {
         }
     }
     const results = {
-        request: {
-            absoluteUrl,
-            ...parameters
-        },
+        request: requestDetails,
         curlCommand,
         ok: response.ok,
         status: response.status,
         response: processedResponse,
         headers
     }
+    if (processedResponse instanceof Blob) {
+        if (canAttach.call(this)) {
+            const mediaType = processedResponse.type.split(';')[0] || 'application/octet-stream'
+            const name = mediaType.startsWith('image/') ? 'Response image' : 'Response body'
+            tryAttach.call(this, Buffer.from(await processedResponse.arrayBuffer()), {
+                mediaType,
+                fileName: `${name} (HTTP ${response.status})`
+            })
+        }
+    } else {
+        tryAttach.call(this, processedResponse, { fileName: `Response body (HTTP ${response.status})` })
+    }
+    tryAttach.call(this, headers, { fileName: 'Response headers' })
+    tryAttach.call(this, curlCommand, { fileName: 'cURL command' })
     return results
 }
 
 MAFWhen('api request from {jsonObject} is performed', async function (request) {
     request = performJSONObjectTransform.call(this, request)
     const results = await requestBuilder.call(this, request)
-    MAFSave.call(this, 'response', results.response)
+    MAFSave.call(this, 'response', results.response, { attach: false })
     return results
-})
+}, { attachResult: false })
 
 MAFWhen('api request is performed', async function () {
     const results = await requestBuilder.call(this, {})
-    MAFSave.call(this, 'response', results.response)
+    MAFSave.call(this, 'response', results.response, { attach: false })
     return results
-})
+}, { attachResult: false })
 
 MAFWhen('perform api request:', async function (string) {
     const request = JSON.parse(fillTemplate(string, this.results))
     const results = await requestBuilder.call(this, request)
-    MAFSave.call(this, 'response', results.response)
+    MAFSave.call(this, 'response', results.response, { attach: false })
     return results
-})
+}, { attachResult: false })
 
 Then('the status is ok', function () {
     assert(this.results.lastRun.ok, `The status ${this.results.lastRun.status} was not in the range of valid http response codes 200-299`)

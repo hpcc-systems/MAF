@@ -1,0 +1,278 @@
+.maf-report {
+    font-size: 14px;
+}
+
+.maf-report header {
+    padding-block: 12px;
+}
+
+.maf-report header h1 {
+    font-size: 20px;
+}
+
+.maf-report main {
+    padding: 18px 24px;
+}
+
+.maf-report main > div > .space-y-6 > :not(:last-child) {
+    margin-bottom: 14px;
+}
+
+.maf-report-actions {
+    display: flex;
+    justify-content: flex-end;
+    font-size: 12px;
+    color: var(--muted-foreground);
+}
+
+.maf-originals {
+    position: relative;
+}
+
+.maf-originals summary,
+.maf-analytics > summary,
+.maf-run-info > summary {
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.maf-original-links {
+    position: absolute;
+    top: 26px;
+    right: 0;
+    z-index: 45;
+    display: grid;
+    min-width: 190px;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--background);
+    box-shadow: 0 8px 24px #0003;
+}
+
+.maf-original-links a {
+    padding: 6px;
+    color: var(--foreground);
+}
+
+.maf-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.maf-metric {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px 20px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--card);
+}
+
+.maf-metric-label {
+    color: var(--muted-foreground);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.maf-metric strong {
+    font-size: 30px;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+}
+
+.maf-metric-passed strong {
+    color: var(--status-passed);
+}
+
+.maf-metric-failed strong {
+    color: var(--status-failed);
+}
+
+.maf-analytics,
+.maf-run-info {
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--card);
+}
+
+.maf-analytics > div,
+.maf-run-info > div {
+    margin-top: 16px;
+}
+
+.maf-feature-header > div {
+    padding: 16px;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.maf-feature-header > div > div {
+    min-width: 0;
+}
+
+.maf-feature-header > div > .grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-left: 0;
+    width: auto;
+}
+
+.maf-feature-header > div > .grid > div {
+    min-width: 68px;
+    padding: 8px 12px;
+}
+
+.maf-report #features-table-container td {
+    padding-block: 10px;
+}
+
+.maf-report #features-table-container td,
+.maf-report #features-table-container th {
+    padding-inline: 16px;
+}
+
+.maf-report .maf-scenario-toolbar,
+.maf-report .maf-scenario-toolbar > div {
+    flex-wrap: wrap;
+    gap: 10px;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.maf-report .maf-status-filters {
+    flex-wrap: wrap;
+    max-width: 100%;
+}
+
+.maf-report .maf-status-filters button {
+    padding-inline: 9px;
+    white-space: nowrap;
+}
+
+.maf-report .scenario-card > button {
+    padding: 12px 16px;
+}
+
+.maf-report .scenario-card > .border-t > div {
+    padding: 10px 16px;
+}
+
+.maf-report .scenario-card .w-full {
+    min-width: 0;
+}
+
+.maf-report .scenario-card p {
+    overflow-wrap: anywhere;
+}
+
+.maf-report .maf-attachments {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 10px;
+    padding: 0;
+    margin-top: 7px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+}
+
+.maf-attachments > p {
+    margin: 0;
+    font-size: 9px;
+    opacity: 0.7;
+}
+
+.maf-attachment-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    min-width: 0;
+    margin: 0;
+}
+
+.maf-report .maf-attachment-chips .modal-trigger {
+    display: inline-flex;
+    gap: 10px;
+    min-height: 30px;
+    max-width: 100%;
+    padding: 5px 9px;
+    border-radius: 6px;
+    background: var(--background);
+}
+
+.maf-attachment-chips .modal-trigger > div {
+    min-width: 0;
+}
+
+.maf-attachment-chips .modal-trigger span {
+    overflow-wrap: anywhere;
+}
+
+.maf-attachment-chips .modal-trigger:focus-visible,
+.maf-download:focus-visible,
+.maf-report summary:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
+}
+
+.maf-api-summary {
+    margin-top: 4px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px;
+    color: var(--muted-foreground);
+}
+
+.maf-report #media-modal {
+    max-width: calc(100vw - 64px) !important;
+    max-height: calc(100vh - 32px) !important;
+}
+
+.maf-report #modal-content {
+    padding: 12px;
+    min-height: 0;
+}
+
+.maf-report #modal-content .font-mono {
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.maf-report #modal-title {
+    font-size: 16px;
+}
+
+.maf-download {
+    margin-left: 8px;
+    padding: 5px 10px;
+    border: 1px solid #64748b;
+    border-radius: 5px;
+    color: #e2e8f0;
+    font-size: 12px;
+}
+
+@media (max-width: 700px) {
+    .maf-report main {
+        padding: 12px;
+    }
+
+    .maf-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .maf-report #media-modal {
+        right: 2vw !important;
+        left: 2vw !important;
+        width: 96vw !important;
+        max-width: 96vw !important;
+        min-width: 0 !important;
+    }
+}

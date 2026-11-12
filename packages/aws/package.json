@@ -9,10 +9,10 @@
   "scripts": {
     "test": "npm run localstack:start && npm run test:run && npm run localstack:stop",
     "test:coverage": "npm run localstack:start && npm run test:run:coverage && npm run localstack:stop",
-    "test:run": "wait-on tcp:localhost:${LOCALSTACK_PORT:-4566} && mkdir -p ../../test/report && npm run terraform:apply && npm run cucumber:exec && npm run test:finalize",
-    "test:run:coverage": "wait-on tcp:localhost:${LOCALSTACK_PORT:-4566} && mkdir -p ../../test/report && npm run terraform:apply && npm run cucumber:exec:coverage && npm run test:finalize",
-    "cucumber:exec": "AWSENV=LOCALSTACK npx cucumber-js -f json:../../test/report/aws.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE",
-    "cucumber:exec:coverage": "AWSENV=LOCALSTACK npx nyc --reporter=lcov --reporter=text --report-dir=../../coverage npx cucumber-js -f json:../../test/report/aws.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE",
+    "test:run": "wait-on tcp:localhost:${LOCALSTACK_PORT:-4566} && mkdir -p ../../reports && npm run terraform:apply && npm run cucumber:exec && npm run test:finalize",
+    "test:run:coverage": "wait-on tcp:localhost:${LOCALSTACK_PORT:-4566} && mkdir -p ../../reports && npm run terraform:apply && npm run cucumber:exec:coverage && npm run test:finalize",
+    "cucumber:exec": "AWSENV=LOCALSTACK npx cucumber-js -f @ln-maf/core/jsonFormatter.js:../../reports/aws.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE",
+    "cucumber:exec:coverage": "AWSENV=LOCALSTACK npx nyc --reporter=lcov --reporter=text --report-dir=../../coverage npx cucumber-js -f @ln-maf/core/jsonFormatter.js:../../reports/aws.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE",
     "test:finalize": "echo 'AWS tests completed'",
     "localstack:start": "export MAF_AWS_INSTANCE=${MAF_AWS_INSTANCE:-$(date +%s)} && export LOCALSTACK_PORT=${LOCALSTACK_PORT:-4566} && docker-compose up -d",
     "localstack:stop": "docker-compose down",
@@ -44,7 +44,7 @@
     "@cucumber/cucumber": "^12.0.0",
     "@ln-maf/core": "^4.1.8",
     "@ln-maf/validations": "^4.1.9",
-    "multiple-cucumber-html-reporter": "3.10.0",
+    "multiple-cucumber-html-reporter": "^4.6.0",
     "nyc": "^18.0.0",
     "wait-on": "^7.2.0"
   },

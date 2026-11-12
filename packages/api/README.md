@@ -7,7 +7,7 @@ This module is created to allow other projects to easily perform API requests, u
 
 ## Requirements
 
-- **Node.js 18.0.0 or higher** (for native `fetch`, `Blob`, and `FormData` support)
+- **Node.js 22.0.0 or higher**, matching MAF core and its bundled HTML reporter.
 
 ## Dependencies
 
@@ -34,6 +34,21 @@ require('@ln-maf/api')
 - urlEncodedBody: The url encoded body to use for the api request. It will be appended to the url
 - headers: The headers to use for the api request. Should be a JSON object. Note that default headers are automatically added by the native `fetch` API (such as `accept-encoding`, `accept-language`, etc.).
 - method: The method to use for the api request. Should be a string. ex: 'GET', 'POST', 'PUT', 'DELETE'
+
+## Request Evidence in Reports
+
+Use the [MAF JSON formatter](../core/README.md#html-reports) and `npx multiReport` for named evidence:
+
+- `Request (<method>)`
+- `Response body (HTTP <status>)`, or an image attachment for image responses
+- `Response headers`
+- `cURL command`
+
+Each response body is attached once, rather than both as a saved response and inside the full step result. `${response}`, `${lastRun}`, and `it` retain their existing values, including the complete request/response result.
+
+Blob attachments retain their bytes and content type, including responses retrieved with `apiRetrieveType` set to `blob`.
+
+Setting item `attach` to `"false"` disables automatic API evidence. Explicit blob-attachment steps still work. Failed network requests retain their request attachment and propagate the original error.
 
 ## Step Definitions
 
