@@ -296,7 +296,10 @@ async function dynamoQuery(activeArgs = {}, additionalArgs = {}) {
 
         // Log parameters on first iteration only
         if (!lastEvaluatedKey) {
-            this.attach(JSON.stringify(queryParameters))
+            this.attach(JSON.stringify(queryParameters, null, 2), {
+                mediaType: 'application/json',
+                fileName: 'DynamoDB query parameters'
+            })
         }
 
         const queryResults = await dbClient.send(new QueryCommand(queryParameters))
@@ -499,7 +502,10 @@ async function putItem(activeArgs = {}, additionalArgs = {}) {
         Object.assign(queryParameters, additionalArgs)
     }
 
-    this.attach(JSON.stringify(queryParameters))
+    this.attach(JSON.stringify(queryParameters, null, 2), {
+        mediaType: 'application/json',
+        fileName: 'DynamoDB put-item parameters'
+    })
     return await dbClient.send(new PutItemCommand(decodeBinaryAttributes(queryParameters)))
 }
 
@@ -617,7 +623,10 @@ async function updateItem(activeArgs = {}, additionalArgs = {}) {
         Object.assign(queryParameters, additionalArgs)
     }
 
-    this.attach(JSON.stringify(queryParameters))
+    this.attach(JSON.stringify(queryParameters, null, 2), {
+        mediaType: 'application/json',
+        fileName: 'DynamoDB update-item parameters'
+    })
     return await dbClient.send(new UpdateItemCommand(queryParameters))
 }
 
@@ -730,7 +739,10 @@ async function deleteItem(activeArgs = {}, additionalArgs = {}) {
         Object.assign(queryParameters, additionalArgs)
     }
 
-    this.attach(JSON.stringify(queryParameters))
+    this.attach(JSON.stringify(queryParameters, null, 2), {
+        mediaType: 'application/json',
+        fileName: 'DynamoDB delete-item parameters'
+    })
     return await dbClient.send(new DeleteItemCommand(queryParameters))
 }
 

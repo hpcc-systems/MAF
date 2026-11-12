@@ -73,7 +73,7 @@ An expandable, fast, and easy-to-use automation framework built with the Cucumbe
    ```json
    {
      "scripts": {
-       "test": "npx cucumber-js -f json:test/report/report.json $EXTRAS"
+       "test": "npx cucumber-js -f @ln-maf/core/jsonFormatter.js:test/report/report.json $EXTRAS"
      }
    }
    ```
@@ -85,6 +85,10 @@ An expandable, fast, and easy-to-use automation framework built with the Cucumbe
    ```
 
 Now you can run `npm test` to execute tests and `npx multiReport` to generate an HTML report.
+
+The MAF JSON formatter preserves attachment names that Cucumber's built-in JSON formatter omits. It produces compatible Cucumber JSON. Existing projects should replace `-f json:...` with `-f @ln-maf/core/jsonFormatter.js:...` to get named attachments after updating MAF and rerunning their tests.
+
+The report includes a compact results overview, collapsible charts, and movable/resizable attachment viewers. API requests, response bodies, headers, and cURL commands are reported separately without duplicating the response body. Share the entire `test/report/` directory, including its assets and JSON files, rather than only `index.html`.
 
 ## Important Concepts
 

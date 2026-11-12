@@ -5,7 +5,7 @@ This project will preprocess feature files to allow more input variables to be s
 ```
 mkdir -p test/report
 npx preprocessor
-npx cucumber-js -f json:test/report/cucumber_report.json --require "features/**/*.js" tmp/features/$*; 
+npx cucumber-js -f @ln-maf/core/jsonFormatter.js:test/report/cucumber_report.json --require "features/**/*.js" tmp/features/$*;
 val=$?
 node multiReport.js; 
 openPy $PWD/test/report/undefined/index.html

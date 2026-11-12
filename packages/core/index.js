@@ -7,15 +7,26 @@ const { When } = Cucumber
 /**
  * Tries to attach content to the current scenario if attachment is enabled.
  * @param {*} attach - The content to attach (object or string)
- * @param {string} [type='text'] - The MIME type of the attachment
+ * @param {string|{mediaType?: string, fileName?: string}} [type] - MIME type or Cucumber attachment options
  */
-const tryAttach = function (attach, type = 'text') {
+const tryAttach = function (attach, type) {
     if (canAttach.call(this)) {
-        if (typeof attach === 'object') {
-            this.attach(JSON.stringify(attach, null, 2))
-        } else {
-            this.attach(attach, type)
+        const options = typeof type === 'string' ? { mediaType: type } : type || {}
+        const binary = Buffer.isBuffer(attach)
+        const structured = !binary && typeof attach !== 'string' && attach !== undefined
+        const data = binary || typeof attach === 'string'
+            ? attach
+            : attach === undefined ? 'undefined' : JSON.stringify(attach, null, 2)
+        if (typeof data !== 'string' && !Buffer.isBuffer(data)) {
+            throw new TypeError('Attachment content must serialize to a string or Buffer')
         }
+        const mediaType = options.mediaType === 'text' ? 'text/plain'
+            : options.mediaType || (binary ? 'application/octet-stream' : structured ? 'application/json' : 'text/plain')
+        return this.attach(data, {
+            ...options,
+            mediaType,
+            fileName: options.fileName || (binary ? 'Binary attachment' : structured ? 'Step data' : 'Text log')
+        })
     }
 }
 
@@ -120,8 +131,9 @@ function getItemValue(item, itemsList) {
  *
  * @param {string} item - The name of the item to be saved.
  * @param {any} itemValue - The value of the item to be saved.
+ * @param {{attach?: boolean}} [options] - Set attach to false when the value is already reported.
  */
-function MAFSave(item, itemValue) {
+function MAFSave(item, itemValue, { attach = true } = {}) {
     if (item.includes('__proto__') || item.includes('constructor') || item.includes('prototype')) {
         throw new Error('Invalid item key')
     }
@@ -230,7 +242,9 @@ function MAFSave(item, itemValue) {
         }
     }
 
-    tryAttach.call(this, { [resultKey]: this.results[resultKey] })
+    if (attach) {
+        tryAttach.call(this, itemValue, { fileName: `Value: ${resultKey}` })
+    }
 }
 
 /**
@@ -368,8 +382,9 @@ const readFile = (filename, scenario, dataType = 'utf-8') => {
  * Creates a Cucumber When step with automatic result saving and attachment.
  * @param {string} name - The step definition pattern
  * @param {Function} func - The step implementation function
+ * @param {{attachResult?: boolean}} [options] - Set attachResult to false for steps with their own attachments
  */
-function MAFWhen(name, func) {
+function MAFWhen(name, func, { attachResult = true } = {}) {
     // Create a wrapper function that handles any number of parameters
     // We'll create a generic wrapper that uses ...args but preserve the original function's length
     const wrapperFunction = async function (...args) {
@@ -377,8 +392,8 @@ function MAFWhen(name, func) {
             this.results = {}
         }
         this.results.lastRun = await func.call(this, ...args)
-        if (canAttach.call(this)) {
-            this.attach(JSON.stringify({ lastRun: this.results.lastRun }, null, 2))
+        if (attachResult && this.results.lastRun !== undefined) {
+            tryAttach.call(this, this.results.lastRun, { fileName: 'Step result' })
         }
     }
 

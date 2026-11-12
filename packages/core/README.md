@@ -21,6 +21,35 @@ const result = fillTemplate("Hello ${name}!", { name: "World" })
 console.log(result) // "Hello World!"
 ```
 
+## HTML Reports
+
+On Node.js 22 or later, generate an HTML report from Cucumber JSON files in `test/report/`:
+
+```bash
+npx multiReport
+```
+
+The report is written to `test/report/index.html`. The CLI loads the ESM-only reporter asynchronously and exits with a non-zero status if report generation fails.
+
+Reports include:
+
+- A compact feature/scenario summary, with charts and run metadata available in expandable sections.
+- Named attachments with formatted JSON, copy/download controls, and step context.
+- Movable, resizable attachment popups and compact evidence rows.
+- Image/video files under `test/report/assets/media/` instead of large inline media payloads.
+- Downloads of the original Cucumber JSON files, which are not rewritten.
+
+Use the MAF JSON formatter to preserve attachment names:
+
+```bash
+npx cucumber-js -f @ln-maf/core/jsonFormatter.js:test/report/report.json
+npx multiReport
+```
+
+It extends Cucumber's JSON formatter with an optional attachment `name` field. Existing JSON reports remain supported; legacy API response/result wrappers are simplified only for display. Update custom Cucumber configurations from `-f json:...` to the command above and rerun tests to capture new attachment names.
+
+The layout assets and formatter ship in `@ln-maf/core`; no modifications to the third-party reporter are required. Downstream projects should update both core and API packages for the new API evidence format. Share the entire report directory, not just `index.html`, so scripts, media, and source JSON downloads remain available.
+
 ## API Reference
 
 ### performJSONObjectTransform
@@ -70,6 +99,9 @@ Then it is equal to 8
 
 - `pattern` - Cucumber step pattern (string or regex)
 - `implementation` - Function that implements the step logic
+- `options` - Optional `{ attachResult: false }` for steps that emit their own evidence. The result is still stored as `lastRun`/`it`.
+
+Defined results are attached once as `Step result`, without an extra `lastRun` wrapper. Steps returning `undefined` do not create an empty result attachment.
 
 ### MAFSave
 
@@ -90,6 +122,23 @@ MAFSave.call(this, "config", { timeout: 5000, retries: 3 })
 
 - `key` - String key to store the value under
 - `value` - Any JavaScript value to store
+- `options` - Optional `{ attach: false }` to save a value without attaching it again.
+
+By default, the value is attached as `Value: <key>`, without an extra object wrapper. This does not change how saved items are referenced.
+
+### tryAttach
+
+Attaches evidence when automatic attachments are enabled. Objects, arrays, numbers, booleans, and `null` use `application/json`; strings use `text/plain`. Buffers retain their bytes and accept an explicit MIME type.
+
+```javascript
+const { tryAttach } = require('@ln-maf/core')
+
+tryAttach.call(this, payload, { fileName: 'Request payload' })
+tryAttach.call(this, logText, { mediaType: 'text/plain', fileName: 'Command output' })
+tryAttach.call(this, screenshotBuffer, { mediaType: 'image/png', fileName: 'Screenshot' })
+```
+
+The existing string MIME argument is still supported. Set item `attach` to `"false"` to disable automatic evidence. Explicit attachment steps, such as attaching a blob, continue to attach when requested.
 
 ### readFile
 

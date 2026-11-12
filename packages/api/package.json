@@ -8,12 +8,13 @@
   "main": "index.js",
   "scripts": {
     "start:test-server": "node ./test/testApiServer.js",
-    "test": "concurrently -k -s first -n server,test \"npm run start:test-server\" \"npm run test:run\"",
-    "test:coverage": "concurrently -k -s first -n server,test \"npm run start:test-server\" \"npm run test:run:coverage\"",
+    "test": "npm run test:unit && concurrently -k -s first -n server,test \"npm run start:test-server\" \"npm run test:run\"",
+    "test:coverage": "npm run test:unit && concurrently -k -s first -n server,test \"npm run start:test-server\" \"npm run test:run:coverage\"",
+    "test:unit": "node --test tests/*.test.js",
     "test:run": "wait-on tcp:3001 && mkdir -p ../../test/report && npm run cucumber:exec && npm run test:finalize",
     "test:run:coverage": "wait-on tcp:3001 && mkdir -p ../../test/report && npm run cucumber:exec:coverage && npm run test:finalize",
-    "cucumber:exec": "npx cucumber-js -f json:../../test/report/api.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE",
-    "cucumber:exec:coverage": "npx nyc --reporter=lcov --reporter=text --report-dir=../../coverage npx cucumber-js -f json:../../test/report/api.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE",
+    "cucumber:exec": "npx cucumber-js -f @ln-maf/core/jsonFormatter.js:../../test/report/api.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE",
+    "cucumber:exec:coverage": "npx nyc --reporter=lcov --reporter=text --report-dir=../../coverage npx cucumber-js -f @ln-maf/core/jsonFormatter.js:../../test/report/api.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE",
     "test:finalize": "echo 'API tests completed'"
   },
   "license": "Apache-2.0",
@@ -29,7 +30,7 @@
     "@ln-maf/core": "^4.1.8",
     "@ln-maf/validations": "^4.1.9",
     "concurrently": "^8.0.0",
-    "multiple-cucumber-html-reporter": "3.10.0",
+    "multiple-cucumber-html-reporter": "^4.6.0",
     "nyc": "^18.0.0",
     "wait-on": "^7.0.1"
   },

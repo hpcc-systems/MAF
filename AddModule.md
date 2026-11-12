@@ -42,8 +42,8 @@ packages/your-module/
      "description": "Description of your MAF module",
      "main": "index.js",
      "scripts": {
-       "test": "mkdir -p ../../test/report && npx cucumber-js -f json:../../test/report/your-module.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE",
-       "test:coverage": "mkdir -p ../../test/report && npx nyc --reporter=lcov --reporter=text --report-dir=../../coverage npx cucumber-js -f json:../../test/report/your-module.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE"
+       "test": "mkdir -p ../../test/report && npx cucumber-js -f @ln-maf/core/jsonFormatter.js:../../test/report/your-module.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE",
+       "test:coverage": "mkdir -p ../../test/report && npx nyc --reporter=lcov --reporter=text --report-dir=../../coverage npx cucumber-js -f @ln-maf/core/jsonFormatter.js:../../test/report/your-module.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE"
      },
      "license": "Apache-2.0",
      "dependencies": {
@@ -57,7 +57,7 @@ packages/your-module/
        "@cucumber/cucumber": "^12.0.0",
        "@ln-maf/core": "file:../core",
        "@ln-maf/validations": "file:../validations",
-       "multiple-cucumber-html-reporter": "3.7.0",
+       "multiple-cucumber-html-reporter": "^4.6.0",
        "nyc": "^17.0.0"
      },
      "repository": {
