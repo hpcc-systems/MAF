@@ -4,12 +4,12 @@ stages:
 test:
   stage: test
   script: 
-    - mkdir -p test/report
+    - mkdir -p reports
     - npm ci
     - bash runIt.sh
   tags:
     - docker
   artifacts:
     paths:
-      - test/report/undefined/cucumber_report.html 
+      - reports/undefined/cucumber_report.html
     when: always

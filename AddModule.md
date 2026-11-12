@@ -18,7 +18,7 @@ packages/your-module/
 ├── features/            # Feature files for testing your module
 │   └── *.feature
 └── test/               # Test utilities and setup
-    └── report/         # Generated test reports
+    └── reports/        # Generated test reports
 ```
 
 ## Step 1: Create Package Structure
@@ -42,8 +42,8 @@ packages/your-module/
      "description": "Description of your MAF module",
      "main": "index.js",
      "scripts": {
-       "test": "mkdir -p ../../test/report && npx cucumber-js -f @ln-maf/core/jsonFormatter.js:../../test/report/your-module.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE",
-       "test:coverage": "mkdir -p ../../test/report && npx nyc --reporter=lcov --reporter=text --report-dir=../../coverage npx cucumber-js -f @ln-maf/core/jsonFormatter.js:../../test/report/your-module.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE"
+       "test": "mkdir -p ../../reports && npx cucumber-js -f @ln-maf/core/jsonFormatter.js:../../reports/your-module.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE",
+       "test:coverage": "mkdir -p ../../reports && npx nyc --reporter=lcov --reporter=text --report-dir=../../coverage npx cucumber-js -f @ln-maf/core/jsonFormatter.js:../../reports/your-module.json --require \"stepDefinitions/*.js\" features/$FEATURE_FILE"
      },
      "license": "Apache-2.0",
      "dependencies": {

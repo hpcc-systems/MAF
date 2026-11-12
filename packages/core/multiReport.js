@@ -18,7 +18,7 @@ if (platformMap[os.platform()]) {
 
 async function generateReport() {
     const { generate } = await import('multiple-cucumber-html-reporter')
-    const reportPath = path.resolve('test/report')
+    const reportPath = path.resolve('reports')
     const customScript = path.join(__dirname, 'report-assets', 'maf-report.js')
 
     await generate({

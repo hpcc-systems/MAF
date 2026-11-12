@@ -8,7 +8,7 @@ const { test } = require('node:test')
 function runReport(t, json) {
     const directory = mkdtempSync(path.join(os.tmpdir(), 'maf-report-'))
     t.after(() => rmSync(directory, { recursive: true, force: true }))
-    const reportDirectory = path.join(directory, 'test', 'report')
+    const reportDirectory = path.join(directory, 'reports')
     mkdirSync(reportDirectory, { recursive: true })
     writeFileSync(path.join(reportDirectory, 'cucumber.json'), json)
 

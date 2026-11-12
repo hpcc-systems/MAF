@@ -23,26 +23,27 @@ console.log(result) // "Hello World!"
 
 ## HTML Reports
 
-On Node.js 22 or later, generate an HTML report from Cucumber JSON files in `test/report/`:
+On Node.js 22 or later, generate an HTML report from Cucumber JSON files in the repository-root `reports/` directory:
 
 ```bash
 npx multiReport
 ```
 
-The report is written to `test/report/index.html`. The CLI loads the ESM-only reporter asynchronously and exits with a non-zero status if report generation fails.
+The report is written to `reports/index.html`. The CLI loads the ESM-only reporter asynchronously and exits with a non-zero status if report generation fails.
 
 Reports include:
 
 - A compact feature/scenario summary, with charts and run metadata available in expandable sections.
 - Named attachments with formatted JSON, copy/download controls, and step context.
 - Movable, resizable attachment popups and compact evidence rows.
-- Image/video files under `test/report/assets/media/` instead of large inline media payloads.
+- Image/video files under `reports/assets/media/` instead of large inline media payloads.
 - Downloads of the original Cucumber JSON files, which are not rewritten.
 
 Use the MAF JSON formatter to preserve attachment names:
 
 ```bash
-npx cucumber-js -f @ln-maf/core/jsonFormatter.js:test/report/report.json
+mkdir -p reports
+npx cucumber-js -f @ln-maf/core/jsonFormatter.js:reports/report.json
 npx multiReport
 ```
 

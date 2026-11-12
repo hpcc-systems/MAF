@@ -13,6 +13,7 @@ export default [
             'tmp/',
             '**/tmp/',
             // Test and report output
+            'reports/',
             '**/test/report/',
             '**/report/',
             '**/lcov-report/',

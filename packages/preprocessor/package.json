@@ -11,8 +11,8 @@
   },
   "scripts": {
     "preprocess": "node ./exec --src './'",
-    "cucumber:exec": "npx cucumber-js -f @ln-maf/core/jsonFormatter.js:../../test/report/preprocessor.json --require \"stepDefinitions/*.js\" tmp/features/*.feature",
-    "cucumber:exec:coverage": "npx nyc --reporter=lcov --reporter=text --report-dir=../../coverage npx cucumber-js -f @ln-maf/core/jsonFormatter.js:../../test/report/preprocessor.json --require \"stepDefinitions/*.js\" tmp/features/*.feature",
+    "cucumber:exec": "mkdir -p ../../reports && npx cucumber-js -f @ln-maf/core/jsonFormatter.js:../../reports/preprocessor.json --require \"stepDefinitions/*.js\" tmp/features/*.feature",
+    "cucumber:exec:coverage": "mkdir -p ../../reports && npx nyc --reporter=lcov --reporter=text --report-dir=../../coverage npx cucumber-js -f @ln-maf/core/jsonFormatter.js:../../reports/preprocessor.json --require \"stepDefinitions/*.js\" tmp/features/*.feature",
     "test:finalize": "echo 'Preprocessor tests completed'",
     "test": "npm run preprocess && npm run cucumber:exec && npm run test:finalize",
     "test:coverage": "npm run preprocess && npm run cucumber:exec:coverage && npm run test:finalize",
